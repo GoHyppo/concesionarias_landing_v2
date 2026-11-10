@@ -1,0 +1,7 @@
+---
+import AuthorPage from '../../layouts/AuthorPage.astro';
+import { blogAuthorPaths } from '../../lib/blog';
+export const getStaticPaths = blogAuthorPaths;
+---
+
+<AuthorPage {...(Astro.props as any)} />

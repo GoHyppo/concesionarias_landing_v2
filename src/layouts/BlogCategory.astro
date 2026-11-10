@@ -1,0 +1,78 @@
+---
+/** Hub de una categoría (/blog/tema/<id>/). Copy propia para no ser un archivo thin. */
+import Layout from './Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import BlogCard from '../components/BlogCard.astro';
+import CategoryNav from '../components/CategoryNav.astro';
+import Pagination from '../components/Pagination.astro';
+import Icon from '../components/Icon.astro';
+import { BLOG_BASE, categoryPath, pagePath, postPath, type Post } from '../lib/blog';
+import { getCategory, type CategoryId } from '../lib/categories';
+import { blogCollectionSchema, breadcrumbListSchema, type BreadcrumbItem } from '../lib/seo';
+
+interface Props {
+  id: CategoryId;
+  posts: Post[];
+  current: number;
+  total: number;
+  used: readonly CategoryId[];
+}
+const { id, posts, current, total, used } = Astro.props;
+const c = getCategory(id);
+const base = categoryPath(id);
+const path = pagePath(base, current);
+const isFirst = current === 1;
+
+const h1 = isFirst ? c.h1 : `${c.h1}, página ${current}`;
+const title = isFirst ? `${c.seoTitle} · ConcesionarIA` : `${c.seoTitle}, página ${current} · ConcesionarIA`;
+const description = isFirst ? c.description : `Página ${current}: ${c.description}`;
+
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Blog', path: BLOG_BASE },
+  { name: c.name, path: base },
+  ...(isFirst ? [] : [{ name: `Página ${current}`, path }]),
+];
+
+const schemas = [
+  blogCollectionSchema({
+    name: h1,
+    description,
+    path,
+    items: posts.map((p) => ({ name: p.data.title, path: postPath(p.slug) })),
+  }),
+  breadcrumbListSchema(crumbs),
+];
+---
+
+<Layout title={title} description={description} jsonLd={schemas}>
+  <section class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <p class="kicker">Tema</p>
+      <h1>{h1}</h1>
+      {isFirst && c.intro.map((p) => <p class="lead">{p}</p>)}
+      <p><a class="btn btn-ghost" href={c.service}>{c.serviceLabel} <Icon name="arrow" /></a></p>
+      <CategoryNav used={used} active={id} />
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="arts-h">
+    <div class="wrap">
+      <h2 id="arts-h">Artículos sobre {c.name.toLowerCase()}</h2>
+      <div class="grid grid-3">
+        {posts.map((p) => <BlogCard post={p} headingLevel="h3" />)}
+      </div>
+      <Pagination base={base} current={current} total={total} />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-hero .lead + .lead {
+    margin-top: -0.2em;
+  }
+  .page-hero :global(.catnav) {
+    margin-top: 24px;
+  }
+</style>

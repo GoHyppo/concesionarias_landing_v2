@@ -1,0 +1,526 @@
+/* ============================================================
+   ConcesionarIA · estilos globales
+   Paleta de marca (deck comercial): fondo #05040A, violeta #6D2EFF,
+   naranja #FF6A00. Tipografía: Space Grotesk (self-hosted, OFL).
+   Contraste: el violeta puro sobre el fondo da ~3.4:1, así que el texto
+   en violeta usa --violet-text (lila, ~7:1). El naranja lleva texto oscuro
+   encima (blanco sobre naranja no pasa AA).
+   ============================================================ */
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --bg: #05040a;
+  --surface: #0d0b1e;
+  --surface-2: #161028;
+  --border: #2a2550;
+  --border-soft: #1e1b38;
+  --violet: #6d2eff;
+  --violet-dark: #5a26d6;
+  --violet-text: #b9a3ff;
+  --orange: #ff6a00;
+  --white: #ffffff;
+  --text: #f4f2ff;
+  --text-2: #c9c5df;
+  --muted: #a9a6c2;
+  --lilac: #edeaff;
+  --ok: #4ade80;
+
+  --font: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --radius: 10px;
+  --radius-lg: 18px;
+  --wrap: 1160px;
+  --gutter: 20px;
+  --nav-h: 68px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--nav-h) + 12px);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--violet-text);
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--white);
+}
+
+:focus-visible {
+  outline: 2px solid var(--violet-text);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font);
+  color: var(--white);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.6em;
+}
+h1 {
+  font-size: clamp(2rem, 5.2vw, 3.5rem);
+  font-weight: 700;
+}
+h2 {
+  font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+  font-weight: 700;
+}
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+p {
+  margin: 0 0 1em;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  background: var(--white);
+  color: var(--bg);
+  padding: 8px 14px;
+  border-radius: 6px;
+  z-index: 2000;
+}
+.skip-link:focus {
+  left: 8px;
+}
+
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.sec {
+  padding: clamp(56px, 9vw, 104px) 0;
+}
+.sec-alt {
+  background: var(--surface);
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+}
+.sec-head {
+  max-width: 760px;
+  margin-bottom: clamp(28px, 5vw, 48px);
+}
+.sec-head.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.kicker {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--violet-text);
+  margin: 0 0 14px;
+}
+.lead {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  color: var(--text-2);
+  line-height: 1.6;
+  max-width: 62ch;
+}
+.muted {
+  color: var(--muted);
+}
+.accent {
+  color: var(--violet-text);
+}
+.accent-orange {
+  color: var(--orange);
+}
+.small {
+  font-size: 0.88rem;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 22px;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--violet);
+  color: var(--white);
+}
+.btn-primary:hover {
+  background: var(--violet-dark);
+  color: var(--white);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--white);
+  border-color: var(--border);
+}
+.btn-ghost:hover {
+  border-color: var(--violet-text);
+  color: var(--white);
+}
+.btn-wa {
+  background: #25d366;
+  color: #062b14;
+}
+.btn-wa:hover {
+  background: #1fb857;
+  color: #062b14;
+}
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.btn .icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- Grillas y tarjetas ---------- */
+.grid {
+  display: grid;
+  gap: 18px;
+}
+@media (min-width: 720px) {
+  .grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1000px) {
+  .grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+.card h3 {
+  margin-bottom: 0.4em;
+}
+.card p:last-child {
+  margin-bottom: 0;
+}
+.card p {
+  color: var(--text-2);
+}
+.card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(109, 46, 255, 0.16);
+  color: var(--violet-text);
+  margin-bottom: 16px;
+}
+.card-icon .icon {
+  width: 22px;
+  height: 22px;
+}
+
+.check-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.check-list li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 10px;
+  color: var(--text-2);
+}
+.check-list li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.45em;
+  width: 14px;
+  height: 8px;
+  border-left: 2px solid var(--violet-text);
+  border-bottom: 2px solid var(--violet-text);
+  transform: rotate(-45deg);
+}
+
+.num {
+  font-size: clamp(2.2rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--white);
+  letter-spacing: -0.03em;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: 0.88rem;
+  background: var(--surface);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ---------- Tablas ---------- */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+th,
+td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th {
+  color: var(--white);
+  background: var(--surface-2);
+  font-weight: 600;
+}
+td {
+  color: var(--text-2);
+}
+tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ---------- Prosa (blog, legales) ---------- */
+.prose {
+  max-width: 70ch;
+  color: var(--text-2);
+}
+.prose h2 {
+  font-size: clamp(1.4rem, 3vw, 1.85rem);
+  margin-top: 2em;
+}
+.prose h3 {
+  font-size: 1.2rem;
+  margin-top: 1.6em;
+}
+.prose p,
+.prose li {
+  color: var(--text-2);
+}
+.prose strong {
+  color: var(--white);
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.3em;
+  margin: 0 0 1.2em;
+}
+.prose li {
+  margin-bottom: 0.4em;
+}
+.prose table {
+  display: block;
+  overflow-x: auto;
+  margin: 1.4em 0;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+}
+.prose blockquote {
+  margin: 1.4em 0;
+  padding: 4px 0 4px 18px;
+  border-left: 1px solid var(--violet-text);
+  color: var(--text);
+}
+
+/* ---------- Breadcrumbs ---------- */
+.crumbs {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+.crumbs ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+}
+.crumbs li + li::before {
+  content: '/';
+  margin-right: 6px;
+  color: var(--border);
+}
+.crumbs a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.crumbs a:hover {
+  color: var(--white);
+}
+.crumbs [aria-current] {
+  color: var(--text-2);
+}
+
+/* ---------- Hero de páginas internas ---------- */
+.page-hero {
+  padding: calc(var(--nav-h) + 40px) 0 clamp(40px, 7vw, 72px);
+  border-bottom: 1px solid var(--border-soft);
+  background:
+    radial-gradient(60% 80% at 15% 0%, rgba(109, 46, 255, 0.18), transparent 70%),
+    var(--bg);
+}
+.page-hero h1 {
+  max-width: 22ch;
+}
+
+/* ---------- Banda de CTA ---------- */
+.cta-band {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: clamp(28px, 5vw, 48px);
+  display: grid;
+  gap: 20px;
+}
+@media (min-width: 900px) {
+  .cta-band {
+    grid-template-columns: 1.4fr auto;
+    align-items: center;
+  }
+}
+.cta-band h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 0.3em;
+}
+.cta-band p {
+  color: var(--text-2);
+  margin: 0;
+}
+
+/* ---------- Logos de marcas (tiles blancos, los logos vienen con fondo claro) ---------- */
+.logo-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+@media (min-width: 720px) {
+  .logo-row {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+.logo-tile {
+  background: #ffffff;
+  border-radius: var(--radius);
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+}
+.logo-tile img {
+  max-height: 52px;
+  width: auto;
+  object-fit: contain;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

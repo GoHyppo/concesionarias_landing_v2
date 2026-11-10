@@ -1,0 +1,103 @@
+---
+/** Índice del blog (/blog/ y /blog/N/). La página 1 lleva intro y la guía por temas. */
+import Layout from './Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import BlogCard from '../components/BlogCard.astro';
+import CategoryNav from '../components/CategoryNav.astro';
+import Pagination from '../components/Pagination.astro';
+import { BLOG_BASE, categoryPath, pagePath, postPath, type Post } from '../lib/blog';
+import { getCategory, type CategoryId } from '../lib/categories';
+import { blogCollectionSchema, breadcrumbListSchema, type BreadcrumbItem } from '../lib/seo';
+
+interface Props {
+  posts: Post[];
+  current: number;
+  total: number;
+  used: readonly CategoryId[];
+}
+const { posts, current, total, used } = Astro.props;
+const path = pagePath(BLOG_BASE, current);
+const isFirst = current === 1;
+
+const h1 = isFirst ? 'Blog para concesionarias: leads, WhatsApp e IA' : `Blog para concesionarias, página ${current}`;
+const title = isFirst
+  ? 'Blog para concesionarias: leads, WhatsApp e IA · ConcesionarIA'
+  : `Blog para concesionarias, página ${current} · ConcesionarIA`;
+const description = isFirst
+  ? 'Guías para dueños y gerentes de concesionarias: tiempo de respuesta, seguimiento por WhatsApp, calificación con IA, atribución de ventas y gestión comercial.'
+  : `Página ${current} del blog de ConcesionarIA: guías para concesionarias sobre gestión de leads, WhatsApp e IA, medición y gestión comercial.`;
+
+const crumbs: BreadcrumbItem[] = isFirst
+  ? [{ name: 'Inicio', path: '/' }, { name: 'Blog', path: BLOG_BASE }]
+  : [{ name: 'Inicio', path: '/' }, { name: 'Blog', path: BLOG_BASE }, { name: `Página ${current}`, path }];
+
+const schemas = [
+  blogCollectionSchema({
+    name: h1,
+    description,
+    path,
+    items: posts.map((p) => ({ name: p.data.title, path: postPath(p.slug) })),
+    isBlogRoot: isFirst,
+  }),
+  breadcrumbListSchema(crumbs),
+];
+---
+
+<Layout title={title} description={description} jsonLd={schemas}>
+  <section class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <p class="kicker">Blog</p>
+      <h1>{h1}</h1>
+      {isFirst && (
+        <p class="lead">
+          Guías prácticas para vender más autos con los leads que ya tienes: cómo responder, calificar y seguir cada
+          consulta, cómo medir qué campaña vende y cómo organizar al equipo comercial con IA.
+        </p>
+      )}
+      <CategoryNav used={used} />
+    </div>
+  </section>
+
+  {isFirst && used.length > 0 && (
+    <section class="sec sec-alt" aria-labelledby="temas-h">
+      <div class="wrap">
+        <h2 id="temas-h">Temas</h2>
+        <div class="grid grid-4">
+          {used.map((id) => {
+            const c = getCategory(id);
+            return (
+              <a class="card topic" href={categoryPath(id)}>
+                <h3>{c.name}</h3>
+                <p>{c.blurb}</p>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="sec" aria-labelledby="ult-h">
+    <div class="wrap">
+      <h2 id="ult-h">{isFirst ? 'Lo último' : 'Artículos'}</h2>
+      <div class="grid grid-3">
+        {posts.map((p) => <BlogCard post={p} headingLevel="h3" />)}
+      </div>
+      <Pagination base={BLOG_BASE} current={current} total={total} />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .topic {
+    text-decoration: none;
+    color: inherit;
+  }
+  .topic:hover {
+    border-color: var(--violet);
+  }
+  .page-hero :global(.catnav) {
+    margin-top: 24px;
+  }
+</style>

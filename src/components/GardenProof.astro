@@ -1,0 +1,96 @@
+---
+/**
+ * Banda de prueba: las métricas públicas del caso Grupo Garden, SIEMPRE con la
+ * atribución y el link a la fuente. Es la única prueba numérica del sitio.
+ */
+import { GARDEN_METRICS, GARDEN_SOURCE } from '../lib/garden';
+
+interface Props {
+  title?: string;
+  /** Cuántas métricas mostrar (en orden). */
+  limit?: number;
+  headingLevel?: 'h2' | 'h3';
+  showCaseLink?: boolean;
+}
+const {
+  title = 'Lo que cambió en Grupo Garden',
+  limit = 6,
+  headingLevel = 'h2',
+  showCaseLink = true,
+} = Astro.props;
+const Heading = headingLevel;
+const items = GARDEN_METRICS.slice(0, limit);
+---
+
+<div class="proof">
+  <div class="proof-head">
+    <Heading class="proof-title">{title}</Heading>
+    <p class="muted small">
+      Resultados publicados en el caso de Grupo Garden, el mayor retailer de vehículos de Paraguay.
+      Fuente: <a href={GARDEN_SOURCE}>hyppo.io/casos/garden</a>.
+    </p>
+  </div>
+  <ul class="proof-grid">
+    {items.map((m) => (
+      <li class="proof-item">
+        <span class="num">{m.value}</span>
+        <span class="proof-label">{m.label}</span>
+        <span class="proof-text">{m.text}</span>
+      </li>
+    ))}
+  </ul>
+  {showCaseLink && (
+    <p class="proof-link"><a href="/casos/grupo-garden/">Leer cómo se implementó en Grupo Garden</a></p>
+  )}
+</div>
+
+<style>
+  .proof-head {
+    max-width: 720px;
+    margin-bottom: 28px;
+  }
+  .proof-title {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+  }
+  .proof-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .proof-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .proof-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .proof-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 22px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .proof-label {
+    color: var(--violet-text);
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .proof-text {
+    color: var(--text-2);
+    font-size: 0.95rem;
+  }
+  .proof-link {
+    margin-top: 20px;
+  }
+</style>

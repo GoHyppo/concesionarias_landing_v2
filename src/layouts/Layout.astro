@@ -1,0 +1,165 @@
+---
+/**
+ * Layout único del sitio. Todo lo que es SEO técnico de cabecera vive acá:
+ * title, description, canonical autorreferencial, OG/Twitter, robots, JSON-LD,
+ * feed, GTM y Customer.io.
+ *
+ * Sitio solo en español (es-419): no hay hreflang. Si algún día hay otro idioma,
+ * el contrato de hyppo.io (alternates por página + x-default) es el modelo.
+ */
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_URL, SITE_NAME, GTM_ID, CIO_WRITE_KEY, GHL_ORIGIN } from '../lib/site';
+import { absoluteUrl, organizationSchema, websiteSchema } from '../lib/seo';
+
+interface Props {
+  /** <title> completo, ya con el sufijo de marca si corresponde. */
+  title: string;
+  description: string;
+  /** Ruta absoluta del sitio (/media/...) o URL. Default: OG genérica 1200x630. */
+  ogImage?: string;
+  ogImageAlt?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** Solo el 404: sin canonical y con noindex. */
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  /** El home suma Organization + WebSite; el resto de las páginas no los repite. */
+  isHome?: boolean;
+}
+
+const {
+  title,
+  description,
+  ogImage = '/media/og-default.png',
+  ogImageAlt = 'ConcesionarIA, IA para concesionarias de autos',
+  jsonLd,
+  noindex = false,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+  isHome = false,
+} = Astro.props;
+
+const canonicalUrl = absoluteUrl(Astro.url.pathname);
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${SITE_URL}${ogImage}`;
+const extra = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const schemas = [...(isHome ? [organizationSchema(), websiteSchema()] : []), ...extra];
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {!noindex && <link rel="canonical" href={canonicalUrl} />}
+    <meta
+      name="robots"
+      content={noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'}
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#05040A" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="es_AR" />
+    {!noindex && <meta property="og:url" content={canonicalUrl} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="alternate" type="application/rss+xml" title="Blog de ConcesionarIA" href="/blog/rss.xml" />
+
+    {schemas.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
+
+    <!-- Google Tag Manager -->
+    <script is:inline define:vars={{ GTM_ID }}>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer',GTM_ID);
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Customer.io Analytics (workspace concesionarIA). Solo medición: los leads
+         entran al CRM por el widget de GoHighLevel, no dependen de este script. -->
+    <script is:inline define:vars={{ CIO_WRITE_KEY }}>
+      !function(){var i="cioanalytics", analytics=(window[i]=window[i]||[]);if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute('data-global-customerio-analytics-key', i);t.src="https://cdp.customer.io/v1/analytics-js/snippet/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._writeKey=key;analytics._loadOptions=e};analytics.SNIPPET_VERSION="4.15.3";
+        analytics.load(CIO_WRITE_KEY);
+        analytics.page();
+      }}();
+    </script>
+
+    <!-- Eventos de conversión. Un solo helper: empuja el evento al dataLayer (GTM)
+         y lo replica en Customer.io si cargó. Ninguno depende del otro. -->
+    <script is:inline define:vars={{ GHL_ORIGIN }}>
+      (function () {
+        var sent = {};
+        window.ciaTrack = function (event, props, once) {
+          if (once && sent[event]) return;
+          sent[event] = true;
+          var payload = Object.assign({ event: event }, props || {});
+          (window.dataLayer = window.dataLayer || []).push(payload);
+          try {
+            if (window.cioanalytics && typeof window.cioanalytics.track === 'function') {
+              window.cioanalytics.track(event, props || {});
+            }
+          } catch (e) {}
+        };
+        // whatsapp_click: cualquier link a wa.me, marcado con data-wa="<ubicación>".
+        document.addEventListener('click', function (e) {
+          var a = e.target && e.target.closest ? e.target.closest('a[href*="wa.me/"]') : null;
+          if (!a) return;
+          window.ciaTrack('whatsapp_click', {
+            placement: a.getAttribute('data-wa') || 'sin-ubicacion',
+            link_url: a.getAttribute('href'),
+            page_path: location.pathname,
+          });
+        });
+        // generate_lead: el widget de agenda de GoHighLevel avisa con un
+        // postMessage "set-sticky-contacts" cuando la persona deja sus datos.
+        // Es la señal disponible desde fuera del iframe; confirmarla en el modo
+        // preview de GTM (ver CLAUDE.md).
+        window.addEventListener('message', function (e) {
+          if (e.origin !== GHL_ORIGIN) return;
+          var d = e.data;
+          if (Array.isArray(d) && d[0] === 'set-sticky-contacts') {
+            window.ciaTrack('generate_lead', { method: 'ghl_booking', page_path: location.pathname }, true);
+          }
+        });
+      })();
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+        title="Google Tag Manager"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <Nav />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,47 @@
+---
+/**
+ * 404. GitHub Pages sirve dist/404.html para cualquier ruta desconocida, así que
+ * esta página no declara canonical y lleva noindex (lo maneja Layout con
+ * `noindex`). Las páginas viejas del sitio eran rutas con # (HashRouter), que
+ * nunca llegan acá: las resuelve el script del home.
+ */
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { BOOKING_ANCHOR, CTA_DEMO_LABEL } from '../lib/site';
+---
+
+<Layout
+  title="Página no encontrada · ConcesionarIA"
+  description="La página que buscas no existe o cambió de dirección. Vuelve al inicio de ConcesionarIA o revisa el producto, la demo y el blog."
+  noindex
+>
+  <section class="page-hero nf">
+    <div class="wrap">
+      <p class="kicker">Error 404</p>
+      <h1>No encontramos esta página</h1>
+      <p class="lead">Puede que la dirección haya cambiado. Estas son las páginas más visitadas:</p>
+      <ul class="chips nf-links">
+        <li><a class="chip" href="/">Inicio</a></li>
+        <li><a class="chip" href="/producto/">Producto</a></li>
+        <li><a class="chip" href="/demo/">Demo en vivo</a></li>
+        <li><a class="chip" href="/calculadora-roi/">Calculadora de ROI</a></li>
+        <li><a class="chip" href="/blog/">Blog</a></li>
+      </ul>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={BOOKING_ANCHOR} data-cta="404">{CTA_DEMO_LABEL} <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .nf {
+    min-height: 60vh;
+  }
+  .nf-links {
+    margin: 8px 0 28px;
+  }
+  .nf-links a {
+    text-decoration: none;
+  }
+</style>

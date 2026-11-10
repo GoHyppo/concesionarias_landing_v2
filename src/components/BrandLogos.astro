@@ -1,0 +1,29 @@
+---
+/** Logos de Grupo Garden y de marcas del grupo que operan con el sistema. */
+import { GARDEN_LOGOS } from '../lib/garden';
+
+interface Props {
+  caption?: string;
+}
+const { caption = 'Grupo Garden y algunas de las marcas que operan con el sistema' } = Astro.props;
+---
+
+<figure class="brands">
+  <figcaption class="small muted">{caption}</figcaption>
+  <ul class="logo-row">
+    {GARDEN_LOGOS.map((l) => (
+      <li class="logo-tile">
+        <img src={l.src} alt={l.name} width={l.width} height={l.height} loading="lazy" decoding="async" />
+      </li>
+    ))}
+  </ul>
+</figure>
+
+<style>
+  .brands {
+    margin: 0;
+  }
+  .brands figcaption {
+    margin-bottom: 12px;
+  }
+</style>

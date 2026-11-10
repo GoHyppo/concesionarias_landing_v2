@@ -1,0 +1,51 @@
+---
+import { getAuthor, authorPath, type AuthorId } from '../lib/authors';
+interface Props {
+  id: AuthorId;
+}
+const a = getAuthor(Astro.props.id);
+---
+
+<aside class="acard" aria-label="Sobre el autor">
+  {a.image && <img src={a.image} alt={`Foto de ${a.name}`} width="96" height="96" loading="lazy" decoding="async" />}
+  <div>
+    <p class="acard-name"><a href={authorPath(a.id)} rel="author">{a.name}</a></p>
+    <p class="acard-role small muted">{a.role}</p>
+    <p class="acard-bio">{a.short}</p>
+    {a.linkedin && <p class="small"><a href={a.linkedin} rel="me noopener" target="_blank">LinkedIn</a></p>}
+  </div>
+</aside>
+
+<style>
+  .acard {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 22px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .acard img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: none;
+  }
+  .acard-name {
+    margin: 0;
+    font-weight: 700;
+  }
+  .acard-name a {
+    color: var(--white);
+    text-decoration: none;
+  }
+  .acard-role {
+    margin: 0 0 8px;
+  }
+  .acard-bio {
+    color: var(--text-2);
+    margin-bottom: 6px;
+  }
+</style>

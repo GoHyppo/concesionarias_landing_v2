@@ -1,0 +1,50 @@
+---
+/**
+ * FAQ visible. La página que lo usa emite faqPageSchema() con EXACTAMENTE estos
+ * items: el schema tiene que decir lo mismo que lee la persona.
+ */
+import type { FaqItem } from '../lib/seo';
+
+interface Props {
+  items: FaqItem[];
+  title?: string;
+}
+const { items, title = 'Preguntas frecuentes' } = Astro.props;
+---
+
+<div class="faq">
+  <h2>{title}</h2>
+  <div class="faq-list">
+    {items.map((item) => (
+      <div class="faq-item">
+        <h3>{item.q}</h3>
+        <p>{item.a}</p>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .faq-list {
+    display: grid;
+    gap: 14px;
+  }
+  @media (min-width: 900px) {
+    .faq-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .faq-item {
+    padding: 22px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .faq-item h3 {
+    font-size: 1.08rem;
+  }
+  .faq-item p {
+    color: var(--text-2);
+    margin: 0;
+  }
+</style>

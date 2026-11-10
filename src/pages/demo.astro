@@ -1,0 +1,190 @@
+---
+/**
+ * /demo/ · head term: "chatbot para concesionarias".
+ * Video del agente (heredado de la v1), bots por marca (src/lib/demo-bots.ts,
+ * PENDIENTE de confirmación de Nico) y el bloque de agenda #agenda, que es el
+ * destino de todos los CTAs "Pide una demo" del sitio.
+ */
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import BookDemo from '../components/BookDemo.astro';
+import { breadcrumbListSchema, type BreadcrumbItem } from '../lib/seo';
+import { DEMO_BOTS, DEMO_BOTS_ENABLED, demoBotHref } from '../lib/demo-bots';
+import { BOOKING_ANCHOR, CTA_DEMO_LABEL } from '../lib/site';
+
+const title = 'Chatbot para concesionarias: demo en vivo · ConcesionarIA';
+const description =
+  'Prueba el chatbot para concesionarias de ConcesionarIA: mira cómo atiende por WhatsApp, escríbele al agente de una marca real y agenda una demo de 30 minutos.';
+
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Demo', path: '/demo/' },
+];
+
+const schemas = [breadcrumbListSchema(crumbs)];
+---
+
+<Layout title={title} description={description} jsonLd={schemas}>
+  <section class="page-hero">
+    <div class="wrap demo-grid">
+      <div>
+        <Breadcrumbs items={crumbs} />
+        <p class="kicker">Demo en vivo</p>
+        <h1>Chatbot para concesionarias: míralo atender un lead real</h1>
+        <p class="lead">
+          El agente de ConcesionarIA no es un menú de opciones. Conversa, entiende qué auto busca la persona, responde
+          con información de la concesionaria y agenda el test drive. Cuando hace falta, le pasa la conversación a un
+          vendedor en el mismo chat.
+        </p>
+        <ul class="check-list">
+          <li>Responde en segundos, a cualquier hora.</li>
+          <li>Pregunta lo justo para calificar: modelo, forma de pago y plazo de compra.</li>
+          <li>Entrega catálogo, financiación y ubicación sin salir de WhatsApp.</li>
+          <li>Deja cada conversación registrada para el vendedor y el gerente.</li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn-primary" href={BOOKING_ANCHOR} data-cta="demo-hero">{CTA_DEMO_LABEL} <Icon name="arrow" /></a>
+          {DEMO_BOTS_ENABLED && DEMO_BOTS.length > 0 && (
+            <a class="btn btn-ghost" href="#probar" data-cta="demo-hero-bots"><Icon name="message" /> Probar por WhatsApp</a>
+          )}
+        </div>
+      </div>
+      <figure class="demo-media">
+        <video
+          controls
+          muted
+          playsinline
+          preload="metadata"
+          poster="/media/demo/agente-whatsapp-poster.webp"
+          width="480"
+          height="854"
+          aria-label="Video: el agente responde por WhatsApp una consulta sobre disponibilidad de un modelo"
+        >
+          <source src="/media/demo/agente-whatsapp-concesionaria.webm" type="video/webm" />
+        </video>
+        <figcaption class="small muted">
+          Una consulta de disponibilidad respondida por el agente, con la propuesta de enviar ficha técnica y opciones de pago.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  {DEMO_BOTS_ENABLED && DEMO_BOTS.length > 0 && (
+    <section class="sec" id="probar" aria-labelledby="probar-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="kicker">Pruébalo tú</p>
+          <h2 id="probar-h">Escríbele al agente de una marca real</h2>
+          <p class="lead">
+            Son los agentes que atienden por WhatsApp a las marcas de Grupo Garden en Paraguay. Pregunta por un modelo,
+            por financiación o por un test drive y mira cómo responde.
+          </p>
+        </div>
+        <ul class="bots">
+          {DEMO_BOTS.map((bot) => (
+            <li>
+              <a
+                class="bot"
+                href={demoBotHref(bot)}
+                target="_blank"
+                rel="noopener"
+                data-wa={`demo-bot-${bot.brand.toLowerCase()}`}
+              >
+                <span class="logo-tile">
+                  <img src={bot.logo} alt={`Logo de ${bot.brand}`} width={bot.logoWidth} height={bot.logoHeight} loading="lazy" decoding="async" />
+                </span>
+                <span class="bot-cta"><Icon name="message" /> Escribir al agente de {bot.brand}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p class="small muted note">
+          Estas conversaciones las atiende la operación real de cada marca en Paraguay. Para ver el sistema completo,
+          con el dashboard y las integraciones, agenda una demo.
+        </p>
+      </div>
+    </section>
+  )}
+
+  <BookDemo
+    title="Agenda tu demo"
+    text="Elige día y horario. En 30 minutos ves el agente, el supervisor y el dashboard funcionando, y revisamos qué se integra con tus sistemas."
+  />
+
+  <section class="sec">
+    <div class="wrap">
+      <p class="muted">
+        ¿Todavía evaluando? Lee <a href="/blog/tema/whatsapp-e-ia/">las guías sobre WhatsApp e IA para concesionarias</a>,
+        mira <a href="/producto/">cómo funciona el producto</a> o el <a href="/casos/grupo-garden/">caso de Grupo Garden</a>.
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .demo-grid {
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .demo-grid {
+      grid-template-columns: 1.3fr 0.7fr;
+    }
+  }
+  .demo-grid .check-list {
+    margin: 0 0 24px;
+  }
+  .demo-media {
+    margin: 0 auto;
+    max-width: 300px;
+    width: 100%;
+  }
+  .demo-media video {
+    display: block;
+    width: 100%;
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .demo-media figcaption {
+    margin-top: 10px;
+    text-align: center;
+  }
+  .bots {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  .bot {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s ease;
+  }
+  .bot:hover {
+    border-color: #25d366;
+    color: var(--white);
+  }
+  .bot-cta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .note {
+    margin-top: 20px;
+    max-width: 80ch;
+  }
+</style>

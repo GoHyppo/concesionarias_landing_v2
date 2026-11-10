@@ -1,0 +1,221 @@
+---
+/**
+ * /casos/grupo-garden/ · el caso Garden contado desde la concesionaria.
+ *
+ * Fuente única: el caso público en hyppo.io/casos/garden/ (CaseGarden.astro de
+ * hyppo_landing). Texto propio, NO copiado: hyppo.io cuenta la arquitectura
+ * para un público de marketing y data; esta página cuenta qué cambió en la
+ * operación comercial. Canonical propia y link explícito a la versión completa.
+ * No usar números del caso que no estén en src/lib/garden.ts.
+ */
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import GardenProof from '../../components/GardenProof.astro';
+import BrandLogos from '../../components/BrandLogos.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { breadcrumbListSchema, type BreadcrumbItem } from '../../lib/seo';
+import { GARDEN_BRANDS, GARDEN_SOURCE } from '../../lib/garden';
+
+const title = 'Caso Grupo Garden: IA en 10 marcas de autos · ConcesionarIA';
+const description =
+  'Cómo Grupo Garden, el mayor retailer de vehículos de Paraguay, ordenó sus leads de WhatsApp con IA en 10 marcas: qué cambió para vendedores y gerentes.';
+
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Caso Grupo Garden', path: '/casos/grupo-garden/' },
+];
+
+const timeline = [
+  ['Nov 2025', 'Nissan (arranque)'],
+  ['Dic 2025', 'Fiat'],
+  ['Ene 2026', 'Jeep y Ram'],
+  ['Feb 2026', 'KIA'],
+  ['Mar 2026', 'Chery, MINI y BMW'],
+  ['Abr 2026', 'iCAUR y Chevrolet'],
+  ['May 2026', 'Volvo y Mazda'],
+];
+
+const schemas = [breadcrumbListSchema(crumbs)];
+---
+
+<Layout title={title} description={description} jsonLd={schemas}>
+  <section class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <p class="kicker">Caso · Retail automotriz · Paraguay</p>
+      <h1>Grupo Garden: cómo un grupo de diez marcas ordenó sus leads de WhatsApp con IA</h1>
+      <p class="lead">
+        Grupo Garden es el mayor retailer de vehículos de Paraguay. Entre noviembre de 2025 y mayo de 2026 pasó de un
+        bot de WhatsApp sin trazabilidad a un sistema donde cada lead se responde, se califica y se sigue hasta la
+        factura, en todas las marcas del grupo.
+      </p>
+      <ul class="chips brands" aria-label="Marcas del grupo">
+        {GARDEN_BRANDS.map((b) => <li class="chip">{b}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap case-body">
+      <div class="prose">
+        <h2>El punto de partida: mucho WhatsApp y ningún dato</h2>
+        <p>
+          En una concesionaria grande, casi todos los leads empiezan en WhatsApp. En Garden ese canal corría sobre un
+          bot que recibía un volumen enorme de consultas en todas las marcas, pero no dejaba nada que un gerente
+          pudiera usar.
+        </p>
+        <ul>
+          <li><strong>Los leads entraban y desaparecían.</strong> No había forma de seguir a una persona desde el primer mensaje hasta la venta.</li>
+          <li><strong>Todos recibían el mismo trato.</strong> Quien pensaba comprar en dos meses y quien preguntaba por curiosidad entraban al mismo flujo.</li>
+          <li><strong>Las conversaciones que se apagaban quedaban apagadas.</strong> Sin seguimiento ni segunda oportunidad.</li>
+          <li><strong>Cada marca era una isla.</strong> Una mejora hecha para una marca había que rehacerla de cero para la siguiente.</li>
+        </ul>
+
+        <h2>Qué se implementó</h2>
+        <p>
+          El sistema tiene tres capas, las mismas que hoy forman <a href="/producto/">ConcesionarIA</a>. Cada herramienta
+          hace un solo trabajo.
+        </p>
+        <h3>Conversación</h3>
+        <p>
+          Un agente de IA sobre GoChat atiende por WhatsApp con habilidades específicas para la venta de autos: la
+          conversación inicial, la elección del modelo, la consulta de crédito, el pedido de test drive, el interés en
+          otras marcas del grupo y la derivación a un vendedor.
+        </p>
+        <h3>Datos y automatización</h3>
+        <p>
+          Customer.io es el registro de cada lead: guarda el perfil, los eventos y la calificación, y decide qué
+          seguimiento corresponde. Se conecta en los dos sentidos con Microsoft Dynamics 365, donde viven las carpetas
+          de crédito, y con SAP, donde se factura.
+        </p>
+        <h3>Gestión</h3>
+        <p>Los datos de todo el sistema se unifican en BigQuery y se leen en dashboards de Looker Studio.</p>
+
+        <h2>Cómo se atiende un lead hoy</h2>
+        <p>Desde la concesionaria, el cambio se nota en cuatro momentos.</p>
+        <h3>La calificación decide el recorrido</h3>
+        <p>
+          Cuando el agente junta suficiente información en la conversación, clasifica al lead. <strong>Hot</strong> es
+          intención de compra en los próximos 60 días: entra en una cadencia intensa de seguimientos dentro de la
+          ventana de 24 horas de WhatsApp. <strong>Warm</strong> es intención a más de 60 días: entra en un seguimiento
+          más pausado de siete días. <strong>Cold</strong> es una consulta general: pasa al call center para
+          reactivación humana.
+        </p>
+        <h3>El test drive llega con aviso doble</h3>
+        <p>
+          Cuando un cliente agenda un test drive en el chat, recibe confirmación y recordatorios por WhatsApp y email.
+          El vendedor asignado recibe una alerta inmediata con el modelo, la financiación y la conversación previa, y un
+          segundo aviso 24 horas antes de la cita.
+        </p>
+        <h3>Las promesas del cliente no se olvidan</h3>
+        <p>
+          Si alguien escribe "te contesto el martes" o "llámame después de cobrar", el sistema extrae esa fecha y ese
+          día dispara el mensaje correcto a la persona correcta.
+        </p>
+        <h3>Una persona es una sola ficha</h3>
+        <p>
+          Los formularios web, los formularios de TikTok, los códigos QR en eventos y los registros del salón llegan al
+          mismo perfil. Quien escaneó un QR en una exposición el sábado y entró a un salón el martes es un solo cliente.
+          Cuando un lead se descarta, el motivo queda guardado para entender en qué etapa se pierden las ventas.
+        </p>
+
+        <h2>De una marca a diez en siete meses</h2>
+        <p>
+          El proyecto arrancó con Nissan. Cada marca nueva heredó la misma librería de flujos, el mismo esquema de
+          datos y el mismo tablero, así que sumar una marca pasó a ser configuración y no desarrollo.
+        </p>
+      </div>
+
+      <div class="table-wrap timeline">
+        <table>
+          <caption class="small muted">Lanzamientos por mes</caption>
+          <thead>
+            <tr><th scope="col">Mes</th><th scope="col">Marcas</th></tr>
+          </thead>
+          <tbody>
+            {timeline.map(([m, b]) => (
+              <tr><td>{m}</td><td>{b}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <blockquote class="quote">
+        <p>
+          "Antes, el mismo KPI nos daba tres números distintos. Marketing reportaba una cifra, lead management otra y
+          el equipo comercial una tercera. Hoy hay una sola fuente de verdad."
+        </p>
+        <footer class="small muted">Jovino Prieto, Head of Media, Grupo Garden. Cita publicada en el caso de hyppo.io.</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" aria-label="Resultados">
+    <div class="wrap">
+      <GardenProof title="Los resultados publicados" showCaseLink={false} />
+      <div class="brands-wrap"><BrandLogos /></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="prose lessons">
+        <h2>Qué se puede llevar otra concesionaria de este caso</h2>
+        <ol>
+          <li><strong>Empezar por la trazabilidad, no por el bot.</strong> El valor apareció cuando cada lead se pudo seguir hasta la factura. Sin eso, un bot nuevo repite los problemas del anterior.</li>
+          <li><strong>Calificar para decidir el recorrido.</strong> Un solo dato, el horizonte de compra, ordena todos los seguimientos posteriores.</li>
+          <li><strong>Diseñar para replicar.</strong> Un esquema de datos común es lo que permite sumar marcas o sucursales sin rehacer el trabajo.</li>
+          <li><strong>Medir al equipo con los mismos datos.</strong> Cuando marketing, ventas y posventa miran el mismo registro, la discusión pasa de los números a las acciones.</li>
+        </ol>
+        <p>
+          Si quieres estimar qué significaría para tu operación, prueba la <a href="/calculadora-roi/">calculadora de ROI para concesionarias</a>.
+          La versión completa del caso, con la arquitectura técnica, está publicada en
+          <a href={GARDEN_SOURCE}>hyppo.io</a>.
+        </p>
+      </div>
+      <CtaBand
+        placement="caso-garden-cta"
+        title="¿Quieres algo así en tu concesionaria?"
+        text="Te mostramos el sistema funcionando y revisamos cómo se aplica a tus marcas, tus sucursales y tus sistemas."
+      />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .brands {
+    margin-top: 22px;
+  }
+  .case-body {
+    display: grid;
+    gap: 32px;
+  }
+  .timeline {
+    max-width: 560px;
+  }
+  .timeline caption {
+    text-align: left;
+    padding: 10px 14px;
+  }
+  .quote {
+    margin: 0;
+    max-width: 70ch;
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .quote p {
+    font-size: 1.15rem;
+    color: var(--text);
+  }
+  .quote footer {
+    margin-top: 8px;
+  }
+  .brands-wrap {
+    margin-top: 40px;
+  }
+  .lessons {
+    margin-bottom: 40px;
+  }
+</style>

@@ -1,0 +1,175 @@
+---
+/**
+ * /precios/ · GATED por PRICING_PUBLISHED (src/lib/site.ts).
+ *
+ * Es una ruta dinámica a propósito: con PRICING_PUBLISHED = false,
+ * getStaticPaths devuelve cero rutas y la página NO se construye. Así no entra
+ * al sitemap, ni a llms.txt, ni queda una URL indexable con precios sin aprobar.
+ * Con true, se construye /precios/ con los planes de src/lib/pricing.ts y su
+ * SoftwareApplication con los Offer visibles en esta misma página.
+ */
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import FaqSection from '../components/FaqSection.astro';
+import CtaBand from '../components/CtaBand.astro';
+import {
+  breadcrumbListSchema,
+  faqPageSchema,
+  softwareApplicationSchema,
+  type BreadcrumbItem,
+  type FaqItem,
+} from '../lib/seo';
+import { PLANS, EARLY_ADOPTER } from '../lib/pricing';
+import { PRICING_PUBLISHED, BOOKING_ANCHOR } from '../lib/site';
+
+export function getStaticPaths() {
+  return PRICING_PUBLISHED ? [{ params: { pricing: 'precios' } }] : [];
+}
+
+const title = 'Precios de ConcesionarIA: planes Gold, Platinum y Enterprise';
+const description =
+  'Precios de ConcesionarIA en USD: planes Gold, Platinum y Enterprise según conversaciones, vendedores e integraciones, con costo de implementación único.';
+
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Precios', path: '/precios/' },
+];
+
+const faq: FaqItem[] = [
+  {
+    q: '¿Qué cuenta como una conversación?',
+    a: 'Cada conversación de WhatsApp atendida por el agente con un lead. Cada plan incluye un volumen mensual y las conversaciones adicionales se cobran por unidad, con el precio que figura en el plan.',
+  },
+  {
+    q: '¿Qué incluye la implementación?',
+    a: 'La configuración del agente con tu catálogo y tus criterios de calificación, la conexión de WhatsApp y las integraciones del plan, y la puesta en marcha con tu equipo. Se paga una sola vez.',
+  },
+  {
+    q: '¿Puedo cambiar de plan?',
+    a: 'Sí. El plan se ajusta al volumen de conversaciones, la cantidad de vendedores y las integraciones que necesites. Lo revisamos con tu equipo cuando cambia la operación.',
+  },
+];
+
+const schemas = [
+  breadcrumbListSchema(crumbs),
+  softwareApplicationSchema({
+    path: '/precios/',
+    description,
+    offers: PLANS.map((p) => ({ name: `Plan ${p.name}`, price: p.priceValue, description: p.target })),
+  }),
+  faqPageSchema(faq),
+];
+---
+
+<Layout title={title} description={description} jsonLd={schemas}>
+  <section class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <p class="kicker">Precios</p>
+      <h1>Precios de ConcesionarIA</h1>
+      <p class="lead">Tres planes según el volumen de conversaciones, la cantidad de vendedores y las integraciones. Precios en USD por mes, más una implementación única.</p>
+      <p class="early">{EARLY_ADOPTER}</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap plans">
+      {PLANS.map((p) => (
+        <article class:list={['card', 'plan', { 'plan-hi': p.highlight }]}>
+          <h2>{p.name}</h2>
+          <p class="muted">{p.subtitle}</p>
+          <p class="price">
+            {p.pricePrefix && <span class="small muted">{p.pricePrefix} </span>}
+            <span class="num">USD {p.price}</span>
+            <span class="small muted"> / mes</span>
+          </p>
+          <dl class="meta">
+            <div><dt>Implementación</dt><dd>{p.setup}</dd></div>
+            <div><dt>Conversaciones incluidas</dt><dd>{p.conversations}</dd></div>
+            <div><dt>Conversación adicional</dt><dd>{p.extraConversation}</dd></div>
+            <div><dt>Vendedores incluidos</dt><dd>{p.seats}</dd></div>
+            <div><dt>Vendedor adicional</dt><dd>{p.extraSeat}</dd></div>
+          </dl>
+          <p>{p.target}</p>
+          <ul class="check-list">
+            {p.features.map((f) => <li>{f}</li>)}
+          </ul>
+          <a class:list={['btn', p.highlight ? 'btn-primary' : 'btn-ghost']} href={BOOKING_ANCHOR} data-cta={`precios-${p.id}`}>
+            Hablar sobre {p.name}
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec sec-alt">
+    <div class="wrap">
+      <FaqSection items={faq} />
+      <p class="muted more">
+        ¿Quieres ver si se paga en tu concesionaria? Usa la <a href="/calculadora-roi/">calculadora de ROI</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <CtaBand placement="precios-cta" />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .early {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    background: var(--orange);
+    color: #1a0b00;
+    font-weight: 600;
+  }
+  .plans {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 1000px) {
+    .plans {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .plan {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .plan-hi {
+    border-color: var(--violet);
+  }
+  .plan .btn {
+    margin-top: auto;
+  }
+  .price {
+    margin: 8px 0;
+  }
+  .meta {
+    margin: 0 0 12px;
+  }
+  .meta div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 0.92rem;
+  }
+  .meta dt {
+    color: var(--muted);
+  }
+  .meta dd {
+    margin: 0;
+    color: var(--white);
+  }
+  .more {
+    margin-top: 24px;
+  }
+</style>

@@ -1,0 +1,272 @@
+---
+/**
+ * El molde de un post (portado de hyppo.io). El orden de los bloques es la
+ * estructura que leen una persona que escanea y un motor que resume:
+ *
+ *   H1 → resumen answer-first → lo que importa → índice → cuerpo (H2/H3)
+ *   → preguntas frecuentes (mismo texto que el FAQPage) → autor → CTA → relacionados
+ */
+import { Image } from 'astro:assets';
+import Layout from './Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import AuthorCard from '../components/AuthorCard.astro';
+import BlogCard from '../components/BlogCard.astro';
+import CategoryNav from '../components/CategoryNav.astro';
+import Icon from '../components/Icon.astro';
+import { SITE_URL, BOOKING_ANCHOR, CTA_DEMO_LABEL } from '../lib/site';
+import { getCategory, type CategoryId } from '../lib/categories';
+import { getAuthor, authorPath } from '../lib/authors';
+import { BLOG_BASE, categoryPath, formatDate, isoDate, postPath, readingMinutes, type Post } from '../lib/blog';
+import { blogPostingSchema, breadcrumbListSchema, faqPageSchema, type BreadcrumbItem } from '../lib/seo';
+
+interface Props {
+  post: Post;
+  related: Post[];
+  used: readonly CategoryId[];
+}
+const { post, related, used } = Astro.props;
+const { data } = post;
+const { Content, headings } = await post.entry.render();
+
+const cat = getCategory(data.category);
+const author = getAuthor(data.author);
+const path = postPath(post.slug);
+const minutes = readingMinutes(post.entry.body);
+const wordCount = post.entry.body.split(/\s+/).filter(Boolean).length;
+const toc = headings.filter((h) => h.depth === 2);
+const ctaPath = data.cta ?? cat.service;
+
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Blog', path: BLOG_BASE },
+  { name: cat.name, path: categoryPath(data.category) },
+  { name: data.title, path },
+];
+
+const seoTitle = `${data.seoTitle ?? data.title} · ConcesionarIA`;
+const ogImage = data.image?.src;
+const schemas: Record<string, unknown>[] = [
+  blogPostingSchema({
+    headline: data.title,
+    description: data.description,
+    abstract: data.summary,
+    path,
+    datePublished: isoDate(data.publishedAt),
+    dateModified: data.updatedAt ? isoDate(data.updatedAt) : undefined,
+    author: {
+      name: author.name,
+      path: authorPath(author.id),
+      jobTitle: author.role,
+      description: author.long,
+      sameAs: author.linkedin ? [author.linkedin] : undefined,
+      image: author.image,
+    },
+    image: ogImage ? `${SITE_URL}${ogImage}` : undefined,
+    section: cat.name,
+    wordCount,
+  }),
+  breadcrumbListSchema(crumbs),
+];
+if (data.faq?.length) schemas.push(faqPageSchema(data.faq));
+
+const ctaLabels: Record<string, string> = {
+  '/producto/': 'Ver cómo funciona ConcesionarIA',
+  '/demo/': 'Probar el agente en vivo',
+  '/calculadora-roi/': 'Calcular el retorno de tu concesionaria',
+  '/para-concesionarias/': 'Ver ConcesionarIA para tu concesionaria',
+  '/integraciones/': 'Ver integraciones',
+  '/casos/grupo-garden/': 'Leer el caso Grupo Garden',
+};
+const ctaLabel = ctaLabels[ctaPath] ?? cat.serviceLabel;
+---
+
+<Layout
+  title={seoTitle}
+  description={data.description}
+  ogImage={ogImage}
+  ogImageAlt={data.imageAlt ?? data.title}
+  ogType="article"
+  publishedTime={isoDate(data.publishedAt)}
+  modifiedTime={data.updatedAt ? isoDate(data.updatedAt) : undefined}
+  jsonLd={schemas}
+>
+  <header class="page-hero post-hero">
+    <div class="wrap post-wrap">
+      <Breadcrumbs items={crumbs} />
+      <p class="kicker"><a href={categoryPath(data.category)}>{cat.name}</a></p>
+      <h1>{data.title}</h1>
+      <p class="lead post-summary">{data.summary}</p>
+      <p class="post-byline small muted">
+        Por <a href={authorPath(author.id)} rel="author">{author.name}</a>
+        <span aria-hidden="true"> · </span>
+        <time datetime={isoDate(data.publishedAt)}>{formatDate(data.publishedAt)}</time>
+        <span aria-hidden="true"> · </span>
+        {minutes} min de lectura
+      </p>
+      {data.updatedAt && (
+        <p class="small muted">Actualizado el <time datetime={isoDate(data.updatedAt)}>{formatDate(data.updatedAt)}</time></p>
+      )}
+    </div>
+  </header>
+
+  <div class="sec post-sec">
+    <div class="wrap post-wrap">
+      {data.image && (
+        <figure class="post-figure">
+          <Image
+            src={data.image}
+            alt={data.imageAlt ?? data.title}
+            widths={[640, 960, 1344]}
+            sizes="(min-width: 800px) 760px, 100vw"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </figure>
+      )}
+
+      {data.keyTakeaways?.length && (
+        <section class="post-tk" aria-labelledby="tk-h">
+          <h2 id="tk-h">Lo que importa</h2>
+          <ul class="check-list">
+            {data.keyTakeaways.map((t) => <li>{t}</li>)}
+          </ul>
+        </section>
+      )}
+
+      {toc.length > 2 && (
+        <nav class="post-toc" aria-label="Índice del artículo">
+          <p class="kicker">En esta guía</p>
+          <ol>
+            {toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+          </ol>
+        </nav>
+      )}
+
+      <article class="prose post-prose">
+        <Content />
+      </article>
+
+      {data.faq?.length && (
+        <section class="prose post-faq" aria-labelledby="faq-h">
+          <h2 id="faq-h">Preguntas frecuentes</h2>
+          {data.faq.map((item) => (
+            <Fragment>
+              <h3>{item.q}</h3>
+              <p>{item.a}</p>
+            </Fragment>
+          ))}
+        </section>
+      )}
+
+      <AuthorCard id={author.id} />
+
+      <aside class="post-cta" aria-label="Siguiente paso">
+        <p class="post-cta-title">Esto lo hacemos todos los días en concesionarias.</p>
+        <p>Si quieres verlo aplicado a tus leads, el primer paso es una demo de 30 minutos.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href={BOOKING_ANCHOR} data-cta="blog-post">{CTA_DEMO_LABEL} <Icon name="arrow" /></a>
+          <a class="btn btn-ghost" href={ctaPath} data-cta="blog-post-service">{ctaLabel}</a>
+        </div>
+      </aside>
+
+      <div class="post-topics">
+        <p class="kicker">Todos los temas</p>
+        <CategoryNav used={used} active={data.category} />
+      </div>
+    </div>
+  </div>
+
+  {related.length > 0 && (
+    <section class="sec sec-alt" aria-labelledby="rel-h">
+      <div class="wrap">
+        <h2 id="rel-h">Sigue leyendo</h2>
+        <div class="grid grid-3">
+          {related.map((p) => <BlogCard post={p} headingLevel="h3" />)}
+        </div>
+      </div>
+    </section>
+  )}
+</Layout>
+
+<style>
+  .post-wrap {
+    max-width: 820px;
+  }
+  .post-hero h1 {
+    max-width: none;
+  }
+  .post-hero .kicker a {
+    color: var(--violet-text);
+    text-decoration: none;
+  }
+  .post-summary {
+    color: var(--text);
+  }
+  .post-byline a {
+    color: var(--text-2);
+  }
+  .post-sec {
+    padding-top: 32px;
+  }
+  .post-figure {
+    margin: 0 0 32px;
+  }
+  .post-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-soft);
+  }
+  .post-tk,
+  .post-toc {
+    padding: 22px 24px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    margin-bottom: 24px;
+  }
+  .post-tk h2 {
+    font-size: 1.2rem;
+  }
+  .post-tk .check-list li:last-child {
+    margin-bottom: 0;
+  }
+  .post-toc ol {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  .post-toc li {
+    margin-bottom: 6px;
+  }
+  .post-prose {
+    max-width: none;
+  }
+  .post-prose :global(h2) {
+    scroll-margin-top: calc(var(--nav-h) + 16px);
+  }
+  .post-faq {
+    max-width: none;
+    margin: 40px 0;
+  }
+  .post-cta {
+    margin: 32px 0;
+    padding: 28px;
+    border-radius: var(--radius-lg);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+  }
+  .post-cta-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .post-cta p {
+    color: var(--text-2);
+  }
+  .post-topics .kicker {
+    margin-bottom: 10px;
+  }
+</style>

@@ -1,0 +1,21 @@
+---
+/** Rastro visible. El schema BreadcrumbList lo arma cada página con la MISMA
+    lista (breadcrumbListSchema en src/lib/seo.ts), así no divergen. */
+import type { BreadcrumbItem } from '../lib/seo';
+interface Props {
+  items: BreadcrumbItem[];
+}
+const { items } = Astro.props;
+---
+
+<nav class="crumbs" aria-label="Ruta de navegación">
+  <ol>
+    {items.map((item, i) =>
+      i === items.length - 1 ? (
+        <li><span aria-current="page">{item.name}</span></li>
+      ) : (
+        <li><a href={item.path}>{item.name}</a></li>
+      )
+    )}
+  </ol>
+</nav>

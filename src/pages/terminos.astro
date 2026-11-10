@@ -1,0 +1,115 @@
+---
+/**
+ * /terminos/ · Términos de uso de concesionaria.ai.
+ *
+ * Adaptados de los Términos y Condiciones de hyppo.io (misma identidad legal,
+ * misma ley aplicable). Cubren el uso del sitio, la calculadora y las cifras
+ * publicadas; la contratación del producto se rige por la propuesta firmada y,
+ * en lo no previsto, por los Términos de Hyppo (link abajo).
+ */
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { breadcrumbListSchema, type BreadcrumbItem } from '../lib/seo';
+import { PRIVACY_CONTACT } from '../lib/site';
+
+const title = 'Términos de uso · ConcesionarIA';
+const description =
+  'Términos de uso de concesionaria.ai: condiciones del sitio, la calculadora de ROI y las cifras publicadas, y cómo se contrata ConcesionarIA, producto de Hyppo.';
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Términos', path: '/terminos/' },
+];
+const mail = `mailto:${PRIVACY_CONTACT}`;
+---
+
+<Layout title={title} description={description} jsonLd={[breadcrumbListSchema(crumbs)]}>
+  <section class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Términos de uso</h1>
+      <p class="muted">Última actualización: 10 de noviembre de 2026</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="prose">
+        <h2>1. Quiénes somos y aceptación</h2>
+        <p>
+          concesionaria.ai es el sitio de ConcesionarIA, un producto del grupo GoHyppo (Hyppo), integrado por GoHyppo
+          LLC y Voxtur Ltd. Al usar este sitio aceptas estos términos. Si los usas en nombre de una empresa, declaras
+          tener facultades para obligarla. El tratamiento de datos personales se rige por nuestra
+          <a href="/privacidad/">Política de privacidad</a>.
+        </p>
+
+        <h2>2. El contenido del sitio</h2>
+        <p>
+          El contenido del sitio, del blog y de los casos publicados tiene finalidad informativa. Lo revisamos con
+          cuidado, pero puede contener errores o quedar desactualizado, y puede cambiar sin aviso.
+        </p>
+
+        <h2>3. Cifras, casos y resultados publicados</h2>
+        <p>
+          Las cifras que mostramos provienen de casos de clientes publicados, en particular el caso de Grupo Garden,
+          y describen los resultados de ese cliente en su contexto. Ninguna cifra, porcentaje o plazo publicado en el
+          sitio constituye una garantía, una declaración contractual ni un compromiso de resultado para otra
+          concesionaria. Lo mismo vale para las demostraciones y los agentes de prueba.
+        </p>
+
+        <h2>4. Calculadora de ROI</h2>
+        <p>
+          La calculadora hace una estimación con los valores que ingresas y con un escenario de mejora que eliges tú.
+          El resultado es ilustrativo, no es una propuesta comercial ni una proyección garantizada, y no reemplaza tu
+          propio análisis.
+        </p>
+
+        <h2>5. Contratación de ConcesionarIA</h2>
+        <p>
+          ConcesionarIA se contrata mediante una propuesta u orden de servicio. Ese documento firmado define el alcance,
+          el precio, el plazo y las condiciones, y prevalece sobre cualquier información del sitio. En lo que no
+          prevea, aplican los <a href="https://hyppo.io/terms-and-conditions/">Términos y Condiciones de Hyppo</a>.
+        </p>
+
+        <h2>6. Uso aceptable</h2>
+        <p>
+          No puedes usar el sitio para fines ilícitos, intentar acceder sin autorización a nuestros sistemas, interferir
+          con su funcionamiento ni extraer su contenido de forma automatizada con fines distintos de la indexación por
+          buscadores.
+        </p>
+
+        <h2>7. Propiedad intelectual y marcas</h2>
+        <p>
+          ConcesionarIA, su logo y el contenido del sitio pertenecen al grupo GoHyppo. Las marcas y logos de terceros
+          que aparecen en el sitio, como los de Grupo Garden y las marcas automotrices que operan con el sistema,
+          pertenecen a sus titulares y se muestran solo para identificar a esos clientes y marcas.
+        </p>
+
+        <h2>8. Servicios de terceros</h2>
+        <p>
+          El sitio enlaza e integra servicios de terceros, como WhatsApp, el calendario de GoHighLevel y hyppo.io. Su
+          uso se rige por las condiciones de cada proveedor. Los agentes de WhatsApp de la página de demo pertenecen a
+          la operación de cada marca.
+        </p>
+
+        <h2>9. Limitación de responsabilidad</h2>
+        <p>
+          En la máxima medida permitida por la ley, no respondemos por daños indirectos, lucro cesante ni pérdida de
+          datos derivados del uso del sitio, de sus herramientas gratuitas o de la imposibilidad de usarlos. Esta
+          limitación no aplica al dolo ni a la responsabilidad que la ley declare inexcluible.
+        </p>
+
+        <h2>10. Ley aplicable</h2>
+        <p>
+          Estos términos se rigen por las leyes del Estado de Florida, Estados Unidos de América, igual que los
+          Términos y Condiciones de Hyppo, sin perjuicio de los derechos que la ley de tu país no permita renunciar.
+        </p>
+
+        <h2>11. Cambios y contacto</h2>
+        <p>
+          Podemos actualizar estos términos y publicaremos la versión vigente en esta página, con su fecha. Para
+          cualquier consulta, escríbenos a <a href={mail}>{PRIVACY_CONTACT}</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>

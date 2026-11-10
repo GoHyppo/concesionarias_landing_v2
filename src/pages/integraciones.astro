@@ -1,0 +1,216 @@
+---
+/**
+ * /integraciones/ · head term: "integración de CRM y ERP para concesionarias".
+ * La lista sale de src/lib/integrations.ts (solo lo que está en la documentación
+ * de producto o en el caso público).
+ */
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { breadcrumbListSchema, faqPageSchema, type BreadcrumbItem, type FaqItem } from '../lib/seo';
+import { publishedGroups } from '../lib/integrations';
+
+const title = 'Integraciones con CRM, ERP y portales · ConcesionarIA';
+const description =
+  'ConcesionarIA se integra con SAP, Dynamics, Pilot, tu DMS, HubSpot, Salesforce, Mercado Libre Autos y Meta Ads para seguir cada lead hasta la venta.';
+
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Integraciones', path: '/integraciones/' },
+];
+
+const groups = publishedGroups();
+
+const faq: FaqItem[] = [
+  {
+    q: '¿Necesito cambiar de CRM para usar ConcesionarIA?',
+    a: 'No. ConcesionarIA trabaja con el CRM y el ERP que ya usa la concesionaria. El agente atiende y califica en WhatsApp, y los datos de cada lead viajan al sistema donde trabaja tu equipo, con la conversación como contexto.',
+  },
+  {
+    q: '¿Cómo se une un lead de WhatsApp con una venta del ERP?',
+    a: 'Cada cliente tiene un solo perfil. El sistema lo reconoce entre canales y sistemas por el teléfono, el número de documento o el email, y así la factura del ERP queda unida al lead original y a la campaña que lo trajo.',
+  },
+  {
+    q: '¿Qué pasa si mi sistema no está en la lista?',
+    a: 'Si tu DMS o ERP tiene una API o permite exportar datos, se puede integrar. En el diagnóstico confirmamos qué datos se leen, cuáles se escriben y con qué frecuencia, antes de comprometer un alcance.',
+  },
+];
+
+const schemas = [breadcrumbListSchema(crumbs), faqPageSchema(faq)];
+---
+
+<Layout title={title} description={description} jsonLd={schemas}>
+  <section class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <p class="kicker">Integraciones</p>
+      <h1>Integraciones con tu CRM, tu ERP y los portales que ya usas</h1>
+      <p class="lead">
+        ConcesionarIA no te pide cambiar de sistema. Se conecta con lo que tu concesionaria ya usa para que cada lead
+        quede registrado desde el primer mensaje y cada venta se pueda atribuir a la campaña que la trajo.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="sistemas">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Sistemas</p>
+        <h2 id="sistemas">Con qué se conecta</h2>
+      </div>
+      <div class="groups">
+        {groups.map((g) => (
+          <div class="card group" id={g.id}>
+            <h3>{g.title}</h3>
+            <p>{g.text}</p>
+            <ul class="chips">
+              {g.items.map((i) => (
+                <li class="chip">
+                  {i.name}
+                  {i.note && <span class="chip-note">· {i.note}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <p class="note small muted">
+        <Icon name="alert" /> La profundidad de cada integración depende de la API de cada sistema. En el diagnóstico
+        confirmamos qué datos se leen, cuáles se escriben y con qué frecuencia.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" aria-labelledby="como-conecta">
+    <div class="wrap two-col">
+      <div>
+        <p class="kicker">Cómo se conecta</p>
+        <h2 id="como-conecta">Una sola identidad por cliente, en todos los sistemas</h2>
+        <p class="lead">
+          El problema de una concesionaria no es la falta de datos: es que cada sistema tiene una parte y ninguno se
+          habla con el otro.
+        </p>
+      </div>
+      <div>
+        <ol class="how">
+          <li>
+            <h3>Cada mensaje es un evento</h3>
+            <p>El agente registra modelo de interés, forma de pago, etapa y origen del lead en un perfil único.</p>
+          </li>
+          <li>
+            <h3>El perfil se une entre sistemas</h3>
+            <p>WhatsApp, formularios, CRM y ERP se cruzan por teléfono, documento o email. Una persona es una sola ficha.</p>
+          </li>
+          <li>
+            <h3>La venta vuelve al lead</h3>
+            <p>Cuando el ERP registra la factura, la venta se une al lead y a la campaña de origen. Ahí aparece el retorno real de la pauta.</p>
+          </li>
+        </ol>
+        <p>
+          Así funciona en <a href="/casos/grupo-garden/">el caso de Grupo Garden</a>, con SAP para la facturación y
+          Dynamics 365 para las carpetas de crédito. Para ver el flujo completo, revisa <a href="/producto/">cómo funciona el producto</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-label="Preguntas frecuentes sobre integraciones">
+    <div class="wrap">
+      <div class="faq">
+        <h2>Preguntas sobre integraciones</h2>
+        <div class="faq-list">
+          {faq.map((f) => (
+            <div class="card">
+              <h3>{f.q}</h3>
+              <p>{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt">
+    <div class="wrap">
+      <CtaBand
+        placement="integraciones-cta"
+        title="Revisemos tu stack en la demo"
+        text="Dinos qué CRM, ERP y portales usas y te mostramos qué se conecta y cómo queda el circuito hasta la venta."
+      />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .groups {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 800px) {
+    .groups {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .group .chips {
+    margin-top: 14px;
+  }
+  .chip-note {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .note {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-top: 24px;
+    max-width: 80ch;
+  }
+  .two-col {
+    display: grid;
+    gap: 32px;
+  }
+  @media (min-width: 960px) {
+    .two-col {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .how {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    counter-reset: how;
+  }
+  .how li {
+    position: relative;
+    padding-left: 48px;
+    margin-bottom: 20px;
+    counter-increment: how;
+  }
+  .how li::before {
+    content: counter(how, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+    color: var(--violet-text);
+    font-size: 1.2rem;
+  }
+  .how h3 {
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+  }
+  .how p {
+    color: var(--text-2);
+    margin: 0;
+  }
+  .faq-list {
+    display: grid;
+    gap: 14px;
+  }
+  @media (min-width: 900px) {
+    .faq-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

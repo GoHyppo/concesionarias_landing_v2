@@ -1,0 +1,162 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { PRICING_PUBLISHED, HYPPO_URL, whatsappHref, WHATSAPP_DISPLAY, BOOKING_ANCHOR } from '../lib/site';
+import { getCategory } from '../lib/categories';
+import { getUsedCategories } from '../lib/blog';
+
+// Solo los temas que tienen posts: un hub vacío no existe como página.
+const used = await getUsedCategories();
+
+const cols = [
+  {
+    title: 'Producto',
+    links: [
+      { label: 'Cómo funciona', href: '/producto/' },
+      { label: 'Integraciones', href: '/integraciones/' },
+      { label: 'Demo en vivo', href: '/demo/' },
+      { label: 'Calculadora de ROI', href: '/calculadora-roi/' },
+      ...(PRICING_PUBLISHED ? [{ label: 'Precios', href: '/precios/' }] : []),
+    ],
+  },
+  {
+    title: 'Concesionarias',
+    links: [
+      { label: 'Para concesionarias', href: '/para-concesionarias/' },
+      { label: 'Caso Grupo Garden', href: '/casos/grupo-garden/' },
+      { label: 'Agenda una demo', href: BOOKING_ANCHOR },
+    ],
+  },
+  {
+    title: 'Blog',
+    links: [
+      { label: 'Todas las guías', href: '/blog/' },
+      ...used.map((id) => ({ label: getCategory(id).name, href: `/blog/tema/${id}/` })),
+    ],
+  },
+];
+const year = 2026;
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" aria-label="ConcesionarIA, inicio" class="footer-logo"><Logo /></a>
+        <p>
+          IA para concesionarias de autos: un agente que responde, califica y sigue cada lead por WhatsApp, con
+          los datos y dashboards para gestionar la venta.
+        </p>
+        <a class="btn btn-wa footer-wa" href={whatsappHref()} data-wa="footer" target="_blank" rel="noopener">
+          <Icon name="message" /> WhatsApp {WHATSAPP_DISPLAY}
+        </a>
+      </div>
+      <div class="footer-cols">
+        {cols.map((col) => (
+          <div>
+            <p class="footer-title">{col.title}</p>
+            <ul>
+              {col.links.map((l) => (
+                <li><a href={l.href}>{l.label}</a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>
+        © {year} ConcesionarIA es un producto de <a href={HYPPO_URL}>Hyppo</a>.
+      </p>
+      <ul>
+        <li><a href="/privacidad/">Privacidad</a></li>
+        <li><a href="/terminos/">Términos</a></li>
+        <li><a href="/blog/rss.xml">RSS</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #030208;
+    border-top: 1px solid var(--border-soft);
+    padding: 64px 0 28px;
+    color: var(--text-2);
+  }
+  .footer-top {
+    display: grid;
+    gap: 40px;
+  }
+  @media (min-width: 900px) {
+    .footer-top {
+      grid-template-columns: 1.1fr 2fr;
+    }
+  }
+  .footer-logo {
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  .footer-brand p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 40ch;
+  }
+  .footer-wa {
+    min-height: 44px;
+    font-size: 0.92rem;
+  }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+  @media (min-width: 700px) {
+    .footer-cols {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .footer-title {
+    color: var(--white);
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer-cols li {
+    margin-bottom: 8px;
+  }
+  .footer a:not(.btn) {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+  .footer a:not(.btn):hover {
+    color: var(--white);
+  }
+  .footer-bottom {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+  .footer-bottom p {
+    margin: 0;
+  }
+  .footer-bottom ul {
+    display: flex;
+    gap: 18px;
+  }
+</style>

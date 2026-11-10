@@ -1,0 +1,352 @@
+---
+/**
+ * /calculadora-roi/ · herramienta gratuita. Head term: "calculadora de ROI para
+ * concesionarias".
+ *
+ * Porta la calculadora del sitio v2 con dos cambios de fondo:
+ *  1. La mejora en la tasa de cierre NO viene fijada por nosotros (el v2 asumía
+ *     +25% sin fuente). Es un escenario que elige la persona, y la página lo dice.
+ *  2. La inversión mensual es un dato de entrada, no un plan sugerido: mientras
+ *     PRICING_PUBLISHED sea false no se muestran precios.
+ *
+ * El HTML renderiza un ejemplo completo con los valores por defecto (calculado en
+ * el build con las mismas fórmulas), así la página tiene contenido sin JS. El
+ * script solo recalcula con lo que ingresa el usuario y emite `roi_calculated`.
+ */
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import FaqSection from '../components/FaqSection.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { breadcrumbListSchema, faqPageSchema, type BreadcrumbItem, type FaqItem } from '../lib/seo';
+
+const title = 'Calculadora de ROI para concesionarias · ConcesionarIA';
+const description =
+  'Calcula cuántos autos más necesitas vender para que una inversión en IA se pague, con tus leads, tu tasa de cierre y tu ganancia por auto. Gratis y sin registro.';
+
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Calculadora de ROI', path: '/calculadora-roi/' },
+];
+
+// Valores de ejemplo. No son benchmarks ni precios: son un punto de partida
+// para que la página muestre un cálculo completo sin JavaScript.
+const EX = { leads: 1000, rate: 2, profit: 1800, invest: 2000, uplift: 10 };
+
+function calc(v: typeof EX) {
+  const current = (v.leads * v.rate) / 100;
+  const improved = current * (1 + v.uplift / 100);
+  const extraCars = improved - current;
+  const extraProfit = extraCars * v.profit;
+  const net = extraProfit - v.invest;
+  const roi = v.invest > 0 ? net / v.invest : 0;
+  const breakEvenCars = v.profit > 0 ? Math.ceil(v.invest / v.profit) : 0;
+  const breakEvenUplift = current > 0 ? (breakEvenCars / current) * 100 : 0;
+  return { current, improved, extraCars, extraProfit, net, roi, breakEvenCars, breakEvenUplift };
+}
+const r = calc(EX);
+const nf = (n: number, d = 0) => n.toLocaleString('es-AR', { minimumFractionDigits: d, maximumFractionDigits: d });
+const usd = (n: number) => `${n < 0 ? '-' : ''}USD ${nf(Math.abs(Math.round(n)))}`;
+
+const scenarios = [5, 10, 20].map((u) => ({ u, ...calc({ ...EX, uplift: u }) }));
+
+const faq: FaqItem[] = [
+  {
+    q: '¿Cómo se calcula el ROI de una inversión en una concesionaria?',
+    a: 'Se calcula la ganancia bruta adicional que genera la inversión, se le resta lo que cuesta y se divide por ese costo. En una concesionaria, la ganancia adicional sale de los autos extra que se venden: leads por mes, por la tasa de cierre, por la mejora en esa tasa, por la ganancia bruta promedio de cada auto.',
+  },
+  {
+    q: '¿Qué mejora en la tasa de cierre debería usar?',
+    a: 'La que puedas defender con tus propios datos. Lo más prudente es mirar el punto de equilibrio: cuántos autos extra por mes hacen falta para cubrir la inversión. Si ese número es bajo frente a tus ventas actuales, la decisión es más fácil que si depende de una mejora grande.',
+  },
+  {
+    q: '¿La calculadora usa resultados de clientes de ConcesionarIA?',
+    a: 'No. Todos los valores son los que ingresas tú, y los que aparecen al cargar la página son solo un ejemplo. Los resultados publicados de un cliente real están en el caso de Grupo Garden, y no se usan en este cálculo.',
+  },
+];
+
+const schemas = [breadcrumbListSchema(crumbs), faqPageSchema(faq)];
+---
+
+<Layout title={title} description={description} jsonLd={schemas}>
+  <section class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <p class="kicker">Herramienta gratuita</p>
+      <h1>Calculadora de ROI para concesionarias</h1>
+      <p class="lead">
+        ¿Cuántos autos más necesitas vender por mes para que una inversión en IA se pague? Carga tus leads, tu tasa
+        de cierre y tu ganancia por auto, y elige un escenario de mejora. El cálculo es tuyo: no guardamos ni enviamos
+        los datos que ingresas.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="calc-h">
+    <div class="wrap calc-grid">
+      <form class="card calc" id="roi-form" novalidate>
+        <h2 id="calc-h">Tus datos</h2>
+        <label>
+          <span>Leads por mes</span>
+          <input type="number" name="leads" min="1" step="1" inputmode="numeric" value={EX.leads} required />
+        </label>
+        <label>
+          <span>Tasa de cierre actual (%)</span>
+          <input type="number" name="rate" min="0.1" max="100" step="0.1" inputmode="decimal" value={EX.rate} required />
+        </label>
+        <label>
+          <span>Ganancia bruta promedio por auto (USD)</span>
+          <input type="number" name="profit" min="1" step="50" inputmode="numeric" value={EX.profit} required />
+        </label>
+        <label>
+          <span>Inversión mensual a evaluar (USD)</span>
+          <input type="number" name="invest" min="0" step="50" inputmode="numeric" value={EX.invest} required />
+        </label>
+        <label>
+          <span>Escenario de mejora en la tasa de cierre (%)</span>
+          <input type="number" name="uplift" min="0" max="200" step="1" inputmode="numeric" value={EX.uplift} required />
+          <small class="muted">Un supuesto tuyo, no una promesa. Mira el punto de equilibrio para decidir.</small>
+        </label>
+        <button class="btn btn-primary" type="submit">Calcular</button>
+      </form>
+
+      <div class="card results" aria-live="polite">
+        <h2>Resultado</h2>
+        <p class="small muted" id="roi-note">Ejemplo con los valores precargados. Cambia los datos y presiona Calcular.</p>
+        <dl class="res">
+          <div><dt>Ventas actuales por mes</dt><dd data-out="current">{nf(r.current, 1)} autos</dd></div>
+          <div><dt>Ventas con la mejora</dt><dd data-out="improved">{nf(r.improved, 1)} autos</dd></div>
+          <div><dt>Autos adicionales por mes</dt><dd data-out="extraCars">{nf(r.extraCars, 1)} autos</dd></div>
+          <div><dt>Ganancia bruta adicional</dt><dd data-out="extraProfit">{usd(r.extraProfit)}</dd></div>
+          <div><dt>Resultado neto (ganancia adicional menos inversión)</dt><dd data-out="net">{usd(r.net)}</dd></div>
+          <div class="hero-out"><dt>ROI mensual</dt><dd data-out="roi">{nf(r.roi, 2)}x</dd></div>
+        </dl>
+        <div class="breakeven">
+          <p class="kicker">Punto de equilibrio</p>
+          <p>
+            Necesitas <strong data-out="breakEvenCars">{r.breakEvenCars}</strong> autos adicionales por mes para cubrir la
+            inversión, una mejora de <strong data-out="breakEvenUplift">{nf(r.breakEvenUplift, 1)}%</strong> sobre tus
+            ventas actuales.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" aria-labelledby="metodo">
+    <div class="wrap">
+      <div class="prose">
+        <h2 id="metodo">Cómo calcula esta herramienta</h2>
+        <p>
+          El cálculo es deliberadamente simple: mira solo la ganancia bruta de los autos adicionales. No incluye
+          financiación, posventa, usados en parte de pago ni el costo de la pauta, porque esos números cambian mucho
+          entre concesionarias.
+        </p>
+        <ol>
+          <li><strong>Ventas actuales</strong> = leads por mes × tasa de cierre.</li>
+          <li><strong>Ventas con la mejora</strong> = ventas actuales × (1 + escenario de mejora).</li>
+          <li><strong>Ganancia bruta adicional</strong> = autos adicionales × ganancia bruta por auto.</li>
+          <li><strong>Resultado neto</strong> = ganancia bruta adicional − inversión mensual.</li>
+          <li><strong>ROI mensual</strong> = resultado neto ÷ inversión mensual.</li>
+          <li><strong>Punto de equilibrio</strong> = inversión ÷ ganancia por auto, redondeado hacia arriba.</li>
+        </ol>
+        <h3>Supuestos y límites</h3>
+        <ul>
+          <li>La mejora en la tasa de cierre es un escenario que eliges tú. No es un resultado prometido ni un promedio de clientes.</li>
+          <li>La ganancia por auto debe ser bruta y promedio de tu mezcla real de modelos.</li>
+          <li>La inversión mensual es la que quieras evaluar: una herramienta, un equipo o una combinación.</li>
+          <li>Los valores precargados son un ejemplo para que la página muestre un cálculo completo.</li>
+        </ul>
+        <h3>El mismo ejemplo con tres escenarios</h3>
+        <p>
+          Con {nf(EX.leads)} leads por mes, una tasa de cierre de {nf(EX.rate)}%, una ganancia bruta de USD {nf(EX.profit)} por
+          auto y una inversión de USD {nf(EX.invest)} por mes:
+        </p>
+      </div>
+      <div class="table-wrap scen">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Mejora en la tasa de cierre</th>
+              <th scope="col">Autos adicionales</th>
+              <th scope="col">Ganancia adicional</th>
+              <th scope="col">Resultado neto</th>
+            </tr>
+          </thead>
+          <tbody>
+            {scenarios.map((s) => (
+              <tr>
+                <td>{s.u}%</td>
+                <td>{nf(s.extraCars, 1)}</td>
+                <td>{usd(s.extraProfit)}</td>
+                <td>{usd(s.net)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted after">
+        Donde mejor se ve el efecto de responder rápido y hacer seguimiento es en la tasa de cierre. Si quieres
+        entender de dónde sale esa mejora, lee la guía sobre <a href="/blog/tiempo-de-respuesta-a-leads/">tiempo de respuesta a leads</a>
+        y la de <a href="/blog/que-campana-vende-autos/">cómo saber qué campaña vende autos</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <FaqSection items={faq} />
+    </div>
+  </section>
+
+  <section class="sec sec-alt">
+    <div class="wrap">
+      <CtaBand
+        placement="calculadora-cta"
+        title="Revisemos este cálculo con tus datos reales"
+        text="En la demo miramos tu volumen de leads, tus tiempos de respuesta y dónde se pierden las ventas, y armamos el número con datos y no con supuestos."
+      />
+    </div>
+  </section>
+</Layout>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('roi-form');
+    if (!form) return;
+    var nf = function (n, d) {
+      return Number(n).toLocaleString('es-AR', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+    };
+    var usd = function (n) {
+      return (n < 0 ? '-' : '') + 'USD ' + nf(Math.abs(Math.round(n)));
+    };
+    var num = function (name) {
+      var v = parseFloat(String(form.elements[name].value).replace(',', '.'));
+      return isFinite(v) && v >= 0 ? v : 0;
+    };
+    var set = function (key, text) {
+      var el = document.querySelector('[data-out="' + key + '"]');
+      if (el) el.textContent = text;
+    };
+    function run(fromSubmit) {
+      var v = { leads: num('leads'), rate: num('rate'), profit: num('profit'), invest: num('invest'), uplift: num('uplift') };
+      var current = (v.leads * v.rate) / 100;
+      var improved = current * (1 + v.uplift / 100);
+      var extraCars = improved - current;
+      var extraProfit = extraCars * v.profit;
+      var net = extraProfit - v.invest;
+      var roi = v.invest > 0 ? net / v.invest : 0;
+      var beCars = v.profit > 0 ? Math.ceil(v.invest / v.profit) : 0;
+      var beUplift = current > 0 ? (beCars / current) * 100 : 0;
+      set('current', nf(current, 1) + ' autos');
+      set('improved', nf(improved, 1) + ' autos');
+      set('extraCars', nf(extraCars, 1) + ' autos');
+      set('extraProfit', usd(extraProfit));
+      set('net', usd(net));
+      set('roi', nf(roi, 2) + 'x');
+      set('breakEvenCars', String(beCars));
+      set('breakEvenUplift', nf(beUplift, 1) + '%');
+      var note = document.getElementById('roi-note');
+      if (note) note.textContent = 'Calculado con tus datos.';
+      if (fromSubmit && window.ciaTrack) {
+        // Solo marca el uso: los valores que ingresa la persona no salen del
+        // navegador (la página y la política de privacidad lo prometen).
+        window.ciaTrack('roi_calculated', { page_path: location.pathname });
+      }
+    }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      run(true);
+    });
+    form.addEventListener('input', function () {
+      run(false);
+    });
+  })();
+</script>
+
+<style>
+  .calc-grid {
+    display: grid;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .calc-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .calc label {
+    display: block;
+    margin-bottom: 16px;
+  }
+  .calc label span {
+    display: block;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .calc input {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font);
+    font-size: 1.05rem;
+  }
+  .calc input:focus {
+    border-color: var(--violet-text);
+    outline: none;
+  }
+  .calc small {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.85rem;
+  }
+  .calc .btn {
+    width: 100%;
+  }
+  .res {
+    margin: 0;
+  }
+  .res div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .res dt {
+    color: var(--text-2);
+  }
+  .res dd {
+    margin: 0;
+    color: var(--white);
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .res .hero-out dd {
+    font-size: 1.8rem;
+    color: var(--violet-text);
+  }
+  .breakeven {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: var(--radius);
+    background: var(--surface-2);
+  }
+  .breakeven p:last-child {
+    margin: 0;
+    color: var(--text-2);
+  }
+  .scen {
+    max-width: 760px;
+    margin-top: 8px;
+  }
+  .after {
+    margin-top: 24px;
+    max-width: 80ch;
+  }
+</style>

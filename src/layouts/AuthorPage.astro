@@ -1,0 +1,93 @@
+---
+/** Página de autor (/autores/<id>/): la URL canónica de la entidad Person. */
+import Layout from './Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import BlogCard from '../components/BlogCard.astro';
+import { getAuthor, authorPath, type AuthorId } from '../lib/authors';
+import { BLOG_BASE, postPath, type Post } from '../lib/blog';
+import { breadcrumbListSchema, personSchema, type BreadcrumbItem } from '../lib/seo';
+
+interface Props {
+  id: AuthorId;
+  posts: Post[];
+}
+const { id, posts } = Astro.props;
+const a = getAuthor(id);
+const path = authorPath(id);
+const title = `${a.name}, ${a.role} · ConcesionarIA`;
+const description = a.short;
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Blog', path: BLOG_BASE },
+  { name: a.name, path },
+];
+const schemas = [
+  personSchema({
+    author: {
+      name: a.name,
+      path,
+      jobTitle: a.role,
+      description: a.long,
+      sameAs: a.linkedin ? [a.linkedin] : undefined,
+      image: a.image,
+    },
+    posts: posts.map((p) => ({ name: p.data.title, path: postPath(p.slug) })),
+  }),
+  breadcrumbListSchema(crumbs),
+];
+---
+
+<Layout title={title} description={description} jsonLd={schemas}>
+  <section class="page-hero">
+    <div class="wrap author">
+      {a.image && <img src={a.image} alt={`Foto de ${a.name}`} width="160" height="160" />}
+      <div>
+        <Breadcrumbs items={crumbs} />
+        <p class="kicker">Autor</p>
+        <h1>{a.name}</h1>
+        <p class="lead">{a.role}</p>
+        <p class="bio">{a.long}</p>
+        <ul class="chips">
+          {a.expertise.map((e) => <li class="chip">{e}</li>)}
+        </ul>
+        {a.linkedin && <p class="small li"><a href={a.linkedin} rel="me noopener" target="_blank">Perfil de LinkedIn</a></p>}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="posts-h">
+    <div class="wrap">
+      <h2 id="posts-h">Artículos de {a.name}</h2>
+      <div class="grid grid-3">
+        {posts.map((p) => <BlogCard post={p} headingLevel="h3" />)}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .author {
+    display: grid;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (min-width: 800px) {
+    .author {
+      grid-template-columns: 160px 1fr;
+    }
+  }
+  .author img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border);
+  }
+  .bio {
+    color: var(--text-2);
+    max-width: 65ch;
+  }
+  .li {
+    margin-top: 16px;
+  }
+</style>

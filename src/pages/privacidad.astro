@@ -1,0 +1,164 @@
+---
+/**
+ * /privacidad/ · Política de privacidad de concesionaria.ai.
+ *
+ * Adaptada de la política de hyppo.io (hyppo_landing/src/pages/privacy.astro):
+ * misma identidad legal (grupo GoHyppo: GoHyppo LLC y Voxtur Ltd, tal como
+ * figuran en hyppo.io/privacy/), mismo contacto y mismos criterios. Cubre lo
+ * propio de este sitio (agenda de GoHighLevel, WhatsApp, GTM, Customer.io) y
+ * remite a la política completa para la lista de subencargados del producto.
+ * Si cambia la política de hyppo.io, revisar esta.
+ */
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { breadcrumbListSchema, type BreadcrumbItem } from '../lib/seo';
+import { PRIVACY_CONTACT, GTM_ID } from '../lib/site';
+
+const title = 'Política de privacidad · ConcesionarIA';
+const description =
+  'Cómo ConcesionarIA, producto del grupo GoHyppo, recopila, usa y protege los datos de quienes visitan concesionaria.ai, agendan una demo o nos escriben.';
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Privacidad', path: '/privacidad/' },
+];
+const mail = `mailto:${PRIVACY_CONTACT}`;
+---
+
+<Layout title={title} description={description} jsonLd={[breadcrumbListSchema(crumbs)]}>
+  <section class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Política de privacidad</h1>
+      <p class="muted">Última actualización: 10 de noviembre de 2026</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="prose">
+        <p>
+          Esta política explica cómo tratamos la información personal de quienes visitan concesionaria.ai, agendan una
+          demo, nos escriben o contratan ConcesionarIA. ConcesionarIA es un producto del grupo GoHyppo (Hyppo), que
+          integran:
+        </p>
+        <ul>
+          <li><strong>GoHyppo LLC</strong>, sociedad constituida en el Estado de Florida, Estados Unidos, con domicilio principal en el condado de Miami-Dade.</li>
+          <li><strong>Voxtur Ltd</strong>, sociedad constituida en San Cristóbal y Nieves, con número de registro 0014565 y domicilio en Suite 5, Horsford's Business Centre, Long Point Road, Charlestown, Nieves KN0801.</li>
+        </ul>
+        <p>
+          En esta política, "nosotros" se refiere a ambas sociedades, que aplican las mismas prácticas y comparten un
+          único punto de contacto: <a href={mail}>{PRIVACY_CONTACT}</a>. El responsable del tratamiento es la sociedad
+          que figure en el contrato, la orden de servicio o la factura correspondiente. La política general del grupo,
+          con la lista completa de proveedores, está en <a href="https://hyppo.io/privacy/">hyppo.io/privacy</a>.
+        </p>
+
+        <h2>1. Qué datos recopilamos en este sitio</h2>
+        <h3>Cuando agendas una demo</h3>
+        <p>
+          El calendario de la página de demo es un widget de GoHighLevel alojado en crm.hyppo.io. Al reservar, nos das
+          tu nombre, email, teléfono, el nombre de tu concesionaria y las respuestas que completes en el formulario, más
+          la fecha y el horario elegidos. Esos datos van directamente a nuestro CRM comercial.
+        </p>
+        <h3>Cuando nos escribes por WhatsApp</h3>
+        <p>
+          Recibimos tu número, el nombre de tu perfil y el contenido de los mensajes. WhatsApp es un servicio de Meta
+          Platforms y se rige además por sus propias políticas.
+        </p>
+        <h3>Cuando usas la calculadora de ROI</h3>
+        <p>
+          El cálculo se hace en tu navegador. No guardamos ni enviamos los valores que ingresas: solo registramos que
+          se usó la calculadora.
+        </p>
+        <h3>Datos de navegación</h3>
+        <p>
+          Dirección IP, tipo de navegador y dispositivo, páginas visitadas, página de origen, fecha y hora, y los
+          eventos de la visita (por ejemplo, un clic en el botón de WhatsApp o la apertura del calendario).
+        </p>
+
+        <h2>2. Cookies y tecnologías similares</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Qué es</th><th scope="col">Para qué</th><th scope="col">Duración</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Google Tag Manager ({GTM_ID})</td><td>Cargar y administrar nuestras etiquetas de medición</td><td>Según la etiqueta que cargue</td></tr>
+              <tr><td>Customer.io (cdp.customer.io)</td><td>Medir visitas y eventos del sitio en nuestra plataforma de datos de clientes</td><td>Hasta 1 año</td></tr>
+              <tr><td>Agenda de GoHighLevel (crm.hyppo.io)</td><td>Mostrar el calendario de demos y recordar los datos que ingresaste en él</td><td>Fijada por el proveedor</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Puedes bloquear o borrar las cookies desde la configuración de tu navegador. Las cookies de medición las
+          usamos por interés legítimo en medir y mejorar el sitio; si estás en una jurisdicción que exige consentimiento
+          previo y quieres oponerte, escríbenos a <a href={mail}>{PRIVACY_CONTACT}</a>.
+        </p>
+
+        <h2>3. Para qué usamos los datos</h2>
+        <ul>
+          <li>Responder tu consulta, agendar y hacer la demo, y enviarte una propuesta.</li>
+          <li>Medir el uso del sitio y mejorar su contenido.</li>
+          <li>Enviarte información comercial relacionada con ConcesionarIA, con opción de baja en cada envío.</li>
+          <li>Cumplir obligaciones legales y defender nuestros derechos.</li>
+        </ul>
+        <p>No vendemos datos personales ni los cedemos a terceros para su propia publicidad.</p>
+
+        <h2>4. Datos que tratamos por cuenta de una concesionaria</h2>
+        <p>
+          Cuando una concesionaria contrata ConcesionarIA, tratamos por su cuenta los datos de las personas que le
+          escriben: contacto, contenido de las conversaciones, interés de compra y la información que la concesionaria
+          conecte desde su CRM o su ERP. En ese caso la concesionaria es la responsable del tratamiento y nosotros
+          actuamos como encargados, siguiendo sus instrucciones. Si escribiste a una concesionaria y quieres acceder a
+          tus datos o pedir que se borren, dirige tu pedido a esa concesionaria; si nos llega a nosotros, se lo
+          derivamos.
+        </p>
+        <p>
+          El producto usa modelos de lenguaje de terceros para responder, clasificar y resumir conversaciones. Las
+          clasificaciones que genera son insumos para el equipo de la concesionaria, que decide.
+        </p>
+
+        <h2>5. Con quién compartimos los datos</h2>
+        <p>
+          Con proveedores que tratan datos por nuestra cuenta para prestar el servicio, entre ellos HighLevel
+          (GoHighLevel, CRM y agenda), Customer.io (plataforma de datos de clientes), Google (Tag Manager, Cloud y
+          BigQuery) y Meta (WhatsApp). La lista completa y vigente, con dónde trata cada uno los datos, está en la
+          sección de proveedores de <a href="https://hyppo.io/privacy/">la política del grupo</a>. También podemos
+          compartir datos cuando la ley lo exige o en una operación societaria, con las mismas protecciones.
+        </p>
+
+        <h2>6. Dónde se tratan y cuánto tiempo se guardan</h2>
+        <p>
+          Nuestros proveedores operan principalmente en Estados Unidos y en la Unión Europea, así que tus datos pueden
+          tratarse fuera de tu país. Guardamos las consultas comerciales y los leads hasta 24 meses desde el último
+          contacto, salvo que se conviertan en una relación contractual, y los registros técnicos hasta 12 meses.
+        </p>
+
+        <h2>7. Cómo protegemos los datos</h2>
+        <p>
+          Aplicamos medidas técnicas y organizativas razonables: cifrado en tránsito, control de accesos según el
+          mínimo privilegio, registro de accesos y revisión de los proveedores que incorporamos. Ningún sistema es
+          completamente seguro; si ocurre un incidente que afecte tus datos, lo notificaremos cuando la ley lo exija.
+        </p>
+
+        <h2>8. Tus derechos</h2>
+        <p>
+          Puedes pedir acceso a tus datos, su rectificación, su supresión, oponerte a su uso para marketing, limitar su
+          tratamiento y pedir su portabilidad, según la ley que te resulte aplicable. En Argentina, la Ley 25.326 de
+          Protección de los Datos Personales te reconoce esos derechos y puedes reclamar ante la Agencia de Acceso a la
+          Información Pública. Para ejercerlos, escríbenos a <a href={mail}>{PRIVACY_CONTACT}</a>: respondemos dentro
+          de un mes y podemos pedirte información para verificar tu identidad.
+        </p>
+        <p>El sitio y el producto están dirigidos a empresas y no a menores de 18 años.</p>
+
+        <h2>9. Cambios a esta política</h2>
+        <p>Publicaremos cualquier cambio en esta página, con su fecha de actualización.</p>
+
+        <h2>10. Contacto</h2>
+        <p>
+          Para cualquier consulta sobre privacidad, escríbenos a <a href={mail}>{PRIVACY_CONTACT}</a> con el asunto
+          "Privacidad de datos". Las condiciones de uso del sitio están en los <a href="/terminos/">Términos</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>

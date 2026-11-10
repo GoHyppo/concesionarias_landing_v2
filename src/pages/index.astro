@@ -1,0 +1,400 @@
+---
+/**
+ * Home. Head term: "IA para concesionarias" (un head term por URL; el mapa
+ * completo está en docs/SEO_PLAYBOOK.md).
+ */
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import GardenProof from '../components/GardenProof.astro';
+import BrandLogos from '../components/BrandLogos.astro';
+import FaqSection from '../components/FaqSection.astro';
+import BookDemo from '../components/BookDemo.astro';
+import { BOOKING_ANCHOR, CTA_DEMO_LABEL, PRICING_PUBLISHED, whatsappHref } from '../lib/site';
+import { faqPageSchema, type FaqItem } from '../lib/seo';
+import { getPosts, postPath } from '../lib/blog';
+import { getCategory } from '../lib/categories';
+
+const title = 'IA para concesionarias de autos · ConcesionarIA';
+const description =
+  'ConcesionarIA es la IA para concesionarias que responde cada lead por WhatsApp en segundos, lo califica, hace el seguimiento y te muestra qué campaña vende autos.';
+
+const pains = [
+  {
+    icon: 'clock',
+    title: 'Leads que se enfrían esperando',
+    text: 'Alguien pregunta por un modelo un sábado a la noche y recibe respuesta el lunes. Para entonces ya habló con otra concesionaria.',
+  },
+  {
+    icon: 'inbox',
+    title: 'WhatsApp en el teléfono de cada vendedor',
+    text: 'Las conversaciones viven en celulares personales. Si el vendedor se va, se va con la cartera y con el historial.',
+  },
+  {
+    icon: 'filter',
+    title: 'Vendedores filtrando en vez de vender',
+    text: 'El equipo pasa horas contestando lo mismo a curiosos y llega tarde al cliente que sí quería comprar.',
+  },
+  {
+    icon: 'refresh',
+    title: 'Seguimiento que depende de la memoria',
+    text: 'Nadie vuelve a escribirle al que dijo "lo pienso y te aviso". Las oportunidades mueren sin que nadie lo note.',
+  },
+  {
+    icon: 'database',
+    title: 'Datos repartidos en islas',
+    text: 'Meta, Google, los portales, el CRM y el ERP no se hablan. No sabes qué auto miró cada cliente ni en qué etapa está.',
+  },
+  {
+    icon: 'chart',
+    title: 'Pauta que optimiza por clics',
+    text: 'Sabes cuántos leads trae cada campaña, pero no cuántos autos vendió. Sin ese dato, la inversión se decide a ciegas.',
+  },
+] as const;
+
+const layers = [
+  {
+    n: '01',
+    icon: 'message',
+    title: 'Conversación',
+    text: 'Un agente de IA atiende por WhatsApp en segundos, las 24 horas. Califica, entrega catálogo y financiación, agenda el test drive y le pasa la conversación al vendedor en el mismo hilo.',
+  },
+  {
+    n: '02',
+    icon: 'database',
+    title: 'Datos y automatización',
+    text: 'Cada mensaje se convierte en un dato. Un score separa al curioso del comprador, los seguimientos se disparan por comportamiento y un supervisor reasigna el lead que nadie respondió.',
+  },
+  {
+    n: '03',
+    icon: 'chart',
+    title: 'Gestión',
+    text: 'Dashboards con el embudo completo, el ranking de vendedores y la atribución de cada venta a la campaña que la originó. Del clic a la factura.',
+  },
+] as const;
+
+const steps = [
+  { title: 'Diagnóstico', text: 'Revisamos tus canales, tu CRM, tu ERP y dónde se pierden los leads hoy.' },
+  { title: 'Configuración', text: 'Cargamos catálogo, financiación y criterios de calificación de tu concesionaria.' },
+  { title: 'Integración', text: 'Conectamos WhatsApp, la pauta, el CRM y el ERP para cerrar el circuito hasta la venta.' },
+  { title: 'Optimización', text: 'Medimos cada etapa del embudo y ajustamos los flujos con datos reales.' },
+];
+
+const faq: FaqItem[] = [
+  {
+    q: '¿Qué es ConcesionarIA?',
+    a: 'Es un sistema de IA para concesionarias de autos. Un agente atiende cada consulta por WhatsApp en segundos, califica la intención de compra, agenda test drives y hace el seguimiento. Una capa de datos ordena cada lead y cada venta, y un dashboard le muestra al gerente el embudo completo, del clic a la factura. Es un producto de Hyppo.',
+  },
+  {
+    q: '¿Reemplaza a mis vendedores?',
+    a: 'No. El agente hace el trabajo repetitivo: responder, calificar, agendar y recordar. El vendedor recibe la conversación con el contexto del lead y se dedica a cerrar. Además, un supervisor detecta los leads que quedaron sin respuesta y los reasigna a otro vendedor.',
+  },
+  {
+    q: '¿Funciona con mi CRM y mi ERP?',
+    a: 'Se integra con los sistemas que ya usa la concesionaria, como SAP, Microsoft Dynamics, Pilot, HubSpot, Salesforce o un DMS propio. La profundidad de cada integración depende de la API de cada sistema, y la revisamos en la demo.',
+  },
+  {
+    q: '¿Cuánto cuesta ConcesionarIA?',
+    a: PRICING_PUBLISHED
+      ? 'Hay tres planes según el volumen de conversaciones y la cantidad de vendedores. Los precios están publicados en la página de precios.'
+      : 'Depende del volumen de conversaciones, la cantidad de vendedores y las integraciones que necesites. Después de la demo te enviamos una propuesta con el alcance definido.',
+  },
+  {
+    q: '¿Qué pasa con los leads que ya tengo?',
+    a: 'Los leads sin actividad se agrupan por motivo, por ejemplo cotizó y no compró o hizo un test drive y no cerró, para reactivarlos con campañas por WhatsApp o email. El umbral de inactividad se configura por concesionaria.',
+  },
+  {
+    q: '¿Dónde funciona hoy?',
+    a: 'El caso publicado es Grupo Garden, el mayor retailer de vehículos de Paraguay, con diez marcas operando sobre el sistema. ConcesionarIA está pensado para concesionarias de habla hispana en Latinoamérica.',
+  },
+];
+
+const latest = (await getPosts()).slice(0, 3);
+---
+
+<Layout title={title} description={description} isHome jsonLd={faqPageSchema(faq)}>
+  <!-- Links viejos del sitio anterior (HashRouter): #/producto → /producto/, etc. -->
+  <script is:inline slot="head" define:vars={{ PRICING_PUBLISHED }}>
+    (function () {
+      var map = {
+        '#/producto': '/producto/',
+        '#/concesionarias': '/para-concesionarias/',
+        '#/precios': PRICING_PUBLISHED ? '/precios/' : '/para-concesionarias/',
+        '#/recursos': '/calculadora-roi/',
+        '#/blog': '/blog/',
+      };
+      var h = location.hash.replace(/\/$/, '');
+      if (map[h]) location.replace(map[h]);
+    })();
+  </script>
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="kicker">IA para concesionarias de autos</p>
+        <h1>IA para concesionarias que responde, califica y sigue cada lead por WhatsApp</h1>
+        <p class="lead">
+          ConcesionarIA atiende cada consulta en segundos, detecta quién está listo para comprar, agenda el test drive
+          y hace el seguimiento hasta la venta. Tu equipo recibe leads con contexto y tú ves el embudo completo, del
+          clic a la factura.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href={BOOKING_ANCHOR} data-cta="home-hero">{CTA_DEMO_LABEL} <Icon name="arrow" /></a>
+          <a class="btn btn-ghost" href="/demo/" data-cta="home-hero-demo"><Icon name="play" /> Probar el agente</a>
+        </div>
+        <p class="hero-note small muted">
+          En producción en Grupo Garden, Paraguay: 10 marcas en 7 meses.
+          <a href="/casos/grupo-garden/">Ver el caso</a>
+        </p>
+      </div>
+      <figure class="hero-media">
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="/media/demo/agente-whatsapp-poster.webp"
+          width="480"
+          height="854"
+          aria-label="Ejemplo de una conversación de WhatsApp atendida por el agente de IA"
+        >
+          <source src="/media/demo/agente-whatsapp-concesionaria.webm" type="video/webm" />
+        </video>
+        <figcaption class="small muted">Una consulta por WhatsApp respondida por el agente.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="dolor">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">El problema</p>
+        <h2 id="dolor">Dónde se pierden las ventas de una concesionaria</h2>
+        <p class="lead">
+          No en la pauta. Entre el primer mensaje y la visita al salón, en lugares que casi nadie mide.
+        </p>
+      </div>
+      <div class="grid grid-3">
+        {pains.map((p) => (
+          <div class="card">
+            <span class="card-icon"><Icon name={p.icon} /></span>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" aria-labelledby="como">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Cómo funciona</p>
+        <h2 id="como">Tres capas que convierten WhatsApp en un proceso de venta</h2>
+        <p class="lead">
+          Conversación, datos y gestión trabajando como un solo sistema, conectado al CRM y al ERP que ya usas.
+        </p>
+      </div>
+      <div class="grid grid-3">
+        {layers.map((l) => (
+          <div class="card layer">
+            <div class="layer-top">
+              <span class="card-icon"><Icon name={l.icon} /></span>
+              <span class="layer-n" aria-hidden="true">{l.n}</span>
+            </div>
+            <h3>{l.title}</h3>
+            <p>{l.text}</p>
+          </div>
+        ))}
+      </div>
+      <p class="sec-more">
+        <a href="/producto/">Ver el software para concesionarias en detalle</a> ·
+        <a href="/integraciones/">Ver integraciones</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="sec" aria-label="Prueba">
+    <div class="wrap">
+      <GardenProof />
+      <div class="brands-wrap"><BrandLogos /></div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" aria-labelledby="implementacion">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Implementación</p>
+        <h2 id="implementacion">Cómo se pone en marcha</h2>
+        <p class="lead">El equipo de Hyppo hace la implementación con tu equipo, en cuatro etapas.</p>
+      </div>
+      <ol class="steps">
+        {steps.map((s, i) => (
+          <li class="card">
+            <span class="step-n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="para-quien">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Para quién es</p>
+        <h2 id="para-quien">Para concesionarias 0km, usados y grupos automotrices</h2>
+      </div>
+      <div class="grid grid-3">
+        <a class="card card-link" href="/para-concesionarias/#oficiales">
+          <span class="card-icon"><Icon name="car" /></span>
+          <h3>Concesionarios oficiales 0km</h3>
+          <p>Leads de Meta, Google y portales calificados con IA entrenada en tu catálogo, y cada venta atribuida a su campaña.</p>
+        </a>
+        <a class="card card-link" href="/para-concesionarias/#usados">
+          <span class="card-icon"><Icon name="key" /></span>
+          <h3>Usados y multimarca</h3>
+          <p>Mucho volumen, stock que cambia todos los días y varias fuentes de leads en un mismo flujo, atendido a toda hora.</p>
+        </a>
+        <a class="card card-link" href="/para-concesionarias/#grupos">
+          <span class="card-icon"><Icon name="building" /></span>
+          <h3>Grupos automotrices</h3>
+          <p>Varias marcas y sucursales, cada una con sus datos, y una vista unificada para la dirección del grupo.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" aria-label="Preguntas frecuentes">
+    <div class="wrap">
+      <FaqSection items={faq} />
+    </div>
+  </section>
+
+  {latest.length > 0 && (
+    <section class="sec" aria-labelledby="guias">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="kicker">Blog</p>
+          <h2 id="guias">Guías para vender más autos</h2>
+        </div>
+        <div class="grid grid-3">
+          {latest.map((p) => (
+            <a class="card card-link" href={postPath(p.slug)}>
+              <span class="kicker">{getCategory(p.data.category).name}</span>
+              <h3>{p.data.title}</h3>
+              <p>{p.data.description}</p>
+            </a>
+          ))}
+        </div>
+        <p class="sec-more">
+          <a href="/blog/">Ver todas las guías</a> ·
+          <a href="/calculadora-roi/">Calcular el retorno para tu concesionaria</a> ·
+          <a href={whatsappHref()} data-wa="home-guias" target="_blank" rel="noopener">Escribirnos por WhatsApp</a>
+        </p>
+      </div>
+    </section>
+  )}
+
+  <BookDemo />
+</Layout>
+
+<style>
+  .hero {
+    padding: calc(var(--nav-h) + 40px) 0 clamp(48px, 8vw, 88px);
+    background:
+      radial-gradient(55% 70% at 10% 0%, rgba(109, 46, 255, 0.22), transparent 70%),
+      var(--bg);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .hero-grid {
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .hero-grid {
+      grid-template-columns: 1.35fr 0.65fr;
+    }
+  }
+  .hero h1 {
+    max-width: 20ch;
+  }
+  .hero .lead {
+    margin-bottom: 28px;
+  }
+  .hero-note {
+    margin-top: 18px;
+  }
+  .hero-media {
+    margin: 0 auto;
+    max-width: 300px;
+    width: 100%;
+  }
+  .hero-media video {
+    display: block;
+    width: 100%;
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .hero-media figcaption {
+    text-align: center;
+    margin-top: 10px;
+  }
+  .layer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .layer-n {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #7a6fc0;
+    line-height: 1;
+  }
+  .sec-more {
+    margin-top: 28px;
+    color: var(--muted);
+  }
+  .brands-wrap {
+    margin-top: 40px;
+  }
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 720px) {
+    .steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .steps {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .step-n {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--violet-text);
+    margin-bottom: 8px;
+  }
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease;
+  }
+  .card-link:hover {
+    border-color: var(--violet);
+    color: inherit;
+  }
+  .card-link .kicker {
+    margin-bottom: 8px;
+  }
+</style>

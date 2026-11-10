@@ -1,11 +1,15 @@
+# dependencias y build
 node_modules/
-client/node_modules/
-server/node_modules/
-client/dist/
+dist/
+.astro/
+
+# entorno local
 .env
+.env.*
+!.env.example
 .DS_Store
 .claude/
-.env
+.vite/
 **/__pycache__/
 **/*.pyc
-.vite
+.venv/

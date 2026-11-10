@@ -1,0 +1,174 @@
+---
+/**
+ * Navegación principal. El menú mobile es un <details>: abre y cierra sin
+ * JavaScript, y sus links son <a href> reales (rastreables).
+ */
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { NAV, BOOKING_ANCHOR, CTA_DEMO_LABEL } from '../lib/site';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="nav" id="top">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <div class="wrap nav-row">
+    <a href="/" class="nav-brand" aria-label="ConcesionarIA, inicio">
+      <Logo />
+    </a>
+
+    <nav class="nav-links" aria-label="Principal">
+      <ul>
+        {NAV.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="btn btn-primary nav-cta" href={BOOKING_ANCHOR} data-cta="nav">{CTA_DEMO_LABEL}</a>
+
+    <details class="nav-mobile">
+      <summary aria-label="Abrir menú">
+        <Icon name="menu" class="nav-open" />
+        <Icon name="close" class="nav-close" />
+      </summary>
+      <div class="nav-panel">
+        <nav aria-label="Principal (mobile)">
+          <ul>
+            {NAV.map((item) => (
+              <li>
+                <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
+              </li>
+            ))}
+            <li><a href="/demo/">Demo en vivo</a></li>
+            <li><a href="/calculadora-roi/">Calculadora de ROI</a></li>
+          </ul>
+        </nav>
+        <a class="btn btn-primary" href={BOOKING_ANCHOR} data-cta="nav-mobile">{CTA_DEMO_LABEL}</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 1000;
+    height: var(--nav-h);
+    background: rgba(5, 4, 10, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .nav-row {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .nav-brand {
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .nav-links {
+    display: none;
+  }
+  .nav-links ul {
+    display: flex;
+    gap: 22px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-links a {
+    color: var(--text-2);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-links a:hover,
+  .nav-links a[aria-current='page'] {
+    color: var(--white);
+    border-bottom-color: var(--violet);
+  }
+  .nav-cta {
+    display: none;
+    min-height: 42px;
+    padding: 9px 18px;
+    font-size: 0.95rem;
+  }
+  .nav-mobile {
+    position: static;
+  }
+  .nav-mobile summary {
+    list-style: none;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--white);
+  }
+  .nav-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+  /* Los íconos vienen de Icon.astro: el scope de este componente no les llega,
+     por eso van con :global(). */
+  .nav-mobile :global(.nav-close) {
+    display: none;
+  }
+  .nav-mobile[open] :global(.nav-close) {
+    display: block;
+  }
+  .nav-mobile[open] :global(.nav-open) {
+    display: none;
+  }
+  .nav-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: var(--nav-h);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 12px var(--gutter) 24px;
+    max-height: calc(100vh - var(--nav-h));
+    overflow-y: auto;
+  }
+  .nav-panel ul {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+  }
+  .nav-panel a:not(.btn) {
+    display: block;
+    padding: 14px 4px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1.05rem;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .nav-panel a[aria-current='page'] {
+    color: var(--violet-text);
+  }
+  .nav-panel .btn {
+    width: 100%;
+  }
+  @media (min-width: 1040px) {
+    .nav-links,
+    .nav-cta {
+      display: flex;
+    }
+    .nav-mobile {
+      display: none;
+    }
+  }
+</style>

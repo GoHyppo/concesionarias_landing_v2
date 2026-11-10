@@ -1,0 +1,7 @@
+---
+import BlogIndex from '../../layouts/BlogIndex.astro';
+import { blogIndexPaths } from '../../lib/blog';
+export const getStaticPaths = blogIndexPaths;
+---
+
+<BlogIndex {...(Astro.props as any)} />

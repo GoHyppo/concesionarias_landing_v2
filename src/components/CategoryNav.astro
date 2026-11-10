@@ -1,0 +1,31 @@
+---
+/** Strip de temas. Solo linkea hubs que existen (categorías con posts). */
+import { getCategory, type CategoryId } from '../lib/categories';
+interface Props {
+  used: readonly CategoryId[];
+  active?: CategoryId;
+}
+const { used, active } = Astro.props;
+---
+
+<nav class="catnav" aria-label="Temas del blog">
+  <ul class="chips">
+    <li><a class="chip" href="/blog/" aria-current={!active ? 'page' : undefined}>Todos</a></li>
+    {used.map((id) => (
+      <li>
+        <a class="chip" href={`/blog/tema/${id}/`} aria-current={active === id ? 'page' : undefined}>{getCategory(id).name}</a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .catnav a {
+    text-decoration: none;
+  }
+  .catnav a[aria-current='page'] {
+    border-color: var(--violet);
+    color: var(--white);
+    background: rgba(109, 46, 255, 0.22);
+  }
+</style>

@@ -1,0 +1,122 @@
+---
+/**
+ * Agenda de demos: widget de calendario de GoHighLevel (crm.hyppo.io), el mismo
+ * de la v1 del sitio. La reserva crea el contacto en el CRM del lado del
+ * servidor, así que el lead no depende de ningún script de analítica.
+ *
+ * Eventos: `book_demo_view` cuando el bloque entra en pantalla (una vez por
+ * página) y `generate_lead` cuando el widget avisa que la persona dejó sus datos
+ * (lo escucha Layout.astro). El link de respaldo es un <a href> real para quien
+ * tenga el iframe bloqueado.
+ */
+import Icon from './Icon.astro';
+import { BOOKING_URL, whatsappHref } from '../lib/site';
+
+interface Props {
+  title?: string;
+  text?: string;
+  /** Nivel del título: h2 en casi todas las páginas. */
+  headingLevel?: 'h2' | 'h3';
+}
+const {
+  title = 'Agenda una demo de 30 minutos',
+  text = 'Elige día y horario. Te mostramos el agente funcionando con casos de tu concesionaria y revisamos juntos cómo se integra con lo que ya usas.',
+  headingLevel = 'h2',
+} = Astro.props;
+const Heading = headingLevel;
+---
+
+<section class="sec book" id="agenda" aria-labelledby="agenda-title" data-book-demo>
+  <div class="wrap book-grid">
+    <div class="book-copy">
+      <p class="kicker">Demo</p>
+      <Heading id="agenda-title">{title}</Heading>
+      <p class="lead">{text}</p>
+      <ul class="check-list">
+        <li>Ves el agente atendiendo una consulta real de punta a punta.</li>
+        <li>Revisamos tus canales, tu CRM y tu ERP para ver qué se integra.</li>
+        <li>Sales con un diagnóstico de dónde se pierden tus leads hoy.</li>
+      </ul>
+      <p class="small muted">
+        ¿Prefieres escribirnos?{' '}
+        <a href={whatsappHref('Hola, quiero agendar una demo de ConcesionarIA.')} data-wa="agenda" target="_blank" rel="noopener">Habla con el equipo por WhatsApp</a>.
+      </p>
+    </div>
+    <div class="book-frame">
+      <iframe
+        src={BOOKING_URL}
+        title="Calendario para agendar una demo de ConcesionarIA"
+        loading="lazy"
+        scrolling="no"
+        id="ghl-booking-concesionaria"></iframe>
+      <p class="book-fallback small">
+        <Icon name="calendar" />
+        <a href={BOOKING_URL} target="_blank" rel="noopener" data-cta="booking-fallback">Abrir el calendario en una pestaña nueva</a>
+      </p>
+    </div>
+  </div>
+  <script src="https://crm.hyppo.io/js/form_embed.js" type="text/javascript" is:inline async></script>
+  <script is:inline>
+    (function () {
+      var el = document.querySelector('[data-book-demo]');
+      if (!el) return;
+      var fire = function () {
+        if (window.ciaTrack) window.ciaTrack('book_demo_view', { page_path: location.pathname }, true);
+      };
+      if (!('IntersectionObserver' in window)) return fire();
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            fire();
+            io.disconnect();
+          }
+        });
+      }, { threshold: 0.25 });
+      io.observe(el);
+    })();
+  </script>
+</section>
+
+<style>
+  .book {
+    background: var(--surface);
+    border-top: 1px solid var(--border-soft);
+  }
+  .book-grid {
+    display: grid;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (min-width: 980px) {
+    .book-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+  }
+  .book-frame {
+    background: #ffffff;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    min-height: 640px;
+  }
+  .book-frame iframe {
+    display: block;
+    width: 100%;
+    min-height: 640px;
+    border: 0;
+    background: #ffffff;
+    color-scheme: light;
+  }
+  .book-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+    padding: 12px 16px;
+    background: var(--surface-2);
+    color: var(--text-2);
+  }
+  .book-fallback a {
+    color: var(--violet-text);
+  }
+</style>

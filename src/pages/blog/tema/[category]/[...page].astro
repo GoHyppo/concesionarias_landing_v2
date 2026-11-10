@@ -1,0 +1,7 @@
+---
+import BlogCategory from '../../../../layouts/BlogCategory.astro';
+import { blogCategoryPaths } from '../../../../lib/blog';
+export const getStaticPaths = blogCategoryPaths;
+---
+
+<BlogCategory {...(Astro.props as any)} />

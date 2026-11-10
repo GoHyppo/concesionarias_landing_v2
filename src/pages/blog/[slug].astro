@@ -1,0 +1,7 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+import { blogPostPaths } from '../../lib/blog';
+export const getStaticPaths = blogPostPaths;
+---
+
+<BlogPost {...(Astro.props as any)} />

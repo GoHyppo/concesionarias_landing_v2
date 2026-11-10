@@ -1,0 +1,28 @@
+---
+import Icon from './Icon.astro';
+import { BOOKING_ANCHOR, CTA_DEMO_LABEL, whatsappHref } from '../lib/site';
+
+interface Props {
+  title?: string;
+  text?: string;
+  placement: string;
+}
+const {
+  title = 'Mira el agente funcionando con tus propios casos',
+  text = 'En 30 minutos te mostramos cómo responde, califica y hace el seguimiento, y qué se integra con tu CRM y tu ERP.',
+  placement,
+} = Astro.props;
+---
+
+<div class="cta-band">
+  <div>
+    <h2>{title}</h2>
+    <p>{text}</p>
+  </div>
+  <div class="btn-row">
+    <a class="btn btn-primary" href={BOOKING_ANCHOR} data-cta={placement}>{CTA_DEMO_LABEL} <Icon name="arrow" /></a>
+    <a class="btn btn-ghost" href={whatsappHref()} data-wa={placement} target="_blank" rel="noopener">
+      <Icon name="message" /> WhatsApp
+    </a>
+  </div>
+</div>

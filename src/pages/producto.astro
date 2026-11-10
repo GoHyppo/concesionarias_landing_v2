@@ -1,0 +1,229 @@
+---
+/**
+ * /producto/ · head term: "software para concesionarias".
+ * Fuente de producto: Hyppo/docs/concesionaria/ (overview + referencia técnica)
+ * y el caso público de Grupo Garden. Sin métricas fuera de las de Garden.
+ */
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import GardenProof from '../components/GardenProof.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { breadcrumbListSchema, softwareApplicationSchema, type BreadcrumbItem } from '../lib/seo';
+import { BOOKING_ANCHOR, CTA_DEMO_LABEL } from '../lib/site';
+
+const title = 'Software para concesionarias con IA · ConcesionarIA';
+const description =
+  'Software para concesionarias en tres capas: agente de IA en WhatsApp con supervisión de respuesta, datos y automatización con Customer.io, y dashboards de gestión.';
+
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Producto', path: '/producto/' },
+];
+
+const layers = [
+  {
+    id: 'conversacion',
+    n: '01',
+    icon: 'message',
+    kicker: 'Capa de conversación',
+    short: 'Conversación',
+    title: 'Un agente de IA que atiende WhatsApp como tu mejor vendedor',
+    text: 'El agente opera sobre la API oficial de WhatsApp Business (GoChat, la plataforma conversacional de Hyppo) y también en el chat de tu sitio web. Responde en segundos, a cualquier hora, y la conversación queda registrada desde el primer mensaje.',
+    points: [
+      'Detecta modelo, versión, presupuesto, forma de pago y urgencia de compra sin que el lead llene un formulario.',
+      'Entrega catálogos, planes de financiación, fichas en PDF y la ubicación del salón dentro de WhatsApp.',
+      'Reconoce intenciones de alto valor: pedido de test drive, consulta de crédito, pregunta de precio.',
+      'La IA califica y el vendedor cierra, en el mismo hilo: el cliente nunca cambia de chat.',
+      'Supervisión de respuesta: si un vendedor no contesta a tiempo, el sistema alerta y reasigna el lead. Los tiempos se configuran por concesionaria.',
+    ],
+  },
+  {
+    id: 'datos',
+    n: '02',
+    icon: 'database',
+    kicker: 'Capa de datos y automatización',
+    short: 'Datos y automatización',
+    title: 'Cada conversación se convierte en un dato que dispara la acción correcta',
+    text: 'Customer.io funciona como la plataforma de datos de clientes (CDP) y el motor de automatización. Guarda el perfil de cada lead, sus eventos y su historial, y decide qué seguimiento corresponde, cuándo y por qué canal.',
+    points: [
+      'Score de calidad del lead: Hot, Warm o Cold según el horizonte de compra, y "Sin respuesta" cuando fue la concesionaria la que no contestó.',
+      'Seguimientos disparados por comportamiento, no por un recordatorio fijo de 24 horas.',
+      'Si el cliente promete una fecha ("te contesto el martes"), el sistema la guarda y escribe ese día.',
+      'Test drive con doble aviso: recordatorios al cliente y alerta al vendedor con todo el contexto antes de la cita.',
+      'Una sola identidad por cliente entre WhatsApp, formularios, QR del salón, CRM y ERP, unida por teléfono, documento o email.',
+      'Continuidad por email cuando el cliente deja de responder por WhatsApp.',
+    ],
+  },
+  {
+    id: 'gestion',
+    n: '03',
+    icon: 'chart',
+    kicker: 'Capa de gestión',
+    short: 'Gestión',
+    title: 'Dashboards para ver el embudo entero, del clic a la factura',
+    text: 'Una aplicación de BI sobre los datos unificados, con filtros por fecha, marca, canal y vendedor que se aplican a todos los tableros, y un asistente de IA que responde en español preguntas sobre lo que estás viendo.',
+    points: [
+      'Embudo de ventas por etapa, con el detalle de dónde cae cada lead.',
+      'Ranking de vendedores con ventas y tiempos de respuesta dentro del horario comercial.',
+      'Atribución de cada venta a la campaña, el canal y el portal que la originó.',
+      'Leads dormidos agrupados por motivo, listos para una campaña de reactivación.',
+      'Inteligencia conversacional: objeciones, intereses y competidores que aparecen en los chats.',
+      'Test drive, cohortes, proyección de ventas y una estrategia priorizada con acciones concretas.',
+    ],
+  },
+] as const;
+
+const flow = [
+  { title: 'Entra el lead', text: 'Desde Meta, Google, un portal, el sitio web o un QR en el salón. Todo cae en el mismo perfil.' },
+  { title: 'Responde y califica', text: 'El agente contesta en segundos, hace las preguntas de calificación y asigna un score.' },
+  { title: 'Deriva según la intención', text: 'El lead caliente va al vendedor con contexto. El tibio entra en un seguimiento más largo. El frío va a reactivación.' },
+  { title: 'Agenda y recuerda', text: 'El test drive queda agendado con recordatorios para el cliente y aviso para el vendedor.' },
+  { title: 'Cierra el circuito', text: 'La venta registrada en el ERP se une al lead original y se atribuye a la campaña que lo trajo.' },
+];
+
+const schemas = [
+  softwareApplicationSchema({ path: '/producto/', description }),
+  breadcrumbListSchema(crumbs),
+];
+---
+
+<Layout title={title} description={description} jsonLd={schemas}>
+  <section class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <p class="kicker">Producto</p>
+      <h1>Software para concesionarias: conversación, datos y gestión en un solo sistema</h1>
+      <p class="lead">
+        ConcesionarIA convierte WhatsApp en un proceso de venta ordenado. Un agente de IA atiende y califica, una
+        capa de datos decide cada seguimiento y un dashboard le muestra a la dirección qué pasa con cada lead.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={BOOKING_ANCHOR} data-cta="producto-hero">{CTA_DEMO_LABEL} <Icon name="arrow" /></a>
+        <a class="btn btn-ghost" href="/demo/" data-cta="producto-hero-demo"><Icon name="play" /> Ver el agente en vivo</a>
+      </div>
+      <nav class="jump" aria-label="Capas del producto">
+        {layers.map((l) => <a href={`#${l.id}`}>{l.n} · {l.short}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  {layers.map((l, i) => (
+    <section class:list={['sec', { 'sec-alt': i % 2 === 1 }]} id={l.id} aria-labelledby={`${l.id}-h`}>
+      <div class="wrap layer-grid">
+        <div>
+          <p class="kicker">{l.n} · {l.kicker}</p>
+          <h2 id={`${l.id}-h`}>{l.title}</h2>
+          <p class="lead">{l.text}</p>
+        </div>
+        <ul class="check-list layer-points">
+          {l.points.map((p) => <li>{p}</li>)}
+        </ul>
+      </div>
+    </section>
+  ))}
+
+  <section class="sec" aria-labelledby="flujo">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Un lead, de punta a punta</p>
+        <h2 id="flujo">Cómo trabaja ConcesionarIA con tu equipo</h2>
+      </div>
+      <ol class="flow">
+        {flow.map((f, i) => (
+          <li class="card">
+            <span class="flow-n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{f.title}</h3>
+            <p>{f.text}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="more">
+        Se conecta con tu CRM, tu ERP y los portales que ya usas: <a href="/integraciones/">ver integraciones</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" aria-label="Resultados en Grupo Garden">
+    <div class="wrap">
+      <GardenProof limit={3} title="En producción en Grupo Garden" />
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <CtaBand placement="producto-cta" />
+      <p class="more">
+        ¿Quieres estimar el retorno antes de hablar? Usa la <a href="/calculadora-roi/">calculadora de ROI para concesionarias</a>.
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+  }
+  .jump a {
+    font-size: 0.9rem;
+    color: var(--text-2);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 14px;
+  }
+  .jump a:hover {
+    color: var(--white);
+    border-color: var(--violet-text);
+  }
+  .page-hero .btn-row {
+    margin-top: 8px;
+  }
+  .layer-grid {
+    display: grid;
+    gap: 32px;
+  }
+  @media (min-width: 960px) {
+    .layer-grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+  .layer-points li {
+    margin-bottom: 14px;
+  }
+  .flow {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+  }
+  @media (min-width: 720px) {
+    .flow {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .flow {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  .flow-n {
+    display: block;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--violet-text);
+    margin-bottom: 6px;
+  }
+  .flow h3 {
+    font-size: 1.05rem;
+  }
+  .more {
+    margin-top: 24px;
+    color: var(--muted);
+  }
+</style>

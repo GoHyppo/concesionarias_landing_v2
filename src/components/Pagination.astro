@@ -1,0 +1,46 @@
+---
+/**
+ * Paginación con <a> reales. Cada página tiene canonical propio, sin noindex y
+ * sin rel=next/prev (mismo criterio que hyppo.io, ver docs/BLOG.md).
+ */
+import { pagePath } from '../lib/blog';
+interface Props {
+  base: string;
+  current: number;
+  total: number;
+}
+const { base, current, total } = Astro.props;
+const pages = Array.from({ length: total }, (_, i) => i + 1);
+---
+
+{total > 1 && (
+  <nav class="pager" aria-label="Paginación">
+    {current > 1 && <a href={pagePath(base, current - 1)}>Anterior</a>}
+    {pages.map((n) =>
+      n === current ? <span aria-current="page">{n}</span> : <a href={pagePath(base, n)}>{n}</a>
+    )}
+    {current < total && <a href={pagePath(base, current + 1)}>Siguiente</a>}
+  </nav>
+)}
+
+<style>
+  .pager {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 32px;
+  }
+  .pager a,
+  .pager span {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--text-2);
+  }
+  .pager [aria-current] {
+    background: var(--violet);
+    color: var(--white);
+    border-color: var(--violet);
+  }
+</style>

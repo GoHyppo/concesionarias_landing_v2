@@ -1,0 +1,190 @@
+---
+/**
+ * /para-concesionarias/ · segmentos y roles (fusiona la página "Concesionarias"
+ * del sitio v2). Head term: "sistema de ventas para concesionarias".
+ * Sin testimonios: los del sitio anterior eran anónimos o no verificables.
+ */
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import GardenProof from '../components/GardenProof.astro';
+import BrandLogos from '../components/BrandLogos.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { breadcrumbListSchema, type BreadcrumbItem } from '../lib/seo';
+
+const title = 'Sistema de ventas para concesionarias y grupos · ConcesionarIA';
+const description =
+  'ConcesionarIA para concesionarios oficiales 0km, usados y multimarca y grupos automotrices: qué resuelve para el dueño, el gerente comercial y marketing.';
+
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Inicio', path: '/' },
+  { name: 'Para concesionarias', path: '/para-concesionarias/' },
+];
+
+const segments = [
+  {
+    id: 'oficiales',
+    icon: 'car',
+    title: 'Concesionarios oficiales 0km',
+    text: 'Una marca, mucha pauta y exigencias de la terminal sobre tiempos de atención. El reto es saber qué campaña vende y no solo cuál trae consultas.',
+    points: [
+      'Agente entrenado en tu catálogo, versiones y planes de financiación.',
+      'Atribución de cada venta a Meta, Google y los portales.',
+      'Test drive agendado desde el chat, con recordatorios.',
+      'Cada conversación registrada, con tiempos de respuesta medidos.',
+    ],
+  },
+  {
+    id: 'usados',
+    icon: 'key',
+    title: 'Usados y multimarca',
+    text: 'Stock que cambia todos los días, muchas consultas por unidad y varias fuentes de leads. Cada mensaje sin respuesta es una venta que se lleva otro.',
+    points: [
+      'Respuesta a toda hora, también de noche y los fines de semana.',
+      'Leads de portales y redes en un mismo flujo.',
+      'Aviso cuando entra una unidad que un cliente anterior estaba buscando.',
+      'Reactivación de la base de clientes que cotizaron y no compraron.',
+    ],
+  },
+  {
+    id: 'grupos',
+    icon: 'building',
+    title: 'Grupos automotrices',
+    text: 'Varias marcas y sucursales bajo una misma dirección. Cada marca necesita sus datos y su estrategia, y el grupo necesita ver todo junto.',
+    points: [
+      'Un espacio de datos por marca, con una vista unificada para el grupo.',
+      'Ranking de vendedores por marca y por sucursal.',
+      'La misma librería de flujos se replica en cada marca nueva.',
+      'Integración con el ERP del grupo, como SAP o Dynamics.',
+    ],
+  },
+] as const;
+
+const roles = [
+  {
+    icon: 'briefcase',
+    title: 'Dueño o gerente general',
+    pain: 'Invierte en pauta todos los meses y no sabe cuántos autos vendió gracias a esa inversión.',
+    gain: 'Ve el retorno por canal y por campaña, con la venta del ERP unida al lead que la originó.',
+  },
+  {
+    icon: 'users',
+    title: 'Gerente comercial',
+    pain: 'No sabe qué hace su equipo con los leads: quién responde, quién tarda y quién deja conversaciones abiertas.',
+    gain: 'Tiene un supervisor que reasigna los leads sin respuesta y un ranking de vendedores con tiempos reales.',
+  },
+  {
+    icon: 'megaphone',
+    title: 'Gerente de marketing',
+    pain: 'Genera leads que ventas califica de malos, sin datos para discutirlo ni para mejorar la pauta.',
+    gain: 'Recibe la calificación de cada lead y la atribución hasta la venta para optimizar con datos.',
+  },
+] as const;
+
+const schemas = [breadcrumbListSchema(crumbs)];
+---
+
+<Layout title={title} description={description} jsonLd={schemas}>
+  <section class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <p class="kicker">Para concesionarias</p>
+      <h1>Un sistema de ventas para cada tipo de concesionaria</h1>
+      <p class="lead">
+        ConcesionarIA no es un chatbot genérico: está armado para vender autos. Combina un agente de IA que califica,
+        un supervisor que cuida los tiempos de respuesta del equipo y la trazabilidad de cada lead hasta la factura.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="segmentos">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Por tipo de concesionaria</p>
+        <h2 id="segmentos">Qué resuelve en cada caso</h2>
+      </div>
+      <div class="grid grid-3">
+        {segments.map((s) => (
+          <article class="card seg" id={s.id}>
+            <span class="card-icon"><Icon name={s.icon} /></span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+            <ul class="check-list">
+              {s.points.map((p) => <li>{p}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" aria-labelledby="roles">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Por rol</p>
+        <h2 id="roles">Quién lo usa dentro de la concesionaria</h2>
+        <p class="lead">La decisión, el presupuesto y el uso diario no siempre están en las mismas manos. Cada rol ve algo distinto.</p>
+      </div>
+      <div class="grid grid-3">
+        {roles.map((r) => (
+          <div class="card">
+            <span class="card-icon"><Icon name={r.icon} /></span>
+            <h3>{r.title}</h3>
+            <p class="role-label">El problema típico</p>
+            <p>{r.pain}</p>
+            <p class="role-label role-gain">Con ConcesionarIA</p>
+            <p>{r.gain}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-label="Caso Grupo Garden">
+    <div class="wrap">
+      <GardenProof title="Un grupo de diez marcas ya opera con el sistema" />
+      <div class="brands-wrap"><BrandLogos /></div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt">
+    <div class="wrap">
+      <CtaBand
+        placement="para-concesionarias-cta"
+        title="Veamos cómo aplica a tu concesionaria"
+        text="En la demo revisamos tu tipo de operación, tus canales y tus sistemas, y te mostramos el agente con casos como los tuyos."
+      />
+      <p class="more">
+        Antes de la demo puedes ver <a href="/producto/">cómo funciona el producto</a> o
+        <a href="/blog/tema/gestion-comercial/">leer guías de gestión comercial</a>.
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .seg {
+    scroll-margin-top: calc(var(--nav-h) + 16px);
+  }
+  .seg .check-list {
+    margin-top: 16px;
+  }
+  .role-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 14px 0 4px;
+  }
+  .role-gain {
+    color: var(--violet-text);
+  }
+  .brands-wrap {
+    margin-top: 40px;
+  }
+  .more {
+    margin-top: 24px;
+    color: var(--muted);
+  }
+</style>
