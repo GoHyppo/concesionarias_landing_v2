@@ -30,7 +30,8 @@
  *  - Sitemap: cada <loc> existe; lastmod solo en el blog.
  *  - Feed RSS 2.0 válido (dc:creator, lastBuildDate de canal en RFC 822, tope).
  *  - Posts huérfanos y slugs válidos.
- *  - robots.txt con Sitemap, CNAME correcto y GTM en todas las páginas.
+ *  - robots.txt con Sitemap, CNAME correcto, y GTM + GA4 (gtag) en todas las páginas.
+ *  - /precios/: un Offer por plan visible, con el mismo abono que la tabla.
  *
  * Si algo falla, se arregla el sitio. Aflojar un chequeo para que pase es apagar
  * la alarma (en particular los de claims y feed).
@@ -41,6 +42,7 @@ import { join, relative } from 'node:path';
 const DIST = 'dist';
 const SITE = 'https://concesionaria.ai';
 const GTM_ID = 'GTM-NSHSFT8S';
+const GA4_ID = 'G-PQD9FKD7M3';
 /** Espejo de RSS_ITEM_LIMIT en src/lib/feed.ts. */
 const RSS_ITEM_LIMIT = 20;
 
@@ -287,8 +289,12 @@ for (const page of pages.values()) {
     if (!r || !routeExists(r)) fail(where, `og:image no existe en el build: ${og}`);
   }
 
-  /* GTM */
+  /* GTM + GA4 */
   if (!html.includes(GTM_ID)) fail(where, `Falta GTM ${GTM_ID}.`);
+  if (!html.includes(`googletagmanager.com/gtag/js?id=${GA4_ID}`)) fail(where, `Falta gtag.js de GA4 ${GA4_ID}.`);
+  if (!new RegExp(`const GA4_ID = "${GA4_ID}"[\\s\\S]*?gtag\\('config', GA4_ID\\)`).test(html)) {
+    fail(where, `GA4 ${GA4_ID} cargado pero sin gtag('config').`);
+  }
 
   /* imágenes con alt */
   for (const tag of html.match(/<img\b[^>]*>/gi) ?? []) {
@@ -383,6 +389,27 @@ for (const page of pages.values()) {
     fail(where, 'El home tiene que emitir Organization y WebSite.');
   }
   if (route === '/producto/' && !types.includes('SoftwareApplication')) fail(where, '/producto/ sin SoftwareApplication.');
+
+  /* Precios: el schema dice exactamente lo que dice la página. */
+  const app = blocks.find((b) => b['@type'] === 'SoftwareApplication');
+  if (app?.offers && route !== '/precios/') fail(where, 'Offers con precio fuera de /precios/ (la página no muestra precios).');
+  if (route === '/precios/') {
+    const cards = (html.match(/data-plan="/g) ?? []).length;
+    const offers = app?.offers ?? [];
+    if (!app) fail(where, '/precios/ sin SoftwareApplication.');
+    if (offers.length !== cards || !cards) fail(where, `Offers (${offers.length}) ≠ planes visibles (${cards}).`);
+    for (const o of offers) {
+      const n = Number(o.price).toLocaleString('es-AR');
+      if (!visible.includes(`USD ${n}`)) fail(where, `El Offer "${o.name}" (USD ${n}) no está visible en la página.`);
+      if (!visible.includes(String(o.name))) fail(where, `El nombre del Offer "${o.name}" no está visible.`);
+      if (o.priceCurrency !== 'USD') fail(where, `Offer "${o.name}" sin priceCurrency USD.`);
+      const spec = o.priceSpecification ?? {};
+      const specPrice = spec.price ?? spec.minPrice;
+      if (Number(specPrice) !== Number(o.price)) fail(where, `Offer "${o.name}": priceSpecification no coincide con price.`);
+      const isFrom = spec.minPrice !== undefined;
+      if (isFrom && !visible.includes(`desde USD ${n}`)) fail(where, `Offer "${o.name}" es "desde" pero la página no lo dice.`);
+    }
+  }
 }
 
 /* ------------------------------------------------------------------ */

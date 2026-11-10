@@ -2,7 +2,7 @@
 /**
  * Layout único del sitio. Todo lo que es SEO técnico de cabecera vive acá:
  * title, description, canonical autorreferencial, OG/Twitter, robots, JSON-LD,
- * feed, GTM y Customer.io.
+ * feed, GA4 (gtag.js), GTM y Customer.io.
  *
  * Sitio solo en español (es-419): no hay hreflang. Si algún día hay otro idioma,
  * el contrato de hyppo.io (alternates por página + x-default) es el modelo.
@@ -10,7 +10,7 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_URL, SITE_NAME, GTM_ID, CIO_WRITE_KEY, GHL_ORIGIN } from '../lib/site';
+import { SITE_URL, SITE_NAME, GTM_ID, GA4_ID, CIO_WRITE_KEY, GHL_ORIGIN } from '../lib/site';
 import { absoluteUrl, organizationSchema, websiteSchema } from '../lib/seo';
 
 interface Props {
@@ -87,6 +87,19 @@ const schemas = [...(isHome ? [organizationSchema(), websiteSchema()] : []), ...
 
     {schemas.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
 
+    <!-- Google Analytics 4 (propiedad 563697477). Directo con gtag.js: el
+         contenedor de GTM no tiene etiqueta de GA4, así que no hay doble conteo.
+         `gtag` va en window porque define:vars envuelve el script en una función. -->
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}></script>
+    <script is:inline define:vars={{ GA4_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () {
+        window.dataLayer.push(arguments);
+      };
+      window.gtag('js', new Date());
+      window.gtag('config', GA4_ID);
+    </script>
+
     <!-- Google Tag Manager -->
     <script is:inline define:vars={{ GTM_ID }}>
       (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -106,19 +119,20 @@ const schemas = [...(isHome ? [organizationSchema(), websiteSchema()] : []), ...
       }}();
     </script>
 
-    <!-- Eventos de conversión. Un solo helper: empuja el evento al dataLayer (GTM)
-         y lo replica en Customer.io si cargó. Ninguno depende del otro. -->
+    <!-- Eventos de conversión. Un solo helper: gtag('event', ...) a GA4 (que también
+         queda en el dataLayer) y la réplica en Customer.io si cargó. Nombres fijos:
+         generate_lead, book_demo_view, whatsapp_click, roi_calculated. -->
     <script is:inline define:vars={{ GHL_ORIGIN }}>
       (function () {
         var sent = {};
         window.ciaTrack = function (event, props, once) {
           if (once && sent[event]) return;
           sent[event] = true;
-          var payload = Object.assign({ event: event }, props || {});
-          (window.dataLayer = window.dataLayer || []).push(payload);
+          var params = props || {};
+          if (typeof window.gtag === 'function') window.gtag('event', event, params);
           try {
             if (window.cioanalytics && typeof window.cioanalytics.track === 'function') {
-              window.cioanalytics.track(event, props || {});
+              window.cioanalytics.track(event, params);
             }
           } catch (e) {}
         };
@@ -134,8 +148,8 @@ const schemas = [...(isHome ? [organizationSchema(), websiteSchema()] : []), ...
         });
         // generate_lead: el widget de agenda de GoHighLevel avisa con un
         // postMessage "set-sticky-contacts" cuando la persona deja sus datos.
-        // Es la señal disponible desde fuera del iframe; confirmarla en el modo
-        // preview de GTM (ver CLAUDE.md).
+        // Es la señal disponible desde fuera del iframe; confirmarla con una
+        // reserva de prueba en GA4 DebugView (ver CLAUDE.md).
         window.addEventListener('message', function (e) {
           if (e.origin !== GHL_ORIGIN) return;
           var d = e.data;

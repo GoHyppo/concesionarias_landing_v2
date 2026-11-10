@@ -1,17 +1,21 @@
 ---
 /**
- * /precios/ · GATED por PRICING_PUBLISHED (src/lib/site.ts).
+ * /precios/ · head term: "precios de ConcesionarIA" / "precio de un software
+ * para concesionarias".
  *
- * Es una ruta dinámica a propósito: con PRICING_PUBLISHED = false,
- * getStaticPaths devuelve cero rutas y la página NO se construye. Así no entra
- * al sitemap, ni a llms.txt, ni queda una URL indexable con precios sin aprobar.
- * Con true, se construye /precios/ con los planes de src/lib/pricing.ts y su
- * SoftwareApplication con los Offer visibles en esta misma página.
+ * Ruta dinámica a propósito: el interruptor es PRICING_PUBLISHED
+ * (src/lib/site.ts). Con false, getStaticPaths devuelve cero rutas y la página
+ * NO se construye (ni sitemap, ni llms.txt, ni links). Hoy está en true.
+ *
+ * Todo lo que muestra sale de src/lib/pricing.ts, que es la tabla de
+ * content.py tal cual. El SoftwareApplication arma un Offer por plan desde el
+ * mismo arreglo, así el schema dice exactamente lo que dice la tabla visible.
  */
 import Layout from '../layouts/Layout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import FaqSection from '../components/FaqSection.astro';
 import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
 import {
   breadcrumbListSchema,
   faqPageSchema,
@@ -19,7 +23,7 @@ import {
   type BreadcrumbItem,
   type FaqItem,
 } from '../lib/seo';
-import { PLANS, EARLY_ADOPTER } from '../lib/pricing';
+import { PLANS, PRICE_ROWS, EARLY_ADOPTER, PRODUCT_PARTS, monthlyLabel } from '../lib/pricing';
 import { PRICING_PUBLISHED, BOOKING_ANCHOR } from '../lib/site';
 
 export function getStaticPaths() {
@@ -28,34 +32,44 @@ export function getStaticPaths() {
 
 const title = 'Precios de ConcesionarIA: planes Gold, Platinum y Enterprise';
 const description =
-  'Precios de ConcesionarIA en USD: planes Gold, Platinum y Enterprise según conversaciones, vendedores e integraciones, con costo de implementación único.';
+  'Precios de ConcesionarIA en USD: Gold 750, Platinum 2.750 y Enterprise desde 5.000 por mes, con conversaciones y vendedores incluidos e implementación única.';
 
 const crumbs: BreadcrumbItem[] = [
   { name: 'Inicio', path: '/' },
   { name: 'Precios', path: '/precios/' },
 ];
 
+const [gold, platinum, enterprise] = PLANS;
 const faq: FaqItem[] = [
   {
-    q: '¿Qué cuenta como una conversación?',
-    a: 'Cada conversación de WhatsApp atendida por el agente con un lead. Cada plan incluye un volumen mensual y las conversaciones adicionales se cobran por unidad, con el precio que figura en el plan.',
+    q: '¿Cuánto cuesta ConcesionarIA por mes?',
+    a: `El abono mensual es de USD ${gold.price} en el plan Gold, USD ${platinum.price} en Platinum y desde USD ${enterprise.price} en Enterprise. A eso se suma una implementación que se paga una sola vez.`,
   },
   {
-    q: '¿Qué incluye la implementación?',
-    a: 'La configuración del agente con tu catálogo y tus criterios de calificación, la conexión de WhatsApp y las integraciones del plan, y la puesta en marcha con tu equipo. Se paga una sola vez.',
+    q: '¿Qué pasa si supero las conversaciones incluidas?',
+    a: `Gold y Platinum incluyen ${gold.conversations} conversaciones y Enterprise ${enterprise.conversations}. Cada conversación adicional cuesta USD ${gold.extraConversation} en Gold, USD ${platinum.extraConversation} en Platinum y USD ${enterprise.extraConversation} en Enterprise.`,
   },
   {
-    q: '¿Puedo cambiar de plan?',
-    a: 'Sí. El plan se ajusta al volumen de conversaciones, la cantidad de vendedores y las integraciones que necesites. Lo revisamos con tu equipo cuando cambia la operación.',
+    q: '¿Puedo sumar vendedores a mi plan?',
+    a: `Sí. Gold incluye ${gold.seats} licencias de vendedor, Platinum ${platinum.seats} y Enterprise ${enterprise.seats}. Cada licencia adicional cuesta USD ${gold.extraSeat} por mes en Gold, USD ${platinum.extraSeat} en Platinum y de USD ${enterprise.extraSeat} en Enterprise.`,
+  },
+  {
+    q: '¿Cuánto cuesta la implementación?',
+    a: `Es un pago único: USD ${gold.setup} en Gold, USD ${platinum.setup} en Platinum y a medida en Enterprise. Las primeras 10 concesionarias de Argentina tienen 50% de descuento en la implementación.`,
   },
 ];
 
 const schemas = [
   breadcrumbListSchema(crumbs),
   softwareApplicationSchema({
-    path: '/precios/',
-    description,
-    offers: PLANS.map((p) => ({ name: `Plan ${p.name}`, price: p.priceValue, description: p.target })),
+    description:
+      'IA para concesionarias de autos: agente de IA en WhatsApp, motor de automatización, dashboard de gestión e integraciones con el CRM y el ERP de la concesionaria.',
+    offers: PLANS.map((p) => ({
+      name: `Plan ${p.name}`,
+      price: p.priceValue,
+      isFrom: p.isFrom,
+      description: `Abono mensual ${monthlyLabel(p)}. Incluye ${p.conversations} conversaciones y ${p.seats} licencias de vendedor. Implementación: ${p.setup === 'A medida' ? 'a medida' : `USD ${p.setup}`}.`,
+    })),
   }),
   faqPageSchema(faq),
 ];
@@ -67,44 +81,94 @@ const schemas = [
       <Breadcrumbs items={crumbs} />
       <p class="kicker">Precios</p>
       <h1>Precios de ConcesionarIA</h1>
-      <p class="lead">Tres planes según el volumen de conversaciones, la cantidad de vendedores y las integraciones. Precios en USD por mes, más una implementación única.</p>
+      <p class="lead">
+        Tres planes con abono mensual en USD. Cambian las conversaciones y las licencias de vendedor incluidas, el
+        precio de lo adicional y la implementación, que se paga una sola vez.
+      </p>
       <p class="early">{EARLY_ADOPTER}</p>
     </div>
   </section>
 
-  <section class="sec">
-    <div class="wrap plans">
-      {PLANS.map((p) => (
-        <article class:list={['card', 'plan', { 'plan-hi': p.highlight }]}>
-          <h2>{p.name}</h2>
-          <p class="muted">{p.subtitle}</p>
-          <p class="price">
-            {p.pricePrefix && <span class="small muted">{p.pricePrefix} </span>}
-            <span class="num">USD {p.price}</span>
-            <span class="small muted"> / mes</span>
-          </p>
-          <dl class="meta">
-            <div><dt>Implementación</dt><dd>{p.setup}</dd></div>
-            <div><dt>Conversaciones incluidas</dt><dd>{p.conversations}</dd></div>
-            <div><dt>Conversación adicional</dt><dd>{p.extraConversation}</dd></div>
-            <div><dt>Vendedores incluidos</dt><dd>{p.seats}</dd></div>
-            <div><dt>Vendedor adicional</dt><dd>{p.extraSeat}</dd></div>
-          </dl>
-          <p>{p.target}</p>
-          <ul class="check-list">
-            {p.features.map((f) => <li>{f}</li>)}
-          </ul>
-          <a class:list={['btn', p.highlight ? 'btn-primary' : 'btn-ghost']} href={BOOKING_ANCHOR} data-cta={`precios-${p.id}`}>
-            Hablar sobre {p.name}
-          </a>
-        </article>
-      ))}
+  <section class="sec" aria-labelledby="planes-h">
+    <div class="wrap">
+      <h2 id="planes-h" class="visually-hidden">Planes</h2>
+      <div class="plans">
+        {PLANS.map((p) => (
+          <article class:list={['card', 'plan', { 'plan-hi': p.highlight }]} data-plan={p.id}>
+            <h3>Plan {p.name}</h3>
+            <p class="price">
+              {p.isFrom && <span class="muted">desde </span>}
+              <span class="num">USD {p.price}</span>
+              <span class="muted"> / mes</span>
+            </p>
+            <dl class="meta">
+              <div><dt>Conversaciones incluidas</dt><dd>{p.conversations}</dd></div>
+              <div><dt>Conversación adicional</dt><dd>USD {p.extraConversation}</dd></div>
+              <div><dt>Licencias de vendedor incluidas</dt><dd>{p.seats}</dd></div>
+              <div><dt>Licencia adicional</dt><dd>USD {p.extraSeat} / mes</dd></div>
+              <div><dt>Implementación, única vez</dt><dd>{p.setup === 'A medida' ? 'A medida' : `USD ${p.setup}`}</dd></div>
+            </dl>
+            <a class:list={['btn', p.highlight ? 'btn-primary' : 'btn-ghost']} href={BOOKING_ANCHOR} data-cta={`precios-${p.id}`}>
+              Hablar sobre {p.name} <Icon name="arrow" />
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" aria-labelledby="tabla-h">
+    <div class="wrap">
+      <h2 id="tabla-h">Tabla de precios</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col"><span class="visually-hidden">Concepto</span></th>
+              {PLANS.map((p) => <th scope="col">{p.name}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {PRICE_ROWS.map((row) => (
+              <tr>
+                <th scope="row">{row.label}</th>
+                {PLANS.map((p) => <td>{row.value(p)}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted note">{EARLY_ADOPTER} Precios en dólares estadounidenses; el alcance y las condiciones finales quedan en la propuesta firmada.</p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="incluye-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">El producto</p>
+        <h2 id="incluye-h">Qué es ConcesionarIA</h2>
+        <p class="lead">
+          Ordena la venta por WhatsApp: un agente de IA atiende al lead en segundos, lo califica, hace el seguimiento y
+          registra cada conversación, y un dashboard le da al dueño visibilidad del embudo, del clic a la factura.
+        </p>
+      </div>
+      <div class="grid grid-4">
+        {PRODUCT_PARTS.map((part) => (
+          <div class="card">
+            <h3>{part.title}</h3>
+            <p>{part.text}</p>
+          </div>
+        ))}
+      </div>
+      <p class="more muted">
+        Más detalle en <a href="/producto/">cómo funciona el producto</a> y en <a href="/integraciones/">integraciones</a>.
+      </p>
     </div>
   </section>
 
   <section class="sec sec-alt">
     <div class="wrap">
-      <FaqSection items={faq} />
+      <FaqSection items={faq} title="Preguntas sobre precios" />
       <p class="muted more">
         ¿Quieres ver si se paga en tu concesionaria? Usa la <a href="/calculadora-roi/">calculadora de ROI</a>.
       </p>
@@ -113,7 +177,11 @@ const schemas = [
 
   <section class="sec">
     <div class="wrap">
-      <CtaBand placement="precios-cta" />
+      <CtaBand
+        placement="precios-cta"
+        title="Elijamos el plan con tus números"
+        text="En la demo revisamos tu volumen de conversaciones, tu equipo de ventas y tus integraciones, y te enviamos la propuesta."
+      />
     </div>
   </section>
 </Layout>
@@ -127,6 +195,14 @@ const schemas = [
     background: var(--orange);
     color: #1a0b00;
     font-weight: 600;
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
   .plans {
     display: grid;
@@ -142,6 +218,9 @@ const schemas = [
     flex-direction: column;
     gap: 6px;
   }
+  .plan h3 {
+    font-size: 1.4rem;
+  }
   .plan-hi {
     border-color: var(--violet);
   }
@@ -149,25 +228,39 @@ const schemas = [
     margin-top: auto;
   }
   .price {
-    margin: 8px 0;
+    margin: 4px 0 12px;
+  }
+  .price .num {
+    font-size: clamp(1.8rem, 2.6vw, 2.3rem);
   }
   .meta {
-    margin: 0 0 12px;
+    margin: 0 0 20px;
   }
   .meta div {
     display: flex;
     justify-content: space-between;
     gap: 12px;
-    padding: 8px 0;
+    padding: 9px 0;
     border-bottom: 1px solid var(--border-soft);
-    font-size: 0.92rem;
+    font-size: 0.95rem;
   }
   .meta dt {
-    color: var(--muted);
+    color: var(--text-2);
   }
   .meta dd {
     margin: 0;
     color: var(--white);
+    font-weight: 600;
+    text-align: right;
+  }
+  th[scope='row'] {
+    background: transparent;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .note {
+    margin-top: 16px;
+    max-width: 80ch;
   }
   .more {
     margin-top: 24px;

@@ -6,8 +6,9 @@
  * Porta la calculadora del sitio v2 con dos cambios de fondo:
  *  1. La mejora en la tasa de cierre NO viene fijada por nosotros (el v2 asumía
  *     +25% sin fuente). Es un escenario que elige la persona, y la página lo dice.
- *  2. La inversión mensual es un dato de entrada, no un plan sugerido: mientras
- *     PRICING_PUBLISHED sea false no se muestran precios.
+ *  2. La inversión mensual es un dato de entrada. Con PRICING_PUBLISHED = true,
+ *     el valor de ejemplo es el abono del plan Gold (sin la implementación) y la
+ *     página lo dice; con false, es un valor neutro sin relación con precios.
  *
  * El HTML renderiza un ejemplo completo con los valores por defecto (calculado en
  * el build con las mismas fórmulas), así la página tiene contenido sin JS. El
@@ -18,6 +19,8 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import FaqSection from '../components/FaqSection.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { breadcrumbListSchema, faqPageSchema, type BreadcrumbItem, type FaqItem } from '../lib/seo';
+import { PRICING_PUBLISHED } from '../lib/site';
+import { PLANS } from '../lib/pricing';
 
 const title = 'Calculadora de ROI para concesionarias · ConcesionarIA';
 const description =
@@ -28,9 +31,12 @@ const crumbs: BreadcrumbItem[] = [
   { name: 'Calculadora de ROI', path: '/calculadora-roi/' },
 ];
 
-// Valores de ejemplo. No son benchmarks ni precios: son un punto de partida
-// para que la página muestre un cálculo completo sin JavaScript.
-const EX = { leads: 1000, rate: 2, profit: 1800, invest: 2000, uplift: 10 };
+// Valores de ejemplo. No son benchmarks: son un punto de partida para que la
+// página muestre un cálculo completo sin JavaScript. La inversión de ejemplo es
+// el abono de Gold cuando los precios están publicados.
+const GOLD = PLANS.find((p) => p.id === 'gold');
+const EXAMPLE_INVEST = PRICING_PUBLISHED && GOLD ? GOLD.priceValue : 2000;
+const EX = { leads: 1000, rate: 2, profit: 1800, invest: EXAMPLE_INVEST, uplift: 10 };
 
 function calc(v: typeof EX) {
   const current = (v.leads * v.rate) / 100;
@@ -153,7 +159,12 @@ const schemas = [breadcrumbListSchema(crumbs), faqPageSchema(faq)];
         <ul>
           <li>La mejora en la tasa de cierre es un escenario que eliges tú. No es un resultado prometido ni un promedio de clientes.</li>
           <li>La ganancia por auto debe ser bruta y promedio de tu mezcla real de modelos.</li>
-          <li>La inversión mensual es la que quieras evaluar: una herramienta, un equipo o una combinación.</li>
+          <li>
+            La inversión mensual es la que quieras evaluar: una herramienta, un equipo o una combinación.
+            {PRICING_PUBLISHED && GOLD && (
+              <Fragment> En el ejemplo es el abono del plan Gold (USD {GOLD.price} por mes), sin la implementación, que se paga una sola vez: ver la <a href="/precios/">tabla de precios</a>.</Fragment>
+            )}
+          </li>
           <li>Los valores precargados son un ejemplo para que la página muestre un cálculo completo.</li>
         </ul>
         <h3>El mismo ejemplo con tres escenarios</h3>

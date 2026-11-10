@@ -12,7 +12,7 @@
 import Layout from '../layouts/Layout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { breadcrumbListSchema, type BreadcrumbItem } from '../lib/seo';
-import { PRIVACY_CONTACT, GTM_ID } from '../lib/site';
+import { PRIVACY_CONTACT, GTM_ID, GA4_ID } from '../lib/site';
 
 const title = 'Política de privacidad · ConcesionarIA';
 const description =
@@ -82,6 +82,7 @@ const mail = `mailto:${PRIVACY_CONTACT}`;
               <tr><th scope="col">Qué es</th><th scope="col">Para qué</th><th scope="col">Duración</th></tr>
             </thead>
             <tbody>
+              <tr><td>Google Analytics 4 ({GA4_ID}; cookies _ga)</td><td>Estadísticas de uso del sitio y medición de conversiones (agendar una demo, abrir WhatsApp, usar la calculadora)</td><td>Hasta 2 años</td></tr>
               <tr><td>Google Tag Manager ({GTM_ID})</td><td>Cargar y administrar nuestras etiquetas de medición</td><td>Según la etiqueta que cargue</td></tr>
               <tr><td>Customer.io (cdp.customer.io)</td><td>Medir visitas y eventos del sitio en nuestra plataforma de datos de clientes</td><td>Hasta 1 año</td></tr>
               <tr><td>Agenda de GoHighLevel (crm.hyppo.io)</td><td>Mostrar el calendario de demos y recordar los datos que ingresaste en él</td><td>Fijada por el proveedor</td></tr>
@@ -120,8 +121,8 @@ const mail = `mailto:${PRIVACY_CONTACT}`;
         <h2>5. Con quién compartimos los datos</h2>
         <p>
           Con proveedores que tratan datos por nuestra cuenta para prestar el servicio, entre ellos HighLevel
-          (GoHighLevel, CRM y agenda), Customer.io (plataforma de datos de clientes), Google (Tag Manager, Cloud y
-          BigQuery) y Meta (WhatsApp). La lista completa y vigente, con dónde trata cada uno los datos, está en la
+          (GoHighLevel, CRM y agenda), Customer.io (plataforma de datos de clientes), Google (Analytics, Tag Manager,
+          Cloud y BigQuery) y Meta (WhatsApp). La lista completa y vigente, con dónde trata cada uno los datos, está en la
           sección de proveedores de <a href="https://hyppo.io/privacy/">la política del grupo</a>. También podemos
           compartir datos cuando la ley lo exige o en una operación societaria, con las mismas protecciones.
         </p>

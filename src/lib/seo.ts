@@ -91,18 +91,24 @@ export function faqPageSchema(items: FaqItem[]) {
   };
 }
 
-export type OfferInput = { name: string; price: number; description: string };
+export type OfferInput = {
+  name: string;
+  /** Abono mensual en USD. Si `isFrom`, es el piso ("desde"). */
+  price: number;
+  isFrom?: boolean;
+  description: string;
+};
 
 /**
- * El producto como SoftwareApplication. Va en /producto/ (y en /precios/ cuando
- * se publiquen los precios, con `offers` visibles en esa misma página). Sin
- * `aggregateRating`: no hay reseñas públicas que lo respalden.
+ * El producto como SoftwareApplication. Una sola entidad (`@id` fijo, `url` =
+ * /producto/) que emiten /producto/ (sin precios) y /precios/ (con un Offer por
+ * plan, armado desde src/lib/pricing.ts: el mismo arreglo que pinta la tabla
+ * visible). Sin `aggregateRating`: no hay reseñas públicas que lo respalden.
+ *
+ * Cada Offer lleva el abono mensual como UnitPriceSpecification con unidad MON.
+ * En Enterprise ("desde USD 5.000") el precio es un mínimo: `minPrice`.
  */
-export function softwareApplicationSchema(opts: {
-  path: string;
-  description: string;
-  offers?: OfferInput[];
-}) {
+export function softwareApplicationSchema(opts: { description: string; offers?: OfferInput[] }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -111,7 +117,7 @@ export function softwareApplicationSchema(opts: {
     applicationCategory: 'BusinessApplication',
     applicationSubCategory: 'CRM y automatización de ventas para concesionarias',
     operatingSystem: 'Web, WhatsApp',
-    url: absoluteUrl(opts.path),
+    url: absoluteUrl('/producto/'),
     description: opts.description,
     inLanguage: 'es-419',
     publisher: { '@id': ORG_ID },
@@ -120,10 +126,17 @@ export function softwareApplicationSchema(opts: {
           offers: opts.offers.map((o) => ({
             '@type': 'Offer',
             name: o.name,
+            description: o.description,
             price: o.price,
             priceCurrency: 'USD',
-            description: o.description,
             url: absoluteUrl('/precios/'),
+            priceSpecification: {
+              '@type': 'UnitPriceSpecification',
+              ...(o.isFrom ? { minPrice: o.price } : { price: o.price }),
+              priceCurrency: 'USD',
+              unitCode: 'MON',
+              referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'MON' },
+            },
           })),
         }
       : {}),

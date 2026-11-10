@@ -1,33 +1,36 @@
 /**
- * Planes de ConcesionarIA. Fuente: Hyppo/claude_tests/business_case_sdr/content.py
- * (tabla "Planes y precios"). Solo se muestran si PRICING_PUBLISHED es true
- * (src/lib/site.ts); mientras tanto este archivo no se importa desde ninguna
- * página construida.
+ * Planes y precios de ConcesionarIA, TAL CUAL la tabla "Planes y precios" de
+ * Hyppo/claude_tests/business_case_sdr/content.py (decisión de Nico,
+ * 2026-11-10: publicar la tabla completa y resolver las contradicciones del
+ * sitio anterior a favor de content.py).
  *
- * Las features por plan siguen el deck comercial (claude_tests/pitches/
- * concesionaria/build_slides.py); el sitio v2 decía otra cosa (por ejemplo, Gold
- * sin supervisor).
+ * Quedan afuera a propósito, porque no están en content.py o lo contradicen:
+ *   - "Solo pagas por leads calificados" (v2): el modelo es abono mensual.
+ *   - "Platinum = 750 base + 500 extra leads" (v2): Platinum es USD 2.750.
+ *   - Listas de features por plan (v2 y el deck no coinciden entre sí).
+ *   - Las "referencias de mercado" de content.py (ganancia por auto, costo de un
+ *     equipo de calificación, costo por lead): son supuestos internos sin fuente
+ *     pública, y la política de claims del sitio no los permite.
  *
- * PENDIENTE DE NICO: la lista dice Gold 750 / Platinum 2.750 / Enterprise desde
- * 5.000, y hay contratos firmados a otro precio. Confirmar precios y features
- * por plan antes de publicar.
+ * Solo se muestran si PRICING_PUBLISHED es true (src/lib/site.ts). El schema
+ * SoftwareApplication de /precios/ arma un Offer por plan desde este mismo
+ * arreglo, así la página y el structured data no pueden divergir (el gate lo
+ * verifica).
  */
 export type Plan = {
   id: 'gold' | 'platinum' | 'enterprise';
   name: string;
-  subtitle: string;
-  /** Abono mensual en USD, como se muestra. */
+  /** Abono mensual en USD, como se muestra (formato es-AR). */
   price: string;
-  /** Precio numérico para el schema Offer (en Enterprise, el piso del "desde"). */
+  /** Abono como número, para el Offer del schema. En Enterprise es el piso. */
   priceValue: number;
-  pricePrefix?: string;
-  setup: string;
+  /** "desde" en Enterprise: el abono es un mínimo. */
+  isFrom?: boolean;
   conversations: string;
   extraConversation: string;
   seats: string;
   extraSeat: string;
-  target: string;
-  features: string[];
+  setup: string;
   highlight?: boolean;
 };
 
@@ -35,63 +38,79 @@ export const PLANS: Plan[] = [
   {
     id: 'gold',
     name: 'Gold',
-    subtitle: 'Para empezar a ordenar WhatsApp',
     price: '750',
     priceValue: 750,
-    setup: 'USD 1.500',
     conversations: '3.000',
-    extraConversation: 'USD 0,25',
+    extraConversation: '0,25',
     seats: '5',
-    extraSeat: 'USD 25 / mes',
-    target: 'Concesionarias con un solo punto de venta y un equipo comercial chico.',
-    features: [
-      'Agente de IA en WhatsApp, las 24 horas',
-      'Supervisor que detecta leads sin respuesta',
-      'Dashboard de gestión incluido',
-      'Integración con planillas y Zapier',
-    ],
+    extraSeat: '25',
+    setup: '1.500',
   },
   {
     id: 'platinum',
     name: 'Platinum',
-    subtitle: 'Para optimizar la conversión',
     price: '2.750',
     priceValue: 2750,
-    setup: 'USD 3.500',
     conversations: '3.000',
-    extraConversation: 'USD 0,20',
+    extraConversation: '0,20',
     seats: '10',
-    extraSeat: 'USD 20 / mes',
-    target: 'Concesionarias grandes o grupos chicos con varios vendedores.',
+    extraSeat: '20',
+    setup: '3.500',
     highlight: true,
-    features: [
-      'Todo lo de Gold',
-      'Supervisor y dashboard avanzados',
-      'Integración con ERP: SAP, Dynamics o tu DMS',
-      'Personalización dedicada',
-    ],
   },
   {
     id: 'enterprise',
     name: 'Enterprise',
-    subtitle: 'Para grupos automotrices',
     price: '5.000',
     priceValue: 5000,
-    pricePrefix: 'desde',
-    setup: 'A medida',
+    isFrom: true,
     conversations: '25.000',
-    extraConversation: 'USD 0,15',
+    extraConversation: '0,15',
     seats: '50',
-    extraSeat: 'USD 10 a 15 / mes',
-    target: 'Grupos con varias marcas o sucursales bajo una misma operación.',
-    features: [
-      'Todo lo de Platinum',
-      'Instancia de IA dedicada',
-      'Dashboard a medida, multimarca',
-      'Equipo dedicado de desarrollo y growth',
-    ],
+    extraSeat: '10 a 15',
+    setup: 'A medida',
   },
 ];
 
+/** Filas de la tabla, en el orden y con los rótulos de content.py. */
+export const PRICE_ROWS: { label: string; value: (p: Plan) => string }[] = [
+  { label: 'Abono mensual (USD)', value: (p) => (p.isFrom ? `desde ${p.price}` : p.price) },
+  { label: 'Conversaciones incluidas', value: (p) => p.conversations },
+  { label: 'Conversación adicional (USD)', value: (p) => p.extraConversation },
+  { label: 'Licencias de vendedor incluidas', value: (p) => p.seats },
+  { label: 'Licencia adicional (USD / mes)', value: (p) => p.extraSeat },
+  { label: 'Implementación, única vez (USD)', value: (p) => p.setup },
+];
+
+/**
+ * Oferta de lanzamiento. content.py: "50% en la implementación para los primeros
+ * 10 clientes"; Nico precisó que son las primeras 10 concesionarias de Argentina
+ * (igual que el deck comercial).
+ */
 export const EARLY_ADOPTER =
-  'Early adopter: 50% de descuento en la implementación para los primeros 10 clientes.';
+  'Early adopter: 50% de descuento en la implementación para las primeras 10 concesionarias de Argentina.';
+
+/** El producto, con las palabras de content.py ("El producto"). */
+export const PRODUCT_PARTS = [
+  {
+    title: 'Agente de IA en WhatsApp',
+    text: 'Atiende, califica y agenda 24/7. Entrega catálogos y planes de financiación. La IA califica, el vendedor cierra, en el mismo hilo.',
+  },
+  {
+    title: 'Motor de automatización',
+    text: 'Seguimientos disparados por comportamiento, score de calidad del lead, y un supervisor que detecta al lead sin respuesta y lo reasigna.',
+  },
+  {
+    title: 'Dashboard de gestión',
+    text: 'Ranking de vendedores, performance por modelo y por campaña, y atribución de cada venta a la campaña que la originó.',
+  },
+  {
+    title: 'Integraciones',
+    text: 'SAP, Dynamics, Pilot y el DMS o ERP que ya tenga la concesionaria.',
+  },
+];
+
+/** Texto del abono para cards y FAQs: "USD 750", "desde USD 5.000". */
+export function monthlyLabel(p: Plan): string {
+  return `${p.isFrom ? 'desde ' : ''}USD ${p.price}`;
+}

@@ -11,6 +11,7 @@ import FaqSection from '../components/FaqSection.astro';
 import BookDemo from '../components/BookDemo.astro';
 import { BOOKING_ANCHOR, CTA_DEMO_LABEL, PRICING_PUBLISHED, whatsappHref } from '../lib/site';
 import { faqPageSchema, type FaqItem } from '../lib/seo';
+import { PLANS } from '../lib/pricing';
 import { getPosts, postPath } from '../lib/blog';
 import { getCategory } from '../lib/categories';
 
@@ -95,7 +96,7 @@ const faq: FaqItem[] = [
   {
     q: '¿Cuánto cuesta ConcesionarIA?',
     a: PRICING_PUBLISHED
-      ? 'Hay tres planes según el volumen de conversaciones y la cantidad de vendedores. Los precios están publicados en la página de precios.'
+      ? `Hay tres planes con abono mensual: Gold a USD ${PLANS[0].price}, Platinum a USD ${PLANS[1].price} y Enterprise desde USD ${PLANS[2].price}, más una implementación que se paga una sola vez. La tabla completa, con conversaciones y licencias incluidas, está en la página de precios.`
       : 'Depende del volumen de conversaciones, la cantidad de vendedores y las integraciones que necesites. Después de la demo te enviamos una propuesta con el alcance definido.',
   },
   {
@@ -269,6 +270,9 @@ const latest = (await getPosts()).slice(0, 3);
   <section class="sec sec-alt" aria-label="Preguntas frecuentes">
     <div class="wrap">
       <FaqSection items={faq} />
+      {PRICING_PUBLISHED && (
+        <p class="sec-more"><a href="/precios/">Ver la tabla de precios completa</a></p>
+      )}
     </div>
   </section>
 

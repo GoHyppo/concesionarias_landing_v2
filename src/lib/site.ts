@@ -3,11 +3,11 @@
  * a qué número de WhatsApp van los CTAs, qué calendario recibe las demos) vive
  * acá y en ningún otro lado, para que cambiarlo sea tocar una línea.
  *
- * PENDIENTE DE NICO (ver CLAUDE.md, "Decisiones abiertas"):
- *   - PRICING_PUBLISHED: si se publican los planes en /precios/.
- *   - WHATSAPP_NUMBER: hoy es el número de Hyppo Argentina (el mismo que usan
- *     v1, gochat.ar y hyppo.io). El sitio v2 usaba un número de EE. UU.
- *   - BOOKING_URL: calendario de GoHighLevel que recibe las demos (el de v1).
+ * Decisiones confirmadas por Nico (2026-11-10):
+ *   - PRICING_PUBLISHED = true: la tabla completa de precios es pública.
+ *   - WHATSAPP_NUMBER: el número de Hyppo Argentina (el mismo de v1, gochat.ar
+ *     y hyppo.io). El número de EE. UU. del sitio v2 quedó afuera.
+ *   - BOOKING_URL: el calendario de GoHighLevel de Pio (el de la v1).
  */
 
 export const SITE_URL = 'https://concesionaria.ai';
@@ -15,15 +15,15 @@ export const SITE_NAME = 'ConcesionarIA';
 export const SITE_TAGLINE = 'IA para concesionarias';
 
 /**
- * Precios públicos. Con `false`:
- *   - /precios/ NO se construye (getStaticPaths devuelve cero rutas en
- *     src/pages/[pricing].astro), así que tampoco entra al sitemap ni a llms.txt;
- *   - el nav y el footer no la linkean;
- *   - los CTAs dicen "Pide una demo" y el FAQ de precio responde sin cifras;
- *   - la calculadora pide la inversión mensual como dato, sin sugerir un plan.
- * Para publicar: poner `true`, correr `npm run verify` y revisar /precios/.
+ * Precios públicos (src/lib/pricing.ts, tal cual content.py). Es un interruptor:
+ *   - `true` (hoy): se construye /precios/, entra al nav, al footer, al sitemap y
+ *     a llms.txt, el FAQ de precio del home da las cifras y la calculadora usa el
+ *     abono de Gold como valor de ejemplo.
+ *   - `false`: /precios/ NO se construye (getStaticPaths devuelve cero rutas en
+ *     src/pages/[pricing].astro), nada la linkea y no aparece ninguna cifra.
+ * Después de cambiarlo: `npm run verify` (el gate chequea los dos estados).
  */
-export const PRICING_PUBLISHED = false;
+export const PRICING_PUBLISHED = true;
 
 /** WhatsApp comercial, en formato E.164 sin el +. Un solo lugar para todo el sitio. */
 export const WHATSAPP_NUMBER = '5491163542275';
@@ -47,8 +47,16 @@ export const GHL_ORIGIN = 'https://crm.hyppo.io';
 export const DEMO_PATH = '/demo/';
 export const BOOKING_ANCHOR = '/demo/#agenda';
 
-/** Medición. Copiados del index.html del sitio anterior. */
+/** Medición. GTM copiado del index.html del sitio anterior. */
 export const GTM_ID = 'GTM-NSHSFT8S';
+/**
+ * GA4 de concesionaria.ai (propiedad 563697477, stream web). Se carga directo
+ * con gtag.js y NO por GTM: el contenedor GTM-NSHSFT8S no tiene ninguna etiqueta
+ * de GA4, así que no hay doble conteo. Si alguien agrega GA4 dentro de GTM,
+ * sacar una de las dos. Key events registrados en la propiedad: generate_lead,
+ * book_demo_view, whatsapp_click.
+ */
+export const GA4_ID = 'G-PQD9FKD7M3';
 /** Write key pública de Customer.io (workspace concesionarIA 210963). Es una
     key de navegador, pensada para ir en el HTML. */
 export const CIO_WRITE_KEY = 'a29e4a60ecae3bf4179f';
