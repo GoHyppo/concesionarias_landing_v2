@@ -1,6 +1,6 @@
 # concesionaria.ai
 
-Sitio de ConcesionarIA, la IA para concesionarias de Hyppo. Astro 4 estático, en español, publicado en GitHub Pages con dominio propio.
+Sitio de ConcesionarIA, la IA para concesionarias de Hyppo. Astro 4 estático, en español, publicado en GitHub Pages con dominio propio. Repo: `GoHyppo/concesionarias_landing_v2`.
 
 ```bash
 npm ci

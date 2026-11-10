@@ -37,6 +37,7 @@ Temas del sitio anterior que **no** se escriben como estaban: los que dependían
 
 - Las únicas métricas que el sitio puede usar son las del caso Grupo Garden publicado en hyppo.io/casos/garden/: 100% de leads trazables, 100% respondidos en segundos, +41% de asistencia a test drive, 3,2x más seguimientos, 94% de leads clasificados automáticamente, 10 marcas en 7 meses. Siempre atribuidas a ese caso y con link (`/casos/grupo-garden/` o el de hyppo.io).
 - Nada de estadísticas de mercado sin fuente, ROI promedio, cantidad de clientes, satisfacción, certificaciones o testimonios anónimos. Un cliente se nombra solo si tiene un caso publicado.
+- Precios: solo los de la tabla de `/precios/` (`src/lib/pricing.ts`, que es la de content.py). Ningún otro precio, descuento ni modelo de cobro en los posts.
 - Datos de producto: solo lo que está en `Hyppo/docs/concesionaria/` (overview y referencia técnica), en la descripción de producto de `Hyppo/claude_tests/business_case_sdr/content.py` y en el caso público.
 - Ante la duda, se deja afuera. El gate (`npm run verify`) falla si reaparece un claim prohibido o un porcentaje fuera de los permitidos.
 
@@ -65,4 +66,4 @@ Español LATAM neutro con **tuteo** (tienes, puedes, pide), directo y concreto, 
 
 - Cada post agrega una fila a `docs/CONTENT_LOG.md`.
 - La Parte B de `hyppo-seo-ops` (jueves) cruza ese log con Search Console: impresiones, clicks, CTR y posición por cohorte de publicación.
-- Accesos pendientes para medir: propiedad `sc-domain:concesionaria.ai` con el SA como Owner, y la propiedad GA4 detrás de GTM-NSHSFT8S con el SA como Viewer (ID: PENDIENTE).
+- Medición conectada (2026-11-10): Search Console `sc-domain:concesionaria.ai` (el SA es siteOwner; baseline de cero en `docs/gsc/BASELINE_20261110.md`) y GA4 propiedad `563697477` (stream `G-PQD9FKD7M3`, key events `generate_lead`, `book_demo_view` y `whatsapp_click`).

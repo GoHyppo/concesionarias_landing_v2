@@ -1,6 +1,6 @@
 # concesionaria.ai · guía para Claude
 
-Sitio de **ConcesionarIA**, el producto de IA para concesionarias de Hyppo. Astro 4 estático, solo en español (es-419, tuteo), servido por **GitHub Pages** con dominio propio `concesionaria.ai`. Reemplaza a la SPA de Vite + React (HashRouter) que vivía en `client/`.
+Sitio de **ConcesionarIA**, el producto de IA para concesionarias de Hyppo. Astro 4 estático, solo en español (es-419, tuteo), servido por **GitHub Pages** con dominio propio `concesionaria.ai`. Repo: **`GoHyppo/concesionarias_landing_v2`** (transferido desde la cuenta de Tomás el 2026-11-10). Reemplaza a la SPA de Vite + React (HashRouter) que vivía en `client/`.
 
 Repos hermanos con la misma arquitectura: `GoHyppo/hyppo_landing` (hyppo.io) y `GoHyppo/gochat_landing` (gochat.ar). El registro de los tres sitios está en `Hyppo/docs/seo/SITES.md`.
 
@@ -10,7 +10,7 @@ Repos hermanos con la misma arquitectura: `GoHyppo/hyppo_landing` (hyppo.io) y `
 
 - `npm run dev` (local) · `npm run build` · `npm run verify` (= `astro build` + `scripts/check-site-seo.mjs`).
 - **Deploy**: push a `main` → `.github/workflows/deploy.yml` → `npm ci` → **`npm run verify`** → upload `dist/` → `deploy-pages`. Si verify falla, no hay deploy. Los PR corren verify sin desplegar.
-- Dominio: `public/CNAME` = `concesionaria.ai` + Settings > Pages del repo. GitHub Pages sirve `/x/` desde `x/index.html` y redirige `/x` a `/x/` con 301.
+- Dominio: `public/CNAME` = `concesionaria.ai` + Settings > Pages del repo. Pages se sirve desde la org GoHyppo (`www` hace CNAME a `gohyppo.github.io`); el `CNAME` del build sigue siendo `concesionaria.ai`. GitHub Pages sirve `/x/` desde `x/index.html` y redirige `/x` a `/x/` con 301.
 - **Contrato de barra final**: `trailingSlash: 'always'` + `build.format: 'directory'` en `astro.config.mjs`, `<loc>` del sitemap, canonicals (`absoluteUrl()` en `src/lib/seo.ts`) y todos los links internos llevan `/` final. Si cambia uno, cambian todos.
 - `404.astro` → `dist/404.html` (Pages lo sirve para cualquier ruta desconocida): sin canonical y con noindex.
 - Los links viejos con `#` (`#/producto`, `#/precios`, `#/concesionarias`, `#/recursos`, `#/blog`) los resuelve un script inline en `src/pages/index.astro` con `location.replace`.
@@ -19,10 +19,10 @@ Repos hermanos con la misma arquitectura: `GoHyppo/hyppo_landing` (hyppo.io) y `
 
 | Qué | Dónde |
 |---|---|
-| Decisiones comerciales (precios publicados sí/no, WhatsApp, calendario, GTM, Customer.io) | `src/lib/site.ts` |
+| Decisiones comerciales (precios publicados sí/no, WhatsApp, calendario) y medición (GA4, GTM, Customer.io) | `src/lib/site.ts` |
 | Métricas permitidas (caso Grupo Garden) y logos de marcas | `src/lib/garden.ts` |
 | Bots de demo por marca | `src/lib/demo-bots.ts` |
-| Planes y precios (gated) | `src/lib/pricing.ts` + `src/pages/[pricing].astro` |
+| Planes y precios (tabla de content.py, interruptor `PRICING_PUBLISHED`) | `src/lib/pricing.ts` + `src/pages/[pricing].astro` |
 | Integraciones | `src/lib/integrations.ts` |
 | Schemas JSON-LD | `src/lib/seo.ts` |
 | Blog: datos, rutas, feed | `src/lib/blog.ts`, `src/lib/feed.ts`, `src/lib/categories.ts`, `src/lib/authors.ts`, `src/content/config.ts` |
@@ -31,27 +31,29 @@ Repos hermanos con la misma arquitectura: `GoHyppo/hyppo_landing` (hyppo.io) y `
 | Gate | `scripts/check-site-seo.mjs` |
 | Credenciales Google para rutinas | `scripts/gauth.py` (copia exacta del de hyppo_landing) |
 
-Rutas: `/`, `/producto/`, `/para-concesionarias/`, `/integraciones/`, `/casos/grupo-garden/`, `/demo/` (agenda en `#agenda`), `/calculadora-roi/`, `/precios/` (solo con `PRICING_PUBLISHED = true`), `/blog/`, `/blog/<slug>/`, `/blog/tema/<categoria>/`, `/autores/<id>/`, `/blog/rss.xml`, `/llms.txt`, `/privacidad/`, `/terminos/`.
+Rutas: `/`, `/producto/`, `/para-concesionarias/`, `/integraciones/`, `/casos/grupo-garden/`, `/demo/` (agenda en `#agenda`), `/calculadora-roi/`, `/precios/` (publicada; existe solo mientras `PRICING_PUBLISHED = true`), `/blog/`, `/blog/<slug>/`, `/blog/tema/<categoria>/`, `/autores/<id>/`, `/blog/rss.xml`, `/llms.txt`, `/privacidad/`, `/terminos/`.
 
 ## Leads y medición
 
-- **El lead entra al CRM por el calendario de GoHighLevel** (`BOOKING_URL`, `crm.hyppo.io/widget/bookings/piorichards-concesionarias-ai`, el de la v1), embebido en `src/components/BookDemo.astro`. No depende de ningún script de analítica. Todos los CTAs "Pide una demo" son `<a href="/demo/#agenda">`.
-- WhatsApp: un solo número, `WHATSAPP_NUMBER` en `src/lib/site.ts`. Cada link lleva `data-wa="<ubicación>"`.
-- GTM `GTM-NSHSFT8S` (head + noscript) y Customer.io (write key pública `a29e4a60ecae3bf4179f`, workspace concesionarIA 210963) con `page()`, en `src/layouts/Layout.astro`.
-- Eventos al `dataLayer` (y replicados en Customer.io con `track`), vía `window.ciaTrack`:
+- **El lead entra al CRM por el calendario de GoHighLevel de Pio** (`BOOKING_URL`, `crm.hyppo.io/widget/bookings/piorichards-concesionarias-ai`, el de la v1; confirmado por Nico), embebido en `src/components/BookDemo.astro`. No depende de ningún script de analítica. Todos los CTAs "Pide una demo" son `<a href="/demo/#agenda">`.
+- WhatsApp: un solo número, el de Hyppo AR `+54 9 11 6354-2275` (`WHATSAPP_NUMBER` en `src/lib/site.ts`, confirmado por Nico). Cada link lleva `data-wa="<ubicación>"`.
+- **GA4** propiedad `563697477`, stream web `G-PQD9FKD7M3`, cargado con gtag.js en `src/layouts/Layout.astro` (retención de 14 meses; key events registrados: `generate_lead`, `book_demo_view`, `whatsapp_click`). Va directo y no por GTM: el contenedor `GTM-NSHSFT8S` (head + noscript, también en el layout) no tiene etiqueta de GA4, así que no hay doble conteo. Si alguien agrega GA4 dentro de GTM, hay que sacar una de las dos.
+- Customer.io (write key pública `a29e4a60ecae3bf4179f`, workspace concesionarIA 210963) con `page()`.
+- Eventos con `gtag('event', '<nombre>', {...})` (que además queda en el `dataLayer`) y replicados en Customer.io con `track`, vía `window.ciaTrack`. Nombres exactos:
   - `whatsapp_click` (`placement`, `link_url`): click en cualquier `a[href*="wa.me/"]`.
   - `book_demo_view`: el bloque de agenda entra en pantalla (una vez por página).
-  - `generate_lead` (`method: ghl_booking`): el iframe de GoHighLevel manda `postMessage(['set-sticky-contacts', ...])` cuando la persona deja sus datos. Es la señal disponible desde fuera del iframe: **confirmarla en el modo preview de GTM** con una reserva de prueba antes de usarla como conversión.
+  - `generate_lead` (`method: ghl_booking`): el iframe de GoHighLevel manda `postMessage(['set-sticky-contacts', ...])` cuando la persona deja sus datos. Es la señal disponible desde fuera del iframe: **confirmarla con una reserva de prueba en GA4 DebugView (o Tag Assistant)** antes de confiar en el key event.
   - `roi_calculated`: botón Calcular de la calculadora. No envía los valores ingresados (la página y la política de privacidad lo prometen).
+- El gate exige GTM y el gtag.js + `gtag('config')` de `G-PQD9FKD7M3` en todas las páginas.
 
 ## Reglas duras (no se negocian)
 
-- **Claims**: las ÚNICAS métricas públicas son las del caso Grupo Garden publicado en `hyppo.io/casos/garden/` (100% de leads trazables, 100% respondidos en segundos, +41% asistencia a test drive, 3,2x seguimientos, 94% clasificados automáticamente, 10 marcas en 7 meses), siempre atribuidas al caso y con link. Prohibido lo que tenía el sitio anterior: "+300 concesionarias", "1.000.000 de leads", "98% de satisfacción", "9,4x ROI", "5,2% vs 0,3%", "40% del mercado", "+1.200 suscriptores", LGPD/GDPR, testimonios anónimos de "Gerente", "Toyota Belgrano", "Nissan Paraguay", los stats de mercado sin fuente (27%, 40%, 70%). El gate falla si reaparecen, y falla con cualquier porcentaje fuera de 100/41/94 en páginas que no sean la calculadora, precios o legales. Ante la duda, se deja afuera.
+- **Claims**: las ÚNICAS métricas públicas son las del caso Grupo Garden publicado en `hyppo.io/casos/garden/` (100% de leads trazables, 100% respondidos en segundos, +41% asistencia a test drive, 3,2x seguimientos, 94% clasificados automáticamente, 10 marcas en 7 meses), siempre atribuidas al caso y con link. Prohibido lo que tenía el sitio anterior: "+300 concesionarias", "1.000.000 de leads", "98% de satisfacción", "9,4x ROI", "5,2% vs 0,3%", "40% del mercado", "+1.200 suscriptores", LGPD/GDPR, testimonios anónimos de "Gerente", "Toyota Belgrano", "Nissan Paraguay", los stats de mercado sin fuente (27%, 40%, 70%). El gate falla si reaparecen, y falla con cualquier porcentaje fuera de 100/41/94 en páginas que no sean la calculadora, precios o legales (el 50% del early adopter vive solo en `/precios/`). Ante la duda, se deja afuera.
 - **Español LATAM neutro con tuteo** (tienes, puedes, pide). Nada de voseo (tenés, podés, pedí): el gate lo chequea.
 - **Sin em-dash (U+2014)** en ningún archivo publicado, **sin emojis** (íconos SVG en `src/components/Icon.astro`). El gate revisa todo el HTML, XML y TXT del build.
 - **Un head term = una URL**, y nunca una query donde hyppo.io tenga una página en el top 20 (ver "Programa SEO").
 - **Sin páginas por país** hasta que GSC muestre demanda (anti-doorway).
-- **Precios**: `PRICING_PUBLISHED = false` hasta que Nico lo apruebe. Con false, `/precios/` no se construye y nada lo linkea.
+- **Precios**: solo los de `src/lib/pricing.ts` (la tabla de content.py). Ningún precio, descuento o modelo de cobro fuera de esa tabla, en ninguna página ni post.
 - Marca GoChat: se nombra GoChat como plataforma de Hyppo; su proveedor upstream no se nombra nunca, en ningún archivo ni commit.
 - Fechas honestas: `publishedAt` es la fecha real de publicación y no se toca después.
 - Nunca credenciales en el repo (es un repo que puede ser público).
@@ -78,13 +80,18 @@ Este sitio corre el mismo programa SEO que hyppo.io, adaptado. Leer antes de toc
 - **Rutinas**: no hay rutinas propias. Las tres rutinas cloud de hyppo.io corren primero hyppo.io y después una Parte B que lee y sigue `docs/routines/blog.md` (lunes y jueves), `docs/routines/seo-ops.md` (jueves) y `docs/routines/monthly-report.md` (día 1). Las rutinas pushean a `main`: `git pull --rebase origin main` antes de trabajar y antes de pushear.
 - **`npm run verify` verde antes de cualquier push.**
 
+## Precios
+
+Publicados (decisión de Nico, 2026-11-10). La tabla de `src/lib/pricing.ts` es la de `Hyppo/claude_tests/business_case_sdr/content.py` tal cual: Gold USD 750, Platinum USD 2.750 y Enterprise desde USD 5.000 por mes; conversaciones incluidas (3.000 / 3.000 / 25.000), conversación adicional (USD 0,25 / 0,20 / 0,15), licencias de vendedor (5 / 10 / 50), licencia adicional (USD 25 / 20 / 10 a 15 por mes), implementación única (USD 1.500 / 3.500 / a medida), y early adopter: 50% de la implementación para las primeras 10 concesionarias de Argentina. Las contradicciones del sitio viejo se resolvieron a favor de content.py: no existe "solo pagas por leads calificados" ni "Platinum = 750 + 500", y no hay listas de features por plan. El SoftwareApplication de `/precios/` tiene un Offer por plan armado desde el mismo arreglo, y el gate verifica que cada Offer esté visible con el mismo abono. Para despublicar: `PRICING_PUBLISHED = false` y `npm run verify`.
+
 ## Decisiones abiertas (para Nico)
 
-Cada una tiene su comentario `PENDIENTE` en el archivo:
-- Publicar precios o no: `PRICING_PUBLISHED` en `src/lib/site.ts` (y confirmar planes en `src/lib/pricing.ts`).
-- Número de WhatsApp: `WHATSAPP_NUMBER` en `src/lib/site.ts` (hoy el de Hyppo AR; el v2 usaba uno de EE. UU.).
-- Calendario y formulario de GoHighLevel que reciben los leads: `BOOKING_URL` en `src/lib/site.ts`. No hay formulario GHL propio de ConcesionarIA; si se crea, se suma en `BookDemo.astro`.
+Las que tocan código tienen su comentario `PENDIENTE` en el archivo citado:
 - Bots de demo por marca (líneas reales de Grupo Garden): `src/lib/demo-bots.ts`.
 - Tecnom como integración: `published: false` en `src/lib/integrations.ts`.
-- Propiedades de Search Console y GA4 para el SA, y el ID del Doc de revisión del blog: `docs/CONTENT_STRATEGY.md`.
+- "Implementación en 14 días": figura en content.py pero contradice a la v1 ("4 semanas"); queda afuera del sitio hasta que Nico lo confirme.
+- ID del Doc de revisión del blog: `docs/CONTENT_STRATEGY.md` §7.
 - `publishedAt` de los 6 posts semilla: 2026-11-10. Si el sitio sale después, ponerles la fecha real de salida antes del merge.
+- No hay formulario GHL propio de ConcesionarIA (solo el calendario); si se crea, se suma en `BookDemo.astro`.
+
+Ya resueltas (2026-11-10): precios publicados, WhatsApp de Hyppo AR, calendario de Pio, Search Console `sc-domain:concesionaria.ai` (SA como siteOwner) y GA4 `563697477`.

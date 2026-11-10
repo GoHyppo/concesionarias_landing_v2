@@ -29,6 +29,7 @@ Ser la referencia en español para **intención de concesionaria**: dueños, ger
 | `/integraciones/` | integración de CRM y ERP para concesionarias | SAP, Dynamics, Pilot, DMS; CRM para concesionarias (mientras no tenga URL propia) |
 | `/demo/` | chatbot para concesionarias | chatbot de WhatsApp para concesionarias, demo |
 | `/calculadora-roi/` | calculadora de ROI para concesionarias | cuántos autos para pagar la inversión |
+| `/precios/` | precios de ConcesionarIA | precio de un software para concesionarias, planes Gold, Platinum y Enterprise |
 | `/casos/grupo-garden/` | caso Grupo Garden (marca) | IA en grupos automotrices. Ángulo concesionaria; la versión técnica es la de hyppo.io |
 | `/blog/tiempo-de-respuesta-a-leads/` | tiempo de respuesta a leads en concesionarias | speed to lead automotriz |
 | `/blog/seguimiento-de-leads-por-whatsapp/` | seguimiento de leads automotriz | seguimiento de leads por WhatsApp, WhatsApp para concesionarias |
@@ -44,9 +45,9 @@ Sin URL propia todavía (candidatas, solo con demanda en GSC): "CRM para concesi
 - `<title>` con el head term adelante y ` · ConcesionarIA` al final, hasta ~65 caracteres. Único en el sitio (el gate falla si se repite).
 - Meta description de 120 a 160 caracteres, con el head term y la propuesta de valor. Única.
 - Un solo `<h1>` con el head term, distinto del title. Sin saltear niveles de heading.
-- Canonical autorreferencial (lo pone `Layout.astro`), BreadcrumbList en toda página interna, FAQPage solo si el FAQ está visible con el mismo texto, SoftwareApplication en `/producto/` (y en `/precios/` con los Offer visibles cuando se publique).
+- Canonical autorreferencial (lo pone `Layout.astro`), BreadcrumbList en toda página interna, FAQPage solo si el FAQ está visible con el mismo texto, SoftwareApplication en `/producto/` (sin precios) y en `/precios/` (con un Offer por plan, igual a la tabla visible).
 - CTAs como `<a href>` reales a `/demo/#agenda` o a WhatsApp.
-- Prueba: solo las métricas del caso Grupo Garden, atribuidas y con link.
+- Prueba: solo las métricas del caso Grupo Garden, atribuidas y con link. Precios: solo los de `/precios/` (tabla de content.py).
 
 ## El estándar de un post
 
@@ -66,7 +67,7 @@ Cuerpo: **900 a 1200 palabras** (formato flagship; a dos posts por semana no hay
 
 ## Selección de temas
 
-1. **GSC primero** (`sc-domain:concesionaria.ai`, cuando el SA tenga acceso): queries con impresiones y sin página dedicada.
+1. **GSC primero** (`sc-domain:concesionaria.ai`, el SA es siteOwner desde 2026-11-10; baseline en `docs/gsc/`): queries con impresiones y sin página dedicada. Mientras el sitio nuevo no acumule datos, manda el mapa de clusters.
 2. **Mapa de clusters** de `docs/CONTENT_STRATEGY.md`.
 3. **Chequeo anti-colisión** contra hyppo.io (top 20) y contra lo que es de gochat.ar.
 4. **Anti-canibalización interna**: revisar `docs/CONTENT_LOG.md` y los titles del build.

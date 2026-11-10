@@ -8,8 +8,8 @@ Reusar el venv de la Parte A (con `playwright` y chromium ya instalados para el 
 
 ## 2) Datos del mes (mes anterior completo vs el previo, y vs el baseline de `docs/gsc/` si existe)
 
-- **GSC** (`sc-domain:concesionaria.ai`, scope webmasters): clicks, impresiones, CTR y posición media; top 10 queries y top 10 páginas con deltas; posiciones de las queries objetivo de `docs/SEO_PLAYBOOK.md`; impresiones por país; rendimiento de las cohortes de `docs/CONTENT_LOG.md`. Si da 403: "Search Console sin acceso del SA (pendiente de Nico)" y seguir.
-- **GA4**: propiedad **PENDIENTE** (la de GTM-NSHSFT8S; el ID va en `docs/CONTENT_STRATEGY.md` §8 cuando Nico lo pase). Mientras diga PENDIENTE, saltear GA4 con una nota en el reporte. Cuando exista: `POST https://analyticsdata.googleapis.com/v1beta/properties/<ID>:runReport` (scope `analytics.readonly`): sesiones y usuarios totales y de Organic Search, top landing pages orgánicas, engagement, y los eventos `generate_lead`, `book_demo_view`, `whatsapp_click` y `roi_calculated` por página.
+- **GSC** (`sc-domain:concesionaria.ai`, scope webmasters): clicks, impresiones, CTR y posición media; top 10 queries y top 10 páginas con deltas; posiciones de las queries objetivo de `docs/SEO_PLAYBOOK.md`; impresiones por país; rendimiento de las cohortes de `docs/CONTENT_LOG.md`. El SA es siteOwner desde 2026-11-10; baseline de cero en `docs/gsc/BASELINE_20261110.md`. Si la API falla, el reporte lo dice y se sigue.
+- **GA4**: propiedad `563697477` (stream web `G-PQD9FKD7M3`, retención de 14 meses). `POST https://analyticsdata.googleapis.com/v1beta/properties/563697477:runReport` (scope `analytics.readonly`). Si la API da 403, el SA todavía no está como Viewer en la propiedad: el reporte lo dice como acción para Nico y sigue sin GA4. Datos: sesiones y usuarios totales y de Organic Search, top landing pages orgánicas, engagement, y los eventos `generate_lead`, `book_demo_view`, `whatsapp_click` y `roi_calculated` por página.
 - **Acciones del mes**: digests de `docs/seo-digests/`, `docs/SEO_TRACKER.md` y `git log --oneline --since` del mes (posts publicados, optimizaciones, pendientes).
 
 ## 3) Reporte (corto: resumen, métricas, acciones)
@@ -20,7 +20,7 @@ Reusar el venv de la Parte A (con `playwright` y chromium ya instalados para el 
 
 ## 4) Slack
 
-UN mensaje **aparte** del de hyppo.io al canal `#hyppo-seo` (id `C0BRXEVBQ9Z`), que empiece con `[ConcesionarIA]`: 4 a 6 bullets con los números clave y sus deltas, una línea de cómo vamos contra el objetivo, las acciones que requieren a Nico (o una línea que diga que no hay), y los links al PDF y al HTML de Drive y al reporte en GitHub (`https://github.com/tomilagom/concesionarias_landing_v2/blob/main/docs/reports/AAAA-MM.md`). Sin saludos ni relleno.
+UN mensaje **aparte** del de hyppo.io al canal `#hyppo-seo` (id `C0BRXEVBQ9Z`), que empiece con `[ConcesionarIA]`: 4 a 6 bullets con los números clave y sus deltas, una línea de cómo vamos contra el objetivo, las acciones que requieren a Nico (o una línea que diga que no hay), y los links al PDF y al HTML de Drive y al reporte en GitHub (`https://github.com/GoHyppo/concesionarias_landing_v2/blob/main/docs/reports/AAAA-MM.md`). Sin saludos ni relleno.
 
 ## 5) Commit
 

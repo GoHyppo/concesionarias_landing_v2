@@ -1,6 +1,6 @@
 # Runbook · Parte B de `hyppo-blog-daily`: blog de concesionaria.ai
 
-Lo ejecuta la rutina cloud `hyppo-blog-daily` (`trig_01KuCaZqRUkfz2P4kYpMabx5`) **después** de terminar, commitear, pushear y reportar su Parte A (hyppo.io). Este repo (`tomilagom/concesionarias_landing_v2`) está clonado en el workspace como fuente adicional: trabajá con `cd` a ese clon y usá rutas relativas a él. Una falla acá se reporta y nunca revierte ni frena la Parte A.
+Lo ejecuta la rutina cloud `hyppo-blog-daily` (`trig_01KuCaZqRUkfz2P4kYpMabx5`) **después** de terminar, commitear, pushear y reportar su Parte A (hyppo.io). Este repo (`GoHyppo/concesionarias_landing_v2`) está clonado en el workspace como fuente adicional: trabajá con `cd` a ese clon y usá rutas relativas a él. Una falla acá se reporta y nunca revierte ni frena la Parte A.
 
 Objetivo: un post en español por turno (lunes y jueves), alineado al mapa de clusters, sin chocar con hyppo.io, con hero de Magnific, verify verde y push a `main` (que deploya concesionaria.ai en GitHub Pages).
 
@@ -24,14 +24,14 @@ El ID del Doc de revisión está en `docs/CONTENT_STRATEGY.md` §7. Si dice `PEN
 
 ## 4) Elegir el tema
 
-1. **GSC primero**: propiedad `sc-domain:concesionaria.ai`, scope `https://www.googleapis.com/auth/webmasters`, últimos 28 días, dimensions `[query]`, rowLimit 100. Buscá queries con impresiones y sin página dedicada que encajen en un post. Si la API da 403 (el SA todavía no tiene la propiedad) o no hay candidato claro: temas sugeridos del último digest > backlog del mapa de clusters (`docs/CONTENT_STRATEGY.md` §3). Anotá en el reporte de dónde salió.
+1. **GSC primero**: propiedad `sc-domain:concesionaria.ai`, scope `https://www.googleapis.com/auth/webmasters`, últimos 28 días, dimensions `[query]`, rowLimit 100. Buscá queries con impresiones y sin página dedicada que encajen en un post (el SA es siteOwner desde 2026-11-10; el baseline arrancó en cero, así que al principio va a ser lo normal no encontrar candidatos). Si la API falla o no hay candidato claro: temas sugeridos del último digest > backlog del mapa de clusters (`docs/CONTENT_STRATEGY.md` §3). Anotá en el reporte de dónde salió.
 2. **Anti-colisión con hyppo.io (obligatorio)**: con el mismo SA, GSC `sc-domain:hyppo.io`, últimos 90 días, dimensions `[query,page]`, `dimensionFilterGroups` con un `includingRegex` de los términos del tema. Si hyppo.io tiene una página con posición ≤ 20 para la query objetivo o una variante directa, cambiá el ángulo a uno más específico de concesionaria o elegí otro tema. Además `curl -s https://hyppo.io/sitemap-0.xml` y revisá que ningún slug de hyppo.io cubra lo mismo. Si GSC de hyppo.io no responde, el chequeo del sitemap es el mínimo y se anota.
 3. **gochat.ar**: no apuntar a intención de plataforma o herramienta ("chatbot para WhatsApp", "WhatsApp Business API", "plataforma de chatbot").
 4. **Interno**: no repetir la query de un post de `docs/CONTENT_LOG.md` ni el head term de una página comercial.
 
 ## 5) Escribir el post
 
-Uno solo, en `src/content/blog/<slug>.md`, siguiendo `docs/SEO_PLAYBOOK.md`: 900 a 1200 palabras de cuerpo, tuteo LATAM neutro, frontmatter completo (summary answer-first de 40-60 palabras, description de 120-160 caracteres, seoTitle de hasta 49, 3-4 keyTakeaways, 3-4 FAQs autosuficientes, related, cta, `publishedAt` = hoy real), 2 o más links internos en el cuerpo. **Claims**: solo las métricas del caso Grupo Garden, atribuidas y con link; datos de producto solo de las fuentes de `docs/CONTENT_STRATEGY.md` §5. Cero em-dash, cero emojis, cero AI-slop, cero números inventados.
+Uno solo, en `src/content/blog/<slug>.md`, siguiendo `docs/SEO_PLAYBOOK.md`: 900 a 1200 palabras de cuerpo, tuteo LATAM neutro, frontmatter completo (summary answer-first de 40-60 palabras, description de 120-160 caracteres, seoTitle de hasta 49, 3-4 keyTakeaways, 3-4 FAQs autosuficientes, related, cta, `publishedAt` = hoy real), 2 o más links internos en el cuerpo. **Claims**: solo las métricas del caso Grupo Garden, atribuidas y con link; precios solo los de `/precios/` (`src/lib/pricing.ts`); datos de producto solo de las fuentes de `docs/CONTENT_STRATEGY.md` §5. Cero em-dash, cero emojis, cero AI-slop, cero números inventados.
 
 ## 6) Imagen (obligatoria)
 
@@ -44,7 +44,7 @@ Magnific, modelo `gpt-2`, 16:9, con el bloque de estilo fijo de `docs/BLOG.md` y
 3. Agregá la fila del post a `docs/CONTENT_LOG.md`.
 4. Doc de revisión: si el ID existe, insertá la entrada arriba de todo con el formato de `docs/CONTENT_STRATEGY.md` §7 (subí el PNG a la carpeta de Drive `1pUBZifYMcGACLHwA0Al4NrjFmz4b6nzJ` y embebé un thumbnail). Si dice `PENDIENTE` o da 403: guardá la copia en `docs/blog-queue/AAAA-MM-DD_<slug>.md` y commiteala junto con el post.
 5. Commit `concesionaria-blog: <slug>` y `git push origin main` (si lo rechaza: pull --rebase y reintentá). El push dispara el workflow de GitHub Pages, que vuelve a correr verify antes de deployar.
-6. Después del push, ping a Search Console (scope webmasters, `PUT https://www.googleapis.com/webmasters/v3/sites/sc-domain%3Aconcesionaria.ai/sitemaps/<url-encodeada>`) de `https://concesionaria.ai/sitemap-index.xml` y de `https://concesionaria.ai/blog/rss.xml`. Si da 403 o falla, anotalo: no es bloqueante.
+6. Después del push, ping a Search Console (scope webmasters, `PUT https://www.googleapis.com/webmasters/v3/sites/sc-domain%3Aconcesionaria.ai/sitemaps/<url-encodeada>`) de `https://concesionaria.ai/sitemap-index.xml` y de `https://concesionaria.ai/blog/rss.xml`. Si falla, anotalo: no es bloqueante. La primera vez que se pinguea, el sitemap y el feed quedan dados de alta en la propiedad.
 
 ## 8) Reporte (sección "ConcesionarIA" del reporte de la rutina)
 
