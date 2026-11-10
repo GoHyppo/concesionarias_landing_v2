@@ -21,7 +21,9 @@ Tracker de implementación SEO en el formato de la casa (igual que hyppo.io). Lo
 | 2026-11-10 | Plan SEO fase 4 | Enviar `sitemap-index.xml` y `blog/rss.xml` en Search Console después del go-live | pendiente | fácil | Hyppo | |
 | 2026-11-10 | Plan SEO fase 4 | Confirmar `generate_lead` con una reserva de prueba en GA4 DebugView | pendiente | fácil | Hyppo | |
 | 2026-11-10 | Plan SEO fase 4 | Apagar Pages y quitar el CNAME del repo v1 (`tomilagom/concesionarias_landing`) | pendiente | fácil | Tomás | |
-| 2026-11-10 | Plan SEO fase 4 | Confirmar los bots de demo por marca (líneas reales de Grupo Garden) o reemplazarlos por un bot demo propio | pendiente | fácil | Nico | |
+| 2026-11-10 | Decisión de Nico | Bots de demo por marca: se mantienen las líneas en producción de Grupo Garden (`/demo/` lo aclara) | listo | fácil | Nico | 2026-11-10 |
+| 2026-11-10 | Decisión de Nico | Legales: GoHyppo LLC constituida en Delaware en `/privacidad/`; `/terminos/` mantiene Florida como ley elegida, igual que hyppo.io | listo | fácil | Hyppo | 2026-11-10 |
+| 2026-11-10 | Decisión de Nico | Montos de precios solo en `/precios/` (gate los lee de `src/lib/pricing.ts`) | listo | fácil | Hyppo | 2026-11-10 |
 | 2026-11-10 | Plan SEO fase 4 | Doc "ConcesionarIA blog review" compartido con el SA (ID en CONTENT_STRATEGY §7) | pendiente | fácil | Nico | |
 | 2026-11-10 | Plan SEO fase 5 | Agregar la Parte B a las 3 rutinas de hyppo.io (`docs/routines/`) | pendiente (después del go-live) | medio | Hyppo | |
 | 2026-11-10 | Plan SEO fase 4 | Actualizar `Hyppo/docs/concesionaria/concesionaria-technical-reference.md` (hosting = GitHub Pages, repo = `GoHyppo/concesionarias_landing_v2`) | pendiente | fácil | Hyppo | |

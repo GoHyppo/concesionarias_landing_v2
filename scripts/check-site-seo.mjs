@@ -32,6 +32,8 @@
  *  - Posts huérfanos y slugs válidos.
  *  - robots.txt con Sitemap, CNAME correcto, y GTM + GA4 (gtag) en todas las páginas.
  *  - /precios/: un Offer por plan visible, con el mismo abono que la tabla.
+ *  - Los números de la tabla de precios (src/lib/pricing.ts) y el early adopter
+ *    aparecen SOLO en /precios/: ninguna otra página, post, feed ni llms.txt.
  *
  * Si algo falla, se arregla el sitio. Aflojar un chequeo para que pase es apagar
  * la alarma (en particular los de claims y feed).
@@ -190,6 +192,7 @@ const BANNED_CLAIMS = [
 /** Porcentajes publicados en el caso Grupo Garden (src/lib/garden.ts). */
 const ALLOWED_PERCENTS = new Set(['100', '41', '94']);
 /** Páginas donde los porcentajes son valores del usuario, precios o texto legal. */
+// El 50% del early adopter vive solo en /precios/ (lo exige también el chequeo de montos).
 const PERCENT_EXEMPT = new Set(['/calculadora-roi/', '/precios/', '/privacidad/', '/terminos/']);
 
 /** Voseo frecuente en copy comercial. El sitio usa tuteo neutro. */
@@ -205,6 +208,23 @@ const EMOJI = /[\u{1F300}-\u{1FAFF}\u{1F000}-\u{1F2FF}\u{2600}-\u{27BF}\u{2B50}\
 
 const siteTs = readFileSync('src/lib/site.ts', 'utf8');
 const pricingPublished = /export const PRICING_PUBLISHED\s*=\s*true/.test(siteTs);
+
+/**
+ * Montos de la tabla de precios, leídos de src/lib/pricing.ts (no se copian a
+ * mano: si cambia la tabla, cambia el chequeo). Solo pueden aparecer en /precios/.
+ */
+const pricingTs = readFileSync('src/lib/pricing.ts', 'utf8');
+const PRICE_AMOUNTS = [
+  ...new Set(
+    [...pricingTs.matchAll(/\b(?:price|setup|extraConversation|extraSeat):\s*'([0-9][0-9.,]*)'/g)].map((m) => m[1])
+  ),
+];
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const PRICE_RE = PRICE_AMOUNTS.length
+  ? new RegExp(`USD\\s?(?:${PRICE_AMOUNTS.map(escapeRe).join('|')})(?![0-9.,]*[0-9])`, 'i')
+  : null;
+const EARLY_RE = /early adopter/i;
+if (PRICE_AMOUNTS.length < 6) fail('src/lib/pricing.ts', `No se pudieron leer los montos de la tabla (${PRICE_AMOUNTS.join(', ')}).`);
 
 /* ------------------------------------------------------------------ */
 /* Posts                                                               */
@@ -332,6 +352,11 @@ for (const page of pages.values()) {
     const m = re.exec(visible);
     if (m) fail(where, `Claim sin respaldo ${label}: "...${visible.slice(Math.max(0, m.index - 40), m.index + 60)}..."`);
   }
+  if (route !== '/precios/') {
+    const pm = PRICE_RE && PRICE_RE.exec(visible);
+    if (pm) fail(where, `Monto de la tabla de precios fuera de /precios/ (${pm[0]}): "...${visible.slice(Math.max(0, pm.index - 50), pm.index + 30)}..."`);
+    if (EARLY_RE.test(visible)) fail(where, 'La oferta early adopter aparece fuera de /precios/.');
+  }
   if (!PERCENT_EXEMPT.has(route)) {
     const re = /(\d+(?:[.,]\d+)?)\s?%/g;
     let m;
@@ -432,6 +457,15 @@ for (const f of textFiles) {
   if (i !== -1) fail(f, `Em-dash (U+2014): "...${raw.slice(Math.max(0, i - 50), i + 30).replace(/\s+/g, ' ')}..."`);
   const e = EMOJI.exec(raw);
   if (e) fail(f, `Emoji o símbolo pictográfico (${e[0]}): "...${raw.slice(Math.max(0, e.index - 40), e.index + 20).replace(/\s+/g, ' ')}..."`);
+}
+
+/* montos de precios fuera de /precios/: feed y llms.txt */
+for (const f of [join(DIST, 'llms.txt'), join(DIST, 'blog', 'rss.xml')]) {
+  if (!existsSync(f)) continue;
+  const raw = readFileSync(f, 'utf8');
+  const pm = PRICE_RE && PRICE_RE.exec(raw);
+  if (pm) fail(f, `Monto de la tabla de precios fuera de /precios/ (${pm[0]}).`);
+  if (EARLY_RE.test(raw)) fail(f, 'La oferta early adopter aparece fuera de /precios/.');
 }
 
 /* precios */

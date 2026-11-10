@@ -1,13 +1,11 @@
 /**
  * Bots de WhatsApp de la página /demo/.
  *
- * PENDIENTE DE NICO: confirmar que estos números siguen vivos y que se pueden
- * mostrar como demo. Vienen tal cual de la v1 del sitio
- * (tomilagom/concesionarias_landing, components/video-section). Son las líneas
- * de las marcas de Grupo Garden en Paraguay: quien escribe habla con el agente
- * real de esa marca, y la conversación entra a la operación del cliente. Si
- * existe un bot demo propio (sin datos de ningún cliente), conviene
- * reemplazarlos por ese y dejar esta lista vacía.
+ * Confirmado por Nico (2026-11-10): se muestran estas líneas. Vienen tal cual
+ * de la v1 del sitio (tomilagom/concesionarias_landing, components/video-section).
+ * Son las líneas reales de las marcas de Grupo Garden en Paraguay: quien escribe
+ * habla con el agente en producción de esa marca y la conversación entra a la
+ * operación de Garden. La página /demo/ lo dice.
  *
  * Con `DEMO_BOTS_ENABLED = false` la página muestra solo el video y el bloque
  * de agenda, sin links a números de terceros.

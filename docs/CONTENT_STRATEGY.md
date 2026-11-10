@@ -37,7 +37,7 @@ Temas del sitio anterior que **no** se escriben como estaban: los que dependían
 
 - Las únicas métricas que el sitio puede usar son las del caso Grupo Garden publicado en hyppo.io/casos/garden/: 100% de leads trazables, 100% respondidos en segundos, +41% de asistencia a test drive, 3,2x más seguimientos, 94% de leads clasificados automáticamente, 10 marcas en 7 meses. Siempre atribuidas a ese caso y con link (`/casos/grupo-garden/` o el de hyppo.io).
 - Nada de estadísticas de mercado sin fuente, ROI promedio, cantidad de clientes, satisfacción, certificaciones o testimonios anónimos. Un cliente se nombra solo si tiene un caso publicado.
-- Precios: solo los de la tabla de `/precios/` (`src/lib/pricing.ts`, que es la de content.py). Ningún otro precio, descuento ni modelo de cobro en los posts.
+- Precios: viven solo en `/precios/` (`src/lib/pricing.ts`, que es la tabla de content.py). Un post puede linkear a la página de precios, pero no repite montos ni el early adopter; el gate falla si aparecen fuera de `/precios/`.
 - Datos de producto: solo lo que está en `Hyppo/docs/concesionaria/` (overview y referencia técnica), en la descripción de producto de `Hyppo/claude_tests/business_case_sdr/content.py` y en el caso público.
 - Ante la duda, se deja afuera. El gate (`npm run verify`) falla si reaparece un claim prohibido o un porcentaje fuera de los permitidos.
 

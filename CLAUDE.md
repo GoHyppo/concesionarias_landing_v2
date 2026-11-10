@@ -39,7 +39,7 @@ Rutas: `/`, `/producto/`, `/para-concesionarias/`, `/integraciones/`, `/casos/gr
 - WhatsApp: un solo número, el de Hyppo AR `+54 9 11 6354-2275` (`WHATSAPP_NUMBER` en `src/lib/site.ts`, confirmado por Nico). Cada link lleva `data-wa="<ubicación>"`.
 - **GA4** propiedad `563697477`, stream web `G-PQD9FKD7M3`, cargado con gtag.js en `src/layouts/Layout.astro` (retención de 14 meses; key events registrados: `generate_lead`, `book_demo_view`, `whatsapp_click`). Va directo y no por GTM: el contenedor `GTM-NSHSFT8S` (head + noscript, también en el layout) no tiene etiqueta de GA4, así que no hay doble conteo. Si alguien agrega GA4 dentro de GTM, hay que sacar una de las dos.
 - Customer.io (write key pública `a29e4a60ecae3bf4179f`, workspace concesionarIA 210963) con `page()`.
-- Eventos con `gtag('event', '<nombre>', {...})` (que además queda en el `dataLayer`) y replicados en Customer.io con `track`, vía `window.ciaTrack`. Nombres exactos:
+- Eventos vía `window.ciaTrack`, a tres destinos: `gtag('event', '<nombre>', {...})` para GA4, un push `{event: '<nombre>', ...}` al `dataLayer` para triggers de GTM, y `track` en Customer.io. Nombres exactos:
   - `whatsapp_click` (`placement`, `link_url`): click en cualquier `a[href*="wa.me/"]`.
   - `book_demo_view`: el bloque de agenda entra en pantalla (una vez por página).
   - `generate_lead` (`method: ghl_booking`): el iframe de GoHighLevel manda `postMessage(['set-sticky-contacts', ...])` cuando la persona deja sus datos. Es la señal disponible desde fuera del iframe: **confirmarla con una reserva de prueba en GA4 DebugView (o Tag Assistant)** antes de confiar en el key event.
@@ -53,7 +53,7 @@ Rutas: `/`, `/producto/`, `/para-concesionarias/`, `/integraciones/`, `/casos/gr
 - **Sin em-dash (U+2014)** en ningún archivo publicado, **sin emojis** (íconos SVG en `src/components/Icon.astro`). El gate revisa todo el HTML, XML y TXT del build.
 - **Un head term = una URL**, y nunca una query donde hyppo.io tenga una página en el top 20 (ver "Programa SEO").
 - **Sin páginas por país** hasta que GSC muestre demanda (anti-doorway).
-- **Precios**: solo los de `src/lib/pricing.ts` (la tabla de content.py). Ningún precio, descuento o modelo de cobro fuera de esa tabla, en ninguna página ni post.
+- **Precios**: solo los de `src/lib/pricing.ts` (la tabla de content.py) y **solo en `/precios/`**. El resto del sitio, los posts, el feed y `llms.txt` linkean a esa página sin repetir montos ni el early adopter; el gate lee los montos de `pricing.ts` y falla si aparecen en otra página. Ningún precio, descuento o modelo de cobro fuera de esa tabla.
 - Marca GoChat: se nombra GoChat como plataforma de Hyppo; su proveedor upstream no se nombra nunca, en ningún archivo ni commit.
 - Fechas honestas: `publishedAt` es la fecha real de publicación y no se toca después.
 - Nunca credenciales en el repo (es un repo que puede ser público).
@@ -82,16 +82,15 @@ Este sitio corre el mismo programa SEO que hyppo.io, adaptado. Leer antes de toc
 
 ## Precios
 
-Publicados (decisión de Nico, 2026-11-10). La tabla de `src/lib/pricing.ts` es la de `Hyppo/claude_tests/business_case_sdr/content.py` tal cual: Gold USD 750, Platinum USD 2.750 y Enterprise desde USD 5.000 por mes; conversaciones incluidas (3.000 / 3.000 / 25.000), conversación adicional (USD 0,25 / 0,20 / 0,15), licencias de vendedor (5 / 10 / 50), licencia adicional (USD 25 / 20 / 10 a 15 por mes), implementación única (USD 1.500 / 3.500 / a medida), y early adopter: 50% de la implementación para las primeras 10 concesionarias de Argentina. Las contradicciones del sitio viejo se resolvieron a favor de content.py: no existe "solo pagas por leads calificados" ni "Platinum = 750 + 500", y no hay listas de features por plan. El SoftwareApplication de `/precios/` tiene un Offer por plan armado desde el mismo arreglo, y el gate verifica que cada Offer esté visible con el mismo abono. Para despublicar: `PRICING_PUBLISHED = false` y `npm run verify`.
+Publicados (decisión de Nico, 2026-11-10). La tabla de `src/lib/pricing.ts` es la de `Hyppo/claude_tests/business_case_sdr/content.py` tal cual: Gold USD 750, Platinum USD 2.750 y Enterprise desde USD 5.000 por mes; conversaciones incluidas (3.000 / 3.000 / 25.000), conversación adicional (USD 0,25 / 0,20 / 0,15), licencias de vendedor (5 / 10 / 50), licencia adicional (USD 25 / 20 / 10 a 15 por mes), implementación única (USD 1.500 / 3.500 / a medida), y early adopter: 50% de la implementación para las primeras 10 concesionarias de Argentina. Las contradicciones del sitio viejo se resolvieron a favor de content.py: no existe "solo pagas por leads calificados" ni "Platinum = 750 + 500", y no hay listas de features por plan. El SoftwareApplication de `/precios/` tiene un Offer por plan armado desde el mismo arreglo, y el gate verifica que cada Offer esté visible con el mismo abono. Los montos viven solo en `/precios/`: el FAQ del home y la calculadora linkean a la tabla sin repetir cifras. Para despublicar: `PRICING_PUBLISHED = false` y `npm run verify`.
 
 ## Decisiones abiertas (para Nico)
 
 Las que tocan código tienen su comentario `PENDIENTE` en el archivo citado:
-- Bots de demo por marca (líneas reales de Grupo Garden): `src/lib/demo-bots.ts`.
 - Tecnom como integración: `published: false` en `src/lib/integrations.ts`.
 - "Implementación en 14 días": figura en content.py pero contradice a la v1 ("4 semanas"); queda afuera del sitio hasta que Nico lo confirme.
 - ID del Doc de revisión del blog: `docs/CONTENT_STRATEGY.md` §7.
 - `publishedAt` de los 6 posts semilla: 2026-11-10. Si el sitio sale después, ponerles la fecha real de salida antes del merge.
 - No hay formulario GHL propio de ConcesionarIA (solo el calendario); si se crea, se suma en `BookDemo.astro`.
 
-Ya resueltas (2026-11-10): precios publicados, WhatsApp de Hyppo AR, calendario de Pio, Search Console `sc-domain:concesionaria.ai` (SA como siteOwner) y GA4 `563697477`.
+Ya resueltas (2026-11-10): precios publicados, WhatsApp de Hyppo AR, calendario de Pio, bots de demo (se muestran las líneas en producción de Grupo Garden; `/demo/` lo aclara), Search Console `sc-domain:concesionaria.ai` (SA como siteOwner), GA4 `563697477`, repo transferido a GoHyppo, y GoHyppo LLC como sociedad de **Delaware** en `/privacidad/` (hyppo.io dice Florida y está mal; la cláusula de ley aplicable de `/terminos/` sigue eligiendo Florida, igual que los términos de hyppo.io).

@@ -47,7 +47,7 @@ Sin URL propia todavía (candidatas, solo con demanda en GSC): "CRM para concesi
 - Un solo `<h1>` con el head term, distinto del title. Sin saltear niveles de heading.
 - Canonical autorreferencial (lo pone `Layout.astro`), BreadcrumbList en toda página interna, FAQPage solo si el FAQ está visible con el mismo texto, SoftwareApplication en `/producto/` (sin precios) y en `/precios/` (con un Offer por plan, igual a la tabla visible).
 - CTAs como `<a href>` reales a `/demo/#agenda` o a WhatsApp.
-- Prueba: solo las métricas del caso Grupo Garden, atribuidas y con link. Precios: solo los de `/precios/` (tabla de content.py).
+- Prueba: solo las métricas del caso Grupo Garden, atribuidas y con link. Precios: solo en `/precios/` (tabla de content.py); las demás páginas linkean ahí sin repetir montos.
 
 ## El estándar de un post
 

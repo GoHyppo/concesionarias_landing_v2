@@ -119,9 +119,11 @@ const schemas = [...(isHome ? [organizationSchema(), websiteSchema()] : []), ...
       }}();
     </script>
 
-    <!-- Eventos de conversión. Un solo helper: gtag('event', ...) a GA4 (que también
-         queda en el dataLayer) y la réplica en Customer.io si cargó. Nombres fijos:
-         generate_lead, book_demo_view, whatsapp_click, roi_calculated. -->
+    <!-- Eventos de conversión. Un solo helper, tres destinos: gtag('event', ...) a GA4,
+         un push {event: ...} al dataLayer para triggers de GTM (el contenedor no tiene
+         etiqueta de GA4, así que GA4 no cuenta doble) y la réplica en Customer.io si
+         cargó. Nombres fijos: generate_lead, book_demo_view, whatsapp_click,
+         roi_calculated. -->
     <script is:inline define:vars={{ GHL_ORIGIN }}>
       (function () {
         var sent = {};
@@ -130,6 +132,7 @@ const schemas = [...(isHome ? [organizationSchema(), websiteSchema()] : []), ...
           sent[event] = true;
           var params = props || {};
           if (typeof window.gtag === 'function') window.gtag('event', event, params);
+          (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: event }, params));
           try {
             if (window.cioanalytics && typeof window.cioanalytics.track === 'function') {
               window.cioanalytics.track(event, params);

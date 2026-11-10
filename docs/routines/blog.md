@@ -31,7 +31,7 @@ El ID del Doc de revisión está en `docs/CONTENT_STRATEGY.md` §7. Si dice `PEN
 
 ## 5) Escribir el post
 
-Uno solo, en `src/content/blog/<slug>.md`, siguiendo `docs/SEO_PLAYBOOK.md`: 900 a 1200 palabras de cuerpo, tuteo LATAM neutro, frontmatter completo (summary answer-first de 40-60 palabras, description de 120-160 caracteres, seoTitle de hasta 49, 3-4 keyTakeaways, 3-4 FAQs autosuficientes, related, cta, `publishedAt` = hoy real), 2 o más links internos en el cuerpo. **Claims**: solo las métricas del caso Grupo Garden, atribuidas y con link; precios solo los de `/precios/` (`src/lib/pricing.ts`); datos de producto solo de las fuentes de `docs/CONTENT_STRATEGY.md` §5. Cero em-dash, cero emojis, cero AI-slop, cero números inventados.
+Uno solo, en `src/content/blog/<slug>.md`, siguiendo `docs/SEO_PLAYBOOK.md`: 900 a 1200 palabras de cuerpo, tuteo LATAM neutro, frontmatter completo (summary answer-first de 40-60 palabras, description de 120-160 caracteres, seoTitle de hasta 49, 3-4 keyTakeaways, 3-4 FAQs autosuficientes, related, cta, `publishedAt` = hoy real), 2 o más links internos en el cuerpo. **Claims**: solo las métricas del caso Grupo Garden, atribuidas y con link; sin montos de precios ni el early adopter (viven solo en `/precios/`; el post puede linkear ahí); datos de producto solo de las fuentes de `docs/CONTENT_STRATEGY.md` §5. Cero em-dash, cero emojis, cero AI-slop, cero números inventados.
 
 ## 6) Imagen (obligatoria)
 
