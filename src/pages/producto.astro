@@ -144,7 +144,7 @@ const schemas = [
     </div>
   </section>
 
-  <section class="sec sec-alt" aria-label="Resultados en Grupo Garden">
+  <section class="sec sec-dark" aria-label="Resultados en Grupo Garden">
     <div class="wrap">
       <GardenProof limit={3} title="En producción en Grupo Garden" />
     </div>
@@ -168,16 +168,20 @@ const schemas = [
     margin-top: 28px;
   }
   .jump a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
     font-size: 0.9rem;
-    color: var(--text-2);
+    color: var(--noche);
+    background: var(--blanco);
     text-decoration: none;
-    border: 1px solid var(--border);
+    border: 1px solid var(--vidrio);
     border-radius: 999px;
-    padding: 6px 14px;
+    padding: 6px 16px;
   }
   .jump a:hover {
-    color: var(--white);
-    border-color: var(--violet-text);
+    color: var(--ink);
+    border-color: var(--accent);
   }
   .page-hero .btn-row {
     margin-top: 8px;
@@ -214,10 +218,12 @@ const schemas = [
   }
   .flow-n {
     display: block;
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: var(--violet-text);
-    margin-bottom: 6px;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 1.375rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--noche);
+    margin-bottom: 8px;
   }
   .flow h3 {
     font-size: 1.05rem;

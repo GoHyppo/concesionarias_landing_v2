@@ -32,15 +32,26 @@ const pages = Array.from({ length: total }, (_, i) => i + 1);
   }
   .pager a,
   .pager span {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 8px 14px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--vidrio);
     border-radius: var(--radius);
+    background: var(--blanco);
     text-decoration: none;
-    color: var(--text-2);
+    color: var(--noche);
+    font-family: var(--mono);
+    font-size: 0.875rem;
+  }
+  .pager a:hover {
+    border-color: var(--noche);
   }
   .pager [aria-current] {
-    background: var(--violet);
-    color: var(--white);
-    border-color: var(--violet);
+    background: var(--noche);
+    color: var(--blanco);
+    border-color: var(--noche);
   }
 </style>

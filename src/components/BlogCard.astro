@@ -32,10 +32,19 @@ const cat = getCategory(post.data.category);
   .bcard {
     display: flex;
     flex-direction: column;
-    background: var(--surface);
-    border: 1px solid var(--border-soft);
+    background: var(--blanco);
+    border: 1px solid var(--vidrio);
     border-radius: var(--radius-lg);
     overflow: hidden;
+    transition: border-color 0.2s var(--ease);
+  }
+  .bcard:hover {
+    border-color: var(--noche);
+  }
+  .bcard-img {
+    display: block;
+    background: var(--escarcha);
+    border-bottom: 1px solid var(--vidrio);
   }
   .bcard-img img {
     display: block;
@@ -45,38 +54,46 @@ const cat = getCategory(post.data.category);
     object-fit: cover;
   }
   .bcard-body {
-    padding: 20px;
+    padding: 22px;
     display: flex;
     flex-direction: column;
     flex: 1;
   }
   .bcard-cat {
-    margin: 0 0 8px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    margin: 0 0 10px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
   .bcard-cat a {
-    color: var(--violet-text);
+    color: var(--pizarra);
     text-decoration: none;
   }
+  .bcard-cat a:hover {
+    color: var(--noche);
+  }
   .bcard-title {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     line-height: 1.3;
   }
   .bcard-title a {
-    color: var(--white);
+    color: var(--noche);
     text-decoration: none;
   }
   .bcard-title a:hover {
     text-decoration: underline;
+    text-decoration-color: var(--capa-2);
   }
   .bcard-desc {
-    color: var(--text-2);
+    color: var(--pizarra);
     font-size: 0.95rem;
   }
   .bcard-date {
     margin: auto 0 0;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
   }
 </style>

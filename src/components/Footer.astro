@@ -42,7 +42,8 @@ const year = 2026;
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="/" aria-label="ConcesionarIA, inicio" class="footer-logo"><Logo /></a>
+        <a href="/" aria-label="ConcesionarIA, inicio" class="footer-logo"><Logo variant="blanco" height={26} /></a>
+        <p class="footer-by">Por Hyppo · concesionaria.ai</p>
         <p>
           IA para concesionarias de autos: un agente que responde, califica y sigue cada lead por WhatsApp, con
           los datos y dashboards para gestionar la venta.
@@ -79,10 +80,9 @@ const year = 2026;
 
 <style>
   .footer {
-    background: #030208;
-    border-top: 1px solid var(--border-soft);
-    padding: 64px 0 28px;
-    color: var(--text-2);
+    background: var(--noche);
+    color: var(--capa-2-noche);
+    padding: 72px 0 32px;
   }
   .footer-top {
     display: grid;
@@ -95,17 +95,32 @@ const year = 2026;
   }
   .footer-logo {
     text-decoration: none;
-    display: inline-block;
-    margin-bottom: 16px;
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
   }
-  .footer-brand p {
-    color: var(--muted);
+  .footer-by {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--capa-2-noche);
+    margin: 6px 0 18px;
+  }
+  .footer-brand p:not(.footer-by) {
+    color: var(--capa-2-noche);
     font-size: 0.95rem;
     max-width: 40ch;
   }
-  .footer-wa {
+  .footer .footer-wa {
     min-height: 44px;
     font-size: 0.92rem;
+    background: transparent;
+    color: var(--blanco);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  .footer .footer-wa:hover {
+    border-color: var(--blanco);
   }
   .footer-cols {
     display: grid;
@@ -118,12 +133,13 @@ const year = 2026;
     }
   }
   .footer-title {
-    color: var(--white);
-    font-weight: 600;
-    font-size: 0.82rem;
-    letter-spacing: 0.1em;
+    font-family: var(--mono);
+    color: var(--blanco);
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   .footer ul {
     list-style: none;
@@ -134,23 +150,26 @@ const year = 2026;
     margin-bottom: 8px;
   }
   .footer a:not(.btn) {
-    color: var(--muted);
+    color: var(--capa-2-noche);
     text-decoration: none;
     font-size: 0.95rem;
   }
   .footer a:not(.btn):hover {
-    color: var(--white);
+    color: var(--blanco);
+  }
+  .footer :focus-visible {
+    outline-color: var(--blanco);
   }
   .footer-bottom {
     margin-top: 48px;
     padding-top: 20px;
-    border-top: 1px solid var(--border-soft);
+    border-top: 1px solid var(--line-dark);
     display: flex;
     flex-wrap: wrap;
     gap: 12px 24px;
     justify-content: space-between;
-    font-size: 0.88rem;
-    color: var(--muted);
+    font-size: 0.875rem;
+    color: var(--capa-2-noche);
   }
   .footer-bottom p {
     margin: 0;

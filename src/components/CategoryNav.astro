@@ -22,10 +22,14 @@ const { used, active } = Astro.props;
 <style>
   .catnav a {
     text-decoration: none;
+    min-height: 40px;
+  }
+  .catnav a:hover {
+    border-color: var(--noche);
   }
   .catnav a[aria-current='page'] {
-    border-color: var(--violet);
-    color: var(--white);
-    background: rgba(109, 46, 255, 0.22);
+    border-color: var(--noche);
+    color: var(--blanco);
+    background: var(--noche);
   }
 </style>

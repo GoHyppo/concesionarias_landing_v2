@@ -62,11 +62,19 @@ const schemas = [...(isHome ? [organizationSchema(), websiteSchema()] : []), ...
       content={noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'}
     />
 
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <meta name="theme-color" content="#05040A" />
+    <link rel="preload" href="/fonts/onest-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#E9EDF1" />
+    <!-- Animaciones de producto (Journey.astro): sin reduced motion, el estado
+         final impreso por el build se oculta hasta que arranca la animación. -->
+    <script is:inline>
+      if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('motion');
+      }
+    </script>
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE_NAME} />

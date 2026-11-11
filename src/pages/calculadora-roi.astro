@@ -296,15 +296,17 @@ const schemas = [breadcrumbListSchema(crumbs), faqPageSchema(faq)];
     min-height: 48px;
     padding: 10px 14px;
     border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--white);
-    font-family: var(--font);
+    border: 1px solid var(--vidrio);
+    background: var(--escarcha);
+    color: var(--noche);
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
     font-size: 1.05rem;
   }
   .calc input:focus {
-    border-color: var(--violet-text);
-    outline: none;
+    border-color: var(--noche);
+    outline: 2px solid var(--noche);
+    outline-offset: 1px;
   }
   .calc small {
     display: block;
@@ -329,20 +331,25 @@ const schemas = [breadcrumbListSchema(crumbs), faqPageSchema(faq)];
   }
   .res dd {
     margin: 0;
-    color: var(--white);
+    color: var(--ink);
     font-weight: 600;
     text-align: right;
     white-space: nowrap;
   }
   .res .hero-out dd {
     font-size: 1.8rem;
-    color: var(--violet-text);
+    color: var(--noche);
+    letter-spacing: -0.02em;
+  }
+  .res dd {
+    font-variant-numeric: tabular-nums;
   }
   .breakeven {
     margin-top: 20px;
     padding: 18px;
     border-radius: var(--radius);
-    background: var(--surface-2);
+    background: var(--escarcha);
+    border: 1px solid var(--vidrio);
   }
   .breakeven p:last-child {
     margin: 0;

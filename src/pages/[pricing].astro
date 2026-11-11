@@ -192,9 +192,10 @@ const schemas = [
     margin-top: 12px;
     padding: 8px 14px;
     border-radius: var(--radius);
-    background: var(--orange);
-    color: #1a0b00;
-    font-weight: 600;
+    background: var(--blanco);
+    border: 1px solid var(--vidrio);
+    color: var(--noche);
+    font-weight: 500;
   }
   .visually-hidden {
     position: absolute;
@@ -217,12 +218,34 @@ const schemas = [
     display: flex;
     flex-direction: column;
     gap: 6px;
+    padding: 28px;
   }
   .plan h3 {
-    font-size: 1.4rem;
+    font-size: 1.375rem;
   }
   .plan-hi {
-    border-color: var(--violet);
+    background: var(--noche);
+    border-color: var(--noche);
+    color: var(--blanco);
+  }
+  .plan-hi h3,
+  .plan-hi .num,
+  .plan-hi .meta dd {
+    color: var(--blanco);
+  }
+  .plan-hi .muted,
+  .plan-hi .meta dt {
+    color: var(--capa-2-noche);
+  }
+  .plan-hi .meta div {
+    border-bottom-color: var(--line-dark);
+  }
+  .plan-hi .btn-primary {
+    background: var(--blanco);
+    color: var(--noche);
+  }
+  .plan-hi :focus-visible {
+    outline-color: var(--blanco);
   }
   .plan .btn {
     margin-top: auto;
@@ -231,7 +254,7 @@ const schemas = [
     margin: 4px 0 12px;
   }
   .price .num {
-    font-size: clamp(1.8rem, 2.6vw, 2.3rem);
+    font-size: clamp(1.9rem, 2.6vw, 2.4rem);
   }
   .meta {
     margin: 0 0 20px;
@@ -249,14 +272,18 @@ const schemas = [
   }
   .meta dd {
     margin: 0;
-    color: var(--white);
+    color: var(--ink);
     font-weight: 600;
     text-align: right;
   }
   th[scope='row'] {
     background: transparent;
-    color: var(--text);
+    color: var(--noche);
+    font-family: var(--font);
+    font-size: 0.95rem;
     font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
   }
   .note {
     margin-top: 16px;

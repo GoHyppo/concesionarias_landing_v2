@@ -15,7 +15,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
   <div class="wrap nav-row">
     <a href="/" class="nav-brand" aria-label="ConcesionarIA, inicio">
-      <Logo />
+      <Logo height={26} />
     </a>
 
     <nav class="nav-links" aria-label="Principal">
@@ -59,10 +59,10 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     inset: 0 0 auto 0;
     z-index: 1000;
     height: var(--nav-h);
-    background: rgba(5, 4, 10, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border-soft);
+    background: rgba(233, 237, 241, 0.86);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--vidrio);
   }
   .nav-row {
     height: 100%;
@@ -73,19 +73,28 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   .nav-brand {
     text-decoration: none;
     margin-right: auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  @media (max-width: 420px) {
+    .nav-brand :global(.logo) {
+      height: 21px;
+      width: auto;
+    }
   }
   .nav-links {
     display: none;
   }
   .nav-links ul {
     display: flex;
-    gap: 22px;
+    gap: 26px;
     list-style: none;
     margin: 0;
     padding: 0;
   }
   .nav-links a {
-    color: var(--text-2);
+    color: var(--pizarra);
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 500;
@@ -94,13 +103,13 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   }
   .nav-links a:hover,
   .nav-links a[aria-current='page'] {
-    color: var(--white);
-    border-bottom-color: var(--violet);
+    color: var(--noche);
+    border-bottom-color: var(--noche);
   }
   .nav-cta {
     display: none;
-    min-height: 42px;
-    padding: 9px 18px;
+    min-height: 44px;
+    padding: 10px 18px;
     font-size: 0.95rem;
   }
   .nav-mobile {
@@ -114,9 +123,10 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--white);
+    border: 1px solid var(--vidrio);
+    border-radius: var(--radius);
+    background: var(--blanco);
+    color: var(--noche);
   }
   .nav-mobile summary::-webkit-details-marker {
     display: none;
@@ -137,8 +147,8 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     left: 0;
     right: 0;
     top: var(--nav-h);
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
+    background: var(--escarcha);
+    border-bottom: 1px solid var(--vidrio);
     padding: 12px var(--gutter) 24px;
     max-height: calc(100vh - var(--nav-h));
     overflow-y: auto;
@@ -151,13 +161,15 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   .nav-panel a:not(.btn) {
     display: block;
     padding: 14px 4px;
-    color: var(--text);
+    color: var(--noche);
     text-decoration: none;
     font-size: 1.05rem;
-    border-bottom: 1px solid var(--border-soft);
+    font-weight: 500;
+    border-bottom: 1px solid var(--vidrio);
   }
   .nav-panel a[aria-current='page'] {
-    color: var(--violet-text);
+    box-shadow: inset 3px 0 0 var(--noche);
+    padding-left: 14px;
   }
   .nav-panel .btn {
     width: 100%;

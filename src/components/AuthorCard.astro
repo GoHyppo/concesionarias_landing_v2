@@ -21,10 +21,10 @@ const a = getAuthor(Astro.props.id);
     display: flex;
     gap: 18px;
     align-items: flex-start;
-    padding: 22px;
-    border: 1px solid var(--border-soft);
+    padding: 24px;
+    border: 1px solid var(--vidrio);
     border-radius: var(--radius-lg);
-    background: var(--surface);
+    background: var(--blanco);
   }
   .acard img {
     width: 72px;
@@ -32,20 +32,26 @@ const a = getAuthor(Astro.props.id);
     border-radius: 50%;
     object-fit: cover;
     flex: none;
+    filter: grayscale(1);
   }
   .acard-name {
     margin: 0;
-    font-weight: 700;
+    font-weight: 600;
+    font-size: 1.05rem;
   }
   .acard-name a {
-    color: var(--white);
+    color: var(--noche);
     text-decoration: none;
   }
   .acard-role {
     margin: 0 0 8px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
   .acard-bio {
-    color: var(--text-2);
+    color: var(--pizarra);
     margin-bottom: 6px;
   }
 </style>

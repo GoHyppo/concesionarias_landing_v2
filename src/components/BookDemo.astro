@@ -79,8 +79,7 @@ const Heading = headingLevel;
 
 <style>
   .book {
-    background: var(--surface);
-    border-top: 1px solid var(--border-soft);
+    background: var(--blanco);
   }
   .book-grid {
     display: grid;
@@ -90,11 +89,14 @@ const Heading = headingLevel;
   @media (min-width: 980px) {
     .book-grid {
       grid-template-columns: 0.9fr 1.1fr;
+      gap: 48px;
     }
   }
   .book-frame {
-    background: #ffffff;
+    background: var(--blanco);
+    border: 1px solid var(--vidrio);
     border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
     overflow: hidden;
     min-height: 640px;
   }
@@ -103,7 +105,7 @@ const Heading = headingLevel;
     width: 100%;
     min-height: 640px;
     border: 0;
-    background: #ffffff;
+    background: var(--blanco);
     color-scheme: light;
   }
   .book-fallback {
@@ -113,10 +115,8 @@ const Heading = headingLevel;
     gap: 8px;
     margin: 0;
     padding: 12px 16px;
-    background: var(--surface-2);
-    color: var(--text-2);
-  }
-  .book-fallback a {
-    color: var(--violet-text);
+    background: var(--escarcha);
+    border-top: 1px solid var(--vidrio);
+    color: var(--pizarra);
   }
 </style>
