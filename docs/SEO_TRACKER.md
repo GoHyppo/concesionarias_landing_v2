@@ -20,7 +20,7 @@ Tracker de implementación SEO en el formato de la casa (igual que hyppo.io). Lo
 | 2026-11-10 | Plan SEO fase 4 | Merge de `astro-rebuild` a `main` (deploya concesionaria.ai) | listo (`0d0260c` en vivo en concesionaria.ai, deploy de Pages OK) | fácil | Nico | 2026-11-10 |
 | 2026-11-10 | Plan SEO fase 4 | Enviar `sitemap-index.xml` y `blog/rss.xml` en Search Console después del go-live | listo | fácil | Hyppo | 2026-11-10 |
 | 2026-11-10 | Plan SEO fase 4 | Owner de Search Console `nicolas@hyppo.io` agregado en `sc-domain:concesionaria.ai` | listo | fácil | Hyppo | 2026-11-10 |
-| 2026-11-10 | URL Inspection | La home sigue indexada desde la SPA vacía (último rastreo 2026-11-03): pedir Request Indexing desde la UI de Search Console (Nico ya es owner) | pendiente | fácil | Nico | |
+| 2026-11-10 | URL Inspection | La home sigue indexada desde la SPA vacía (último rastreo 2026-11-03): pedir Request Indexing desde la UI de Search Console (Nico ya es owner) | listo (resuelto solo: URL Inspection del 2026-11-11 muestra `lastCrawlTime` 2026-11-10T23:54, `Submitted and indexed`, ya sobre el sitio Astro; no hizo falta Request Indexing manual) | fácil | Nico | 2026-11-11 |
 | 2026-11-10 | Plan SEO fase 4 | Confirmar `generate_lead` con una reserva de prueba en GA4 DebugView | pendiente | fácil | Hyppo | |
 | 2026-11-10 | Plan SEO fase 4 | Apagar Pages y quitar el CNAME del repo v1 (`tomilagom/concesionarias_landing`) | pendiente | fácil | Tomás | |
 | 2026-11-10 | Decisión de Nico | Bots de demo por marca: se mantienen las líneas en producción de Grupo Garden (`/demo/` lo aclara) | listo | fácil | Nico | 2026-11-10 |
