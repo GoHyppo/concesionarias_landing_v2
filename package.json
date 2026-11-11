@@ -10,7 +10,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "check:seo": "node scripts/check-site-seo.mjs",
-    "verify": "astro build && node scripts/check-site-seo.mjs"
+    "check:ai": "node scripts/check-ai-access.mjs --live",
+    "verify": "astro build && node scripts/check-site-seo.mjs && node scripts/check-ai-access.mjs"
   },
   "engines": {
     "node": ">=20"
