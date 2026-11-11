@@ -14,6 +14,7 @@
 // Si esto falla, el bug está en robots.txt, en el deploy o en el servidor:
 // nunca se arregla sacando un bot de esta lista.
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 
 const BOTS = {
   'OAI-SearchBot': 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; OAI-SearchBot/1.3; +https://openai.com/searchbot',
@@ -85,12 +86,22 @@ if (!existsSync('dist/llms.txt') || readFileSync('dist/llms.txt', 'utf8').trim()
 
 // ---- sitio vivo
 if (LIVE && site) {
+  // curl y no fetch: en las rutinas en la nube la salida a internet pasa por un
+  // proxy que curl respeta (HTTPS_PROXY) y el fetch de Node no. Sin -L: un
+  // redirect cuenta como falla, el home tiene que dar 200 directo.
+  const MARK = '\n__HTTP_STATUS__';
   const get = async (url, ua) => {
     try {
-      const r = await fetch(url, { headers: ua ? { 'user-agent': ua } : {}, redirect: 'manual' });
-      return { status: r.status, body: r.status === 200 ? await r.text() : '' };
+      const out = execFileSync(
+        'curl',
+        ['-s', '--max-time', '25', ...(ua ? ['-A', ua] : []), '-w', `${MARK}%{http_code}`, url],
+        { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 },
+      );
+      const i = out.lastIndexOf(MARK);
+      const status = Number(out.slice(i + MARK.length));
+      return { status, body: status === 200 ? out.slice(0, i) : '' };
     } catch (e) {
-      return { status: `error ${e.message}`, body: '' };
+      return { status: `error ${e.message.split('\n')[0]}`, body: '' };
     }
   };
   const robots = await get(`${site}/robots.txt`);
