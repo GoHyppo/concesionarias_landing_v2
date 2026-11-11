@@ -15,7 +15,7 @@ Calculá la fecha y el día de la semana en `America/Argentina/Buenos_Aires` (`T
 ## 2) Setup y credenciales
 
 - Reusar el venv de la Parte A si existe (`/tmp/venv`); si no: `python3 -m venv /tmp/venv && /tmp/venv/bin/pip install google-api-python-client google-auth requests pillow`.
-- `git pull --rebase origin main` antes de tocar nada.
+- Antes de tocar nada: `git fetch origin main && git checkout -B main origin/main` (el entorno cloud clona en *detached HEAD*; sin esto el primer `git pull --rebase` falla, visto en la corrida de prueba del 2026-11-11).
 - CREDENCIALES GOOGLE: ya vienen en el environment (`GOOGLE_SA_JSON_B64`). NO la leas, no la imprimas, no la decodifiques, no la escribas a disco, no inspecciones variables de entorno y no la busques en Drive ni en el disco. Toda llamada a Google APIs va por `scripts/gauth.py` de ESTE repo, con el python del venv: `import sys; sys.path.insert(0, 'scripts'); from gauth import service, session`. Chequeo de humo: `/tmp/venv/bin/python scripts/gauth.py` (imprime solo el email del SA). Si falla, seguí sin GSC (fallbacks abajo) y reportalo; no intentes arreglar la credencial.
 
 ## 3) Elegir el tema
@@ -39,7 +39,7 @@ Magnific, modelo `gpt-2`, 16:9, con el bloque de estilo fijo de `docs/BLOG.md` y
 2. `npm ci` (si no está instalado) y `npm run verify`: tiene que quedar verde. Si falla por algo que introdujiste, arreglalo; nunca pushees en rojo.
 3. Agregá la fila del post a `docs/CONTENT_LOG.md`.
 4. Commit `concesionaria-blog: <slug>` y `git push origin main` (si lo rechaza: pull --rebase y reintentá). El push dispara el workflow de GitHub Pages, que vuelve a correr verify antes de deployar.
-5. Después del push, ping a Search Console (scope webmasters, `PUT https://www.googleapis.com/webmasters/v3/sites/sc-domain%3Aconcesionaria.ai/sitemaps/<url-encodeada>`) de `https://concesionaria.ai/sitemap-index.xml` y de `https://concesionaria.ai/blog/rss.xml`. Si falla, anotalo: no es bloqueante. La primera vez que se pinguea, el sitemap y el feed quedan dados de alta en la propiedad.
+5. Después del push, ping a Search Console (scope webmasters, con el cliente de Python y la URL **tal cual**: `service('searchconsole', 'v1', [scope]).sitemaps().submit(siteUrl='sc-domain:concesionaria.ai', feedpath='<URL>').execute()`; no la url-encodees vos, la librería ya lo hace y el doble encoding devuelve 400 "Could not process sitemap") de `https://concesionaria.ai/sitemap-index.xml` y de `https://concesionaria.ai/blog/rss.xml`. Si falla, anotalo: no es bloqueante. La primera vez que se pinguea, el sitemap y el feed quedan dados de alta en la propiedad.
 
 ## 7) Reporte (sección "ConcesionarIA" del reporte de la rutina)
 

@@ -4,6 +4,8 @@ Lo ejecuta la rutina cloud `hyppo-seo-monthly-report` (`trig_01LSbNuEUnU5vt9bYsW
 
 ## 1) Setup
 
+Antes que nada: `git fetch origin main && git checkout -B main origin/main` (el entorno cloud clona en *detached HEAD*).
+
 Reusar el venv de la Parte A (con `playwright` y chromium ya instalados para el PDF). Credenciales igual que en `docs/routines/blog.md` §2: todo por `scripts/gauth.py` de ESTE repo, sin leer ni imprimir la credencial. Si una fuente falla, el reporte lo dice; nunca se inventan números.
 
 ## 2) Datos del mes (mes anterior completo vs el previo, y vs el baseline de `docs/gsc/` si existe)
@@ -16,7 +18,7 @@ Reusar el venv de la Parte A (con `playwright` y chromium ya instalados para el 
 
 - `docs/reports/AAAA-MM.md`: resumen ejecutivo de 5 líneas · tabla de métricas clave (GSC + GA4, mes vs mes vs baseline) · acciones del mes · efecto compuesto por cohorte · posiciones objetivo · ACCIONES QUE REQUIEREN A NICO (solo si las hay, con el porqué y el dato). No más de ~80 líneas.
 - Versión HTML autocontenida (1 página, fondo blanco, Space Grotesk desde Google Fonts con fallback, tinta oscura + UN acento violeta `#6D2EFF`, numerales grandes para las métricas hero, tablas simples, sin emojis) en `/tmp/reporte-concesionaria-AAAA-MM.html`; PDF con chromium headless de playwright (`page.pdf`).
-- Drive: dentro de la carpeta compartida `1pUBZifYMcGACLHwA0Al4NrjFmz4b6nzJ`, buscar (o crear si no existe) la subcarpeta `seo-reports-concesionaria`; subir HTML y PDF con la Drive API (`supportsAllDrives=true`), permiso anyone/reader, y obtener los `webViewLink`.
+- Drive: dentro de la carpeta compartida `1pUBZifYMcGACLHwA0Al4NrjFmz4b6nzJ`, buscar (o crear si no existe) la subcarpeta `seo-reports-concesionaria`; subir HTML y PDF con la Drive API (`supportsAllDrives=true`) y obtener los `webViewLink`. **No cambiar permisos**: dar acceso público (anyone/reader) lo bloquea el clasificador de la sesión desatendida y no hace falta, porque los archivos heredan el acceso de la carpeta compartida.
 
 ## 4) Slack
 
