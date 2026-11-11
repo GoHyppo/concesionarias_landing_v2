@@ -4,6 +4,12 @@
  * de la v1 del sitio. La reserva crea el contacto en el CRM del lado del
  * servidor, así que el lead no depende de ningún script de analítica.
  *
+ * Sin loading="lazy" en el iframe, a propósito: form_embed.js de GoHighLevel
+ * esconde el iframe (opacity 0, left -9999px, position absolute) hasta que el
+ * widget avisa que cargó. Con lazy, si el script lo escondía antes de que
+ * empezara a cargar, el navegador nunca lo cargaba (está fuera de pantalla) y la
+ * agenda quedaba en blanco (visto por Nico el 2026-11-11).
+ *
  * Eventos: `book_demo_view` cuando el bloque entra en pantalla (una vez por
  * página) y `generate_lead` cuando el widget avisa que la persona dejó sus datos
  * (lo escucha Layout.astro). El link de respaldo es un <a href> real para quien
@@ -46,7 +52,6 @@ const Heading = headingLevel;
       <iframe
         src={BOOKING_URL}
         title="Calendario para agendar una demo de ConcesionarIA"
-        loading="lazy"
         scrolling="no"
         id="ghl-booking-concesionaria"></iframe>
       <p class="book-fallback small">
@@ -93,6 +98,7 @@ const Heading = headingLevel;
     }
   }
   .book-frame {
+    position: relative;
     background: var(--blanco);
     border: 1px solid var(--vidrio);
     border-radius: var(--radius-lg);
@@ -100,7 +106,23 @@ const Heading = headingLevel;
     overflow: hidden;
     min-height: 640px;
   }
+  /* Mientras el widget carga (el iframe está oculto) se ve este aviso; el
+     iframe, blanco y más adelante en el DOM, lo tapa cuando aparece. */
+  .book-frame::before {
+    content: 'Cargando el calendario...';
+    position: absolute;
+    top: 240px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--pizarra);
+  }
   .book-frame iframe {
+    position: relative;
     display: block;
     width: 100%;
     min-height: 640px;
