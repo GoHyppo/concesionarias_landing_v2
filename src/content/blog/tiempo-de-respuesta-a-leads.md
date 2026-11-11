@@ -7,7 +7,7 @@ category: 'gestion-de-leads'
 author: 'nicolas-lew-deveali'
 publishedAt: 2026-11-10
 image: '../../assets/blog/tiempo-de-respuesta-a-leads.webp'
-imageAlt: 'Ilustración de un salón de autos de noche con un reloj sin números y un celular del que sale un globo de chat naranja.'
+imageAlt: 'Ilustración de un salón de autos con un reloj de pared sin números y un celular sobre un mostrador del que sale un globo de chat.'
 keyTakeaways:
   - 'El tiempo de respuesta se mide desde el primer mensaje del lead hasta la primera respuesta útil, no hasta que un vendedor lo ve.'
   - 'La mediana por vendedor, dentro y fuera del horario comercial, dice más que un promedio general que esconde los leads que nadie contestó.'

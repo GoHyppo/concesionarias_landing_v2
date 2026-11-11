@@ -34,6 +34,8 @@
  *  - /precios/: un Offer por plan visible, con el mismo abono que la tabla.
  *  - Los números de la tabla de precios (src/lib/pricing.ts) y el early adopter
  *    aparecen SOLO en /precios/: ninguna otra página, post, feed ni llms.txt.
+ *  - Marca "Capas": ni colores ni tipografía de la marca vieja en el build, y
+ *    ningún hero del blog con la paleta vieja (violeta/naranja saturados).
  *
  * Si algo falla, se arregla el sitio. Aflojar un chequeo para que pase es apagar
  * la alarma (en particular los de claims y feed).
@@ -527,6 +529,38 @@ else {
     const url = link.replace(/<\/?link>/g, '');
     const r = toRoute(url);
     if (r && !routeExists(r)) fail(feedPath, `Link del feed que no existe: ${url}`);
+  }
+}
+
+/* Marca "Capas" (2026-11-11): la marca vieja no vuelve. Ni sus colores
+   (violeta #6D2EFF, fondo #05040A, naranja #FF6A00) ni Space Grotesk en el
+   HTML/CSS publicado, ni heroes del blog con la paleta vieja (una corrida de la
+   rutina con el prompt viejo de Magnific frena acá). */
+const OLD_BRAND = [/#6d2eff/i, /#05040a/i, /#ff6a00/i, /#5a26d6/i, /#b9a3ff/i, /rgba\(\s*109,\s*46,\s*255/i, /space[ -]grotesk/i];
+for (const f of files.filter((x) => /\.(html|css|svg|xml)$/.test(x))) {
+  const raw = readFileSync(f, 'utf8');
+  for (const re of OLD_BRAND) {
+    const m = re.exec(raw);
+    if (m) fail(f, `Resto de la marca vieja (${m[0]}): usar los tokens de src/styles/global.css.`);
+  }
+}
+{
+  const sharp = (await import('sharp')).default;
+  const dir = join('src', 'assets', 'blog');
+  for (const name of readdirSync(dir).filter((n) => /\.(webp|png|jpe?g)$/.test(n))) {
+    const { data, info } = await sharp(join(dir, name)).resize(96, 54, { fit: 'fill' }).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+    let off = 0;
+    const n = info.width * info.height;
+    for (let i = 0; i < data.length; i += 3) {
+      const r = data[i] / 255, g = data[i + 1] / 255, b = data[i + 2] / 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+      if (max < 0.25 || d / max < 0.45) continue;
+      let h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+      h = (h * 60 + 360) % 360;
+      if ((h >= 240 && h <= 300) || (h >= 8 && h <= 45)) off++;
+    }
+    const share = off / n;
+    if (share > 0.02) fail(join(dir, name), `Hero con la paleta vieja (${(share * 100).toFixed(1)}% de píxeles violeta/naranja saturados). Regenerarla con el bloque de estilo de docs/BLOG.md.`);
   }
 }
 

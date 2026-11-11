@@ -7,7 +7,7 @@ category: 'gestion-de-leads'
 author: 'nicolas-lew-deveali'
 publishedAt: 2026-11-10
 image: '../../assets/blog/leads-de-plan-de-ahorro.webp'
-imageAlt: 'Ilustración vista desde arriba de un círculo de autos violetas iguales, con un auto naranja que sale del círculo.'
+imageAlt: 'Ilustración vista desde arriba de un círculo de autos iguales, con un auto que sale del círculo.'
 keyTakeaways:
   - 'El lead de plan de ahorro pregunta por la cuota, cómo se adjudica el auto y cuándo se entrega; responder solo con un precio de lista no lo califica.'
   - 'Al mismo WhatsApp escriben prospectos y suscriptores que ya pagan un plan, y mezclarlos ensucia la medición y satura al vendedor.'

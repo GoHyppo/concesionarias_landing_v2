@@ -19,7 +19,7 @@ Reusar el venv de la Parte A (con `playwright` y chromium ya instalados para el 
 ## 3) Reporte (corto: resumen, métricas, acciones)
 
 - `docs/reports/AAAA-MM.md`: resumen ejecutivo de 5 líneas · tabla de métricas clave (GSC + GA4 + sesiones desde asistentes de IA, mes vs mes vs baseline) · acciones del mes · efecto compuesto por cohorte · posiciones objetivo · ACCIONES QUE REQUIEREN A NICO (solo si las hay, con el porqué y el dato). No más de ~80 líneas.
-- Versión HTML autocontenida (1 página, fondo blanco, Space Grotesk desde Google Fonts con fallback, tinta oscura + UN acento violeta `#6D2EFF`, numerales grandes para las métricas hero, tablas simples, sin emojis) en `/tmp/reporte-concesionaria-AAAA-MM.html`; PDF con chromium headless de playwright (`page.pdf`).
+- Versión HTML autocontenida en la marca "Capas" (1 página, fondo escarcha `#E9EDF1` con tarjetas blancas, Onest + Spline Sans Mono desde Google Fonts con fallback, tinta noche `#0B1F3A`, texto secundario pizarra `#4A5A70`, rótulos en mono, numerales grandes para las métricas hero, tablas simples, sin degradados, sin emojis) en `/tmp/reporte-concesionaria-AAAA-MM.html`; PDF con chromium headless de playwright (`page.pdf`).
 - Drive: dentro de la carpeta compartida `1pUBZifYMcGACLHwA0Al4NrjFmz4b6nzJ`, buscar (o crear si no existe) la subcarpeta `seo-reports-concesionaria`; subir HTML y PDF con la Drive API (`supportsAllDrives=true`) y obtener los `webViewLink`. **No cambiar permisos**: dar acceso público (anyone/reader) lo bloquea el clasificador de la sesión desatendida y no hace falta, porque los archivos heredan el acceso de la carpeta compartida.
 
 ## 4) Slack

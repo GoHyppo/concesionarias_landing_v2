@@ -7,7 +7,7 @@ category: 'gestion-comercial'
 author: 'tomas-lagomarsino'
 publishedAt: 2026-11-10
 image: '../../assets/blog/bdc-vs-agente-de-ia.webp'
-imageAlt: 'Ilustración de dos escritorios, uno con auriculares de call center y otro con un nodo de chat violeta, que se pasan un testigo naranja.'
+imageAlt: 'Ilustración de dos escritorios, uno con auriculares de call center y otro con un nodo de chat, unidos por un testigo de posta.'
 keyTakeaways:
   - 'Un BDC automotriz atiende, califica y agenda; un agente de IA puede hacer esas tres tareas a cualquier hora y con el mismo criterio para todos los leads.'
   - 'Las personas siguen rindiendo más en la reactivación de leads fríos, las negociaciones y los casos que se salen del guion.'

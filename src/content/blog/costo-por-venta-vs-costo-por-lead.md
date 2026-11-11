@@ -7,7 +7,7 @@ category: 'medicion-y-atribucion'
 author: 'nicolas-lew-deveali'
 publishedAt: 2026-11-11
 image: '../../assets/blog/costo-por-venta-vs-costo-por-lead.webp'
-imageAlt: 'Ilustración de dos embudos violeta, uno que termina en un lead y otro que termina en un auto, conectados por una balanza con un elemento naranja.'
+imageAlt: 'Ilustración de dos embudos, uno que termina en un globo de chat y otro que termina en un auto, sobre una balanza con una pesa chica.'
 keyTakeaways:
   - 'El costo por lead mide el gasto por contacto. El costo por venta mide el gasto por auto vendido, y es el número que explica el resultado del mes.'
   - 'Un canal con leads baratos puede tener el costo por venta más alto del mes si su tasa de cierre es baja.'

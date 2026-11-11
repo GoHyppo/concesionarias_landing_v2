@@ -7,7 +7,7 @@ category: 'whatsapp-e-ia'
 author: 'tomas-lagomarsino'
 publishedAt: 2026-11-10
 image: '../../assets/blog/calificar-leads-automotrices-con-ia.webp'
-imageAlt: 'Ilustración de una máquina que reparte fichas con forma de globo de chat en tres carriles violetas, con una ficha naranja en el carril más brillante.'
+imageAlt: 'Ilustración de una máquina que reparte fichas con forma de globo de chat en tres carriles de distinta intensidad, con una ficha destacada en el primero.'
 keyTakeaways:
   - 'Un lead automotriz se califica por plazo de compra, modelo y forma de pago, no por cuántas preguntas respondió.'
   - 'Hot es intención de compra en los próximos 60 días, Warm es a más de 60 días y Cold es una consulta general.'

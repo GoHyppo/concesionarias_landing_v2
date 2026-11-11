@@ -7,7 +7,7 @@ category: 'medicion-y-atribucion'
 author: 'nicolas-lew-deveali'
 publishedAt: 2026-11-10
 image: '../../assets/blog/que-campana-vende-autos.webp'
-imageAlt: 'Ilustración de una línea violeta que une un megáfono con un auto en una plataforma giratoria y termina en un documento naranja.'
+imageAlt: 'Ilustración de una línea que une un megáfono con un auto en una plataforma giratoria y termina en un documento cerrado.'
 keyTakeaways:
   - 'Muchas concesionarias miden leads por campaña porque el dato de la venta vive en otro sistema y nadie lo une con el lead.'
   - 'El circuito se cierra guardando el origen de cada lead, registrando la conversación en el mismo perfil y cruzándolo con la factura del ERP.'

@@ -60,11 +60,16 @@ Rutas: `/`, `/producto/`, `/para-concesionarias/`, `/integraciones/`, `/casos/gr
 
 ## Diseño
 
-Marca ConcesionarIA (deck comercial `Hyppo/claude_tests/pitches/concesionaria/build_slides.py`): fondo `#05040A`, violeta `#6D2EFF`, naranja `#FF6A00` como acento puntual, Space Grotesk self-hosted (`public/fonts/`). Tokens en `src/styles/global.css`.
-- Texto violeta sobre fondo oscuro: usar `--violet-text` (lila, ~7:1), nunca el violeta puro (3,4:1).
-- Sobre naranja, texto oscuro (blanco sobre naranja no pasa AA).
-- Logos de marcas: solo marcas de Grupo Garden que operan con el sistema, en tiles blancos.
-- Mobile-first; el menú mobile es un `<details>` (funciona sin JS). Estilos que apuntan a markup de un componente hijo (por ejemplo `Icon.astro`) van con `:global()`.
+Marca **ConcesionarIA "Capas"** (aprobada por Nico el 2026-11-11; el sitio se rebrandeó el mismo día). Fuente de verdad: el kit de marca en `Hyppo/claude_tests/concesionaria_brand/` (repo privado, `HANDOFF_WEB.md` es la entrada) y los tokens de `src/styles/global.css`.
+- Paleta: escarcha `#E9EDF1` (fondo), blanco, noche `#0B1F3A` (tinta, botones, bandas oscuras `.sec-dark`), pizarra `#4A5A70` (texto secundario), acero `#8C9AAB` (solo íconos, nunca texto), vidrio `#C9D3DE` (bordes). Tintes de capa `#798493` / `#C2C7CE` (sobre noche `#9DA5B0` / `#546275`). Colores de estado (ok, alerta, error) solo dentro de UI de producto.
+- Tipografía: Onest para todo y Spline Sans Mono para datos, rótulos (`.kicker`) y horas. Las dos self-hosted en `public/fonts/` (OFL).
+- Logo: `src/components/Logo.astro` (SVG del kit en trazos; variante `noche` y `blanco`). Nunca se redibuja con la fuente. "IA" va en el tinte de la capa 2 a propósito.
+- Recurso gráfico: tres barras redondeadas desfasadas (Conversación / Datos / Gestión), usadas como tabs en el home.
+- **Sin look de IA**: nada de fotos generadas, brillos, degradados ni sparkles en el sitio. En lugar de imágenes, interfaz de producto: el recorrido animado `src/components/Journey.astro` (layout A teléfono + ficha en el héroe y en `/demo/`; layout C una frase por paso en "Cómo funciona"), datos de `src/lib/journey.ts`. Respeta `prefers-reduced-motion` (queda el estado final, que es también lo que imprime el build) y se pausa fuera de pantalla. Las fotos del kit son dirección de arte, pendientes de una sesión real: no van al sitio.
+- Heroes del blog: Magnific con el bloque de estilo de `docs/BLOG.md` (escarcha, tintes gris azulado, un elemento noche).
+- La marca vieja (violeta `#6D2EFF` sobre `#05040A`, naranja `#FF6A00`, Space Grotesk, logo de bloques) está prohibida: el gate (`scripts/check-site-seo.mjs`) falla si reaparece en el build o en un hero del blog.
+- Logos de marcas de Grupo Garden: solo marcas que operan con el sistema, en tiles blancos, en grises (color al pasar el mouse).
+- Mobile-first, sin scroll horizontal a 390 px; el menú mobile es un `<details>` (funciona sin JS). Estilos que apuntan a markup de un componente hijo (por ejemplo `Icon.astro`) van con `:global()`.
 
 ---
 

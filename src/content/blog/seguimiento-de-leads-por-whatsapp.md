@@ -7,7 +7,7 @@ category: 'whatsapp-e-ia'
 author: 'tomas-lagomarsino'
 publishedAt: 2026-11-10
 image: '../../assets/blog/seguimiento-de-leads-por-whatsapp.webp'
-imageAlt: 'Ilustración vista desde arriba de un camino hecho de globos de chat que une un celular con una llave de auto naranja.'
+imageAlt: 'Ilustración vista desde arriba de un camino hecho de globos de chat que une un celular con una llave de auto.'
 keyTakeaways:
   - 'Un seguimiento que vive en el WhatsApp personal del vendedor se pierde cuando el vendedor está ocupado, de vacaciones o deja la empresa.'
   - 'La cadencia correcta depende de la intención: un lead que compra en semanas no se trata igual que uno que solo pidió información.'
