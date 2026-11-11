@@ -12,3 +12,4 @@ Chequeo de colisión de las semillas (2026-11-10): sitemap vivo de hyppo.io + GS
 | 2026-11-10 | leads-de-plan-de-ahorro | AR | leads de plan de ahorro (mapa) | 980 | imagen | flagship | publicado (go-live 2026-11-10) |
 | 2026-11-10 | que-campana-vende-autos | regional | cómo saber qué campaña vende autos (mapa) | 995 | imagen | flagship | publicado (go-live 2026-11-10) |
 | 2026-11-10 | bdc-vs-agente-de-ia | regional | BDC automotriz vs agente de IA (mapa) | 967 | imagen | flagship | publicado (go-live 2026-11-10) |
+| 2026-11-11 | costo-por-venta-vs-costo-por-lead | regional | costo por venta vs costo por lead (mapa; GSC propio sin candidatos, 0 impresiones; anti-colisión hyppo.io sin páginas en el top 20 para "costo por venta/lead" ni "vendedor", sin slug propio en el sitemap) | 986 | imagen | flagship | publicado |
