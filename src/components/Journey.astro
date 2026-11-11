@@ -1,0 +1,704 @@
+---
+/**
+ * Recorrido animado de un lead (marca "Capas"): interfaz de producto en lugar
+ * de una foto o un video.
+ * - layout "A": teléfono + ficha del lead que se completa sola (héroe, /demo/).
+ * - layout "C": una frase grande por paso, barras de progreso y el teléfono
+ *   ("Cómo funciona", sobre banda noche).
+ *
+ * El build imprime el estado FINAL (sin JS, con reduced motion y para los
+ * buscadores); src/scripts/journey.ts lo reemplaza por la animación. Mientras
+ * carga el script, `html.motion` oculta el estado final sin mover el layout.
+ */
+import { STEPS, journeyHTML } from '../lib/journey';
+
+interface Props {
+  layout: 'A' | 'C';
+  id: string;
+  /** Texto para lectores de pantalla (layout A). */
+  label?: string;
+}
+const {
+  layout,
+  id,
+  label = 'Recorrido de ejemplo: un anuncio de Instagram abre WhatsApp, el agente califica a Lucía, agenda el test drive y la ficha del lead se completa sola.',
+} = Astro.props;
+const html = journeyHTML(layout, true);
+---
+
+{
+  layout === 'A' ? (
+    <div class="jx lay-a is-final" id={id} data-journey="A" role="img" aria-label={label} set:html={html} />
+  ) : (
+    <>
+      <div class="jx lay-c is-final" id={id} data-journey="C" aria-hidden="true" set:html={html} />
+      <ol class="sr-only">
+        {STEPS.map(([name, cap, exp]) => (
+          <li>
+            {name}: {cap} {exp}
+          </li>
+        ))}
+      </ol>
+    </>
+  )
+}
+
+<script>
+  import '../scripts/journey';
+</script>
+
+<style is:global>
+  /* El contenido se inyecta con set:html/innerHTML: por eso los estilos son
+     globales y viven todos bajo .jx. */
+  .jx {
+    --c2: #798493;
+    --c3: #c2c7ce;
+    --c2n: #9da5b0;
+    --c3n: #546275;
+    --ok: #1f7a5a;
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    color: var(--noche);
+    font-family: var(--font);
+    line-height: 1.4;
+  }
+  .motion .jx.is-final {
+    visibility: hidden;
+  }
+  .jx p {
+    margin: 0;
+  }
+  .jx .k {
+    font: 500 10px/1.3 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--pizarra);
+  }
+  .sec-dark .jx .k {
+    color: var(--capa-2-noche);
+  }
+  .jx .scr .k {
+    color: var(--pizarra);
+  }
+  .jx .ad .k {
+    color: var(--capa-2-noche);
+  }
+
+  /* ---------- teléfono ---------- */
+  .jx .phone {
+    width: 280px;
+    height: 580px;
+    border-radius: 40px;
+    background: var(--noche);
+    padding: 9px;
+    flex: none;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(11, 31, 58, 0.08), 0 24px 48px -24px rgba(11, 31, 58, 0.35);
+  }
+  .sec-dark .jx .phone {
+    background: #000;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+  .jx .scr {
+    color: var(--noche);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 32px;
+    overflow: hidden;
+    background: var(--blanco);
+  }
+  .jx .sbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 22px;
+    font: 500 11px/1 var(--mono);
+    z-index: 4;
+    color: var(--noche);
+  }
+  .jx .sbar i {
+    display: inline-block;
+    width: 18px;
+    height: 8px;
+    border: 1px solid var(--noche);
+    border-radius: 2px;
+    position: relative;
+  }
+  .jx .sbar i::after {
+    content: '';
+    position: absolute;
+    inset: 1px 4px 1px 1px;
+    background: var(--noche);
+    border-radius: 1px;
+  }
+  .jx .app {
+    position: absolute;
+    inset: 30px 0 0;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.5s var(--ease);
+  }
+  /* feed estilo Instagram */
+  .jx .ig .ah {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--escarcha);
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+  .jx .ig .ah span.k {
+    font-size: 9px;
+  }
+  .jx .ph {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .jx .av {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--noche);
+    color: var(--blanco);
+    display: grid;
+    place-items: center;
+    font: 600 10px/1 var(--font);
+    flex: none;
+  }
+  .jx .ph b {
+    font-size: 12.5px;
+    font-weight: 600;
+    display: block;
+    line-height: 1.2;
+  }
+  .jx .ph small {
+    font-size: 10.5px;
+    color: var(--pizarra);
+  }
+  .jx .ad {
+    aspect-ratio: 1;
+    background: var(--noche);
+    color: var(--blanco);
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .jx .ad .big {
+    font: 600 44px/0.95 var(--font);
+    letter-spacing: -0.045em;
+    margin-top: 14px;
+  }
+  .jx .ad .sub {
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--c2n);
+    margin-top: 10px;
+  }
+  .jx .ad .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+  }
+  .jx .ad .tag {
+    font: 500 9.5px/1 var(--mono);
+    letter-spacing: 0.04em;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    padding: 6px 8px;
+    white-space: nowrap;
+  }
+  .jx .ad .spec {
+    display: grid;
+    gap: 4px;
+    font: 500 10px/1.2 var(--mono);
+    letter-spacing: 0.04em;
+    color: var(--c2n);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .jx .cta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--escarcha);
+    transition: background 0.2s;
+  }
+  .jx .cta.hit {
+    background: var(--escarcha);
+  }
+  .jx .capt {
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--noche);
+  }
+  .jx .capt span {
+    color: var(--pizarra);
+  }
+  /* chat estilo WhatsApp (sin el verde de WhatsApp: colores de la marca) */
+  .jx .wa {
+    transform: translateX(100%);
+    background: var(--escarcha);
+  }
+  .jx.is-final .ig {
+    transform: translateX(-30%);
+  }
+  .jx.is-final .wa {
+    transform: none;
+  }
+  .jx .wa .ah {
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 12px;
+    background: var(--blanco);
+    border-bottom: 1px solid var(--vidrio);
+  }
+  .jx .wa .ah > span:last-child {
+    min-width: 0;
+  }
+  .jx .wa .ah b {
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 600;
+    display: block;
+    line-height: 1.2;
+  }
+  .jx .wa .ah small {
+    font-size: 10.5px;
+    color: var(--pizarra);
+  }
+  .jx .wa .ah .back {
+    font-size: 20px;
+    color: var(--pizarra);
+    width: 12px;
+  }
+  .jx .msgs {
+    flex: 1;
+    overflow: hidden;
+    padding: 10px 10px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .jx.is-final .msgs {
+    justify-content: flex-end;
+  }
+  .jx .msgs .sp {
+    flex: 1 0 auto;
+  }
+  .jx .b {
+    width: max-content;
+    max-width: 82%;
+    overflow-wrap: break-word;
+    font-size: 12.5px;
+    line-height: 1.4;
+    padding: 7px 10px;
+    border-radius: 12px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+    flex: none;
+  }
+  .jx .b.on {
+    opacity: 1;
+    transform: none;
+  }
+  .jx .b.me {
+    align-self: flex-end;
+    background: var(--blanco);
+    border: 1px solid var(--vidrio);
+    border-bottom-right-radius: 4px;
+  }
+  .jx .b.ag {
+    align-self: flex-start;
+    background: var(--noche);
+    color: var(--blanco);
+    border-bottom-left-radius: 4px;
+  }
+  .jx .b .t {
+    display: block;
+    text-align: right;
+    font: 500 9px/1 var(--mono);
+    margin-top: 4px;
+    opacity: 0.6;
+  }
+  .jx .b .ref {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: var(--escarcha);
+    border-left: 3px solid var(--noche);
+    border-radius: 6px;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+  }
+  .jx .b .ref i {
+    width: 28px;
+    height: 28px;
+    background: var(--noche);
+    border-radius: 4px;
+    flex: none;
+  }
+  .jx .b .ref small {
+    display: block;
+    font-size: 10.5px;
+    line-height: 1.3;
+    color: var(--pizarra);
+  }
+  .jx .btns {
+    display: grid;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .jx .btns span {
+    display: block;
+    text-align: center;
+    background: var(--blanco);
+    color: var(--noche);
+    border-radius: 8px;
+    padding: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .jx .btns span.hit {
+    background: var(--c3);
+  }
+  .jx .typing {
+    align-self: flex-start;
+    background: var(--noche);
+    border-radius: 12px;
+    padding: 9px 12px;
+    display: none;
+    gap: 4px;
+    flex: none;
+  }
+  .jx .typing.on {
+    display: flex;
+  }
+  .jx .typing i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c2n);
+    animation: jx-blink 1s infinite;
+  }
+  .jx .typing i:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .jx .typing i:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  @keyframes jx-blink {
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  .jx .day {
+    align-self: center;
+    font: 500 9.5px/1 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--blanco);
+    color: var(--pizarra);
+    border-radius: 6px;
+    padding: 6px 8px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    flex: none;
+  }
+  .jx .day.on {
+    opacity: 1;
+  }
+  .jx .inp {
+    height: 44px;
+    margin: 0 8px 10px;
+    background: var(--blanco);
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    font-size: 12.5px;
+    color: var(--pizarra);
+    flex: none;
+  }
+  /* notificación del sistema */
+  .jx .notif {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: 34px;
+    z-index: 5;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid var(--vidrio);
+    border-radius: 16px;
+    padding: 10px 12px;
+    box-shadow: 0 12px 24px -12px rgba(11, 31, 58, 0.35);
+    transform: translateY(-140%);
+    transition: transform 0.45s var(--ease);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  .jx .notif.on {
+    transform: none;
+  }
+  .jx .notif .k {
+    font-size: 9.5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .jx .notif b {
+    display: block;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  .jx .tap {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border-radius: 50%;
+    background: rgba(11, 31, 58, 0.18);
+    border: 2px solid rgba(11, 31, 58, 0.5);
+    z-index: 6;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.6);
+  }
+  .jx .tap.go {
+    animation: jx-tap 0.55s var(--ease);
+  }
+  @keyframes jx-tap {
+    0% {
+      opacity: 0;
+      transform: scale(1.3);
+    }
+    35% {
+      opacity: 1;
+      transform: scale(0.8);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  /* ---------- ficha del lead ---------- */
+  .jx .rec {
+    background: var(--blanco);
+    border: 1px solid var(--vidrio);
+    border-radius: 16px;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .jx .rec .rh {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--vidrio);
+  }
+  .jx .rec .rh b {
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .jx .rec .rows {
+    display: grid;
+  }
+  .jx .rec .r {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 10px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--escarcha);
+    font-size: 13px;
+    line-height: 1.35;
+    align-items: baseline;
+    transition: background 0.3s;
+  }
+  .jx .rec .r:last-child {
+    border-bottom: 0;
+  }
+  .jx .rec .r .k {
+    font-size: 10px;
+  }
+  .jx .rec .r .v {
+    color: var(--pizarra);
+    transition: color 0.3s;
+  }
+  .jx .rec .r.on .v {
+    color: var(--noche);
+    font-weight: 500;
+  }
+  .jx .rec .r.flash {
+    background: var(--escarcha);
+  }
+  .jx .st {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .jx .st::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+  }
+
+  /* ---------- layout A: teléfono + ficha ---------- */
+  .jx.lay-a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+  }
+  .jx.lay-a .phone {
+    width: 264px;
+    height: 560px;
+  }
+  .jx.lay-a .rec {
+    width: 252px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 1px 2px rgba(11, 31, 58, 0.06), 0 16px 32px -16px rgba(11, 31, 58, 0.25);
+  }
+  .jx.lay-a .rec .r {
+    grid-template-columns: 80px minmax(0, 1fr);
+    padding: 7px 14px;
+  }
+  @media (max-width: 960px) {
+    .jx.lay-a {
+      justify-content: center;
+    }
+  }
+  @media (max-width: 620px) {
+    .jx.lay-a {
+      flex-direction: column;
+    }
+    .jx.lay-a .rec {
+      width: 100%;
+      max-width: 340px;
+    }
+  }
+
+  /* ---------- layout C: una frase por paso ---------- */
+  .jx.lay-c {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 48px;
+    align-items: center;
+    margin-top: 40px;
+  }
+  .jx.lay-c .big {
+    display: grid;
+    gap: 20px;
+    align-content: center;
+  }
+  .jx.lay-c .num {
+    font: 500 13px/1 var(--mono);
+    letter-spacing: 0.08em;
+    color: var(--c2n);
+  }
+  .jx.lay-c .cap {
+    font: 600 clamp(30px, 4.4vw, 56px) / 1.04 var(--font);
+    letter-spacing: -0.035em;
+    min-height: 2.1em;
+    color: var(--blanco);
+    text-wrap: balance;
+  }
+  .jx.lay-c .exp {
+    color: var(--capa-2-noche);
+    font-size: 18px;
+    line-height: 28px;
+    max-width: 44ch;
+    min-height: 56px;
+  }
+  .jx.lay-c .bars {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 6px;
+    max-width: 520px;
+  }
+  .jx.lay-c .bars i {
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    overflow: hidden;
+    position: relative;
+  }
+  .jx.lay-c .bars i.done {
+    background: var(--c2n);
+  }
+  .jx.lay-c .bars i.on::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--blanco);
+    transform-origin: left;
+    animation: jx-fill var(--d, 2s) linear forwards;
+  }
+  @keyframes jx-fill {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+  .jx.lay-c .last {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    min-height: 24px;
+    font-size: 15px;
+    color: var(--blanco);
+  }
+  .jx.lay-c .last .k {
+    color: var(--c2n);
+  }
+  @media (max-width: 860px) {
+    .jx.lay-c {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+    .jx.lay-c .big {
+      width: 100%;
+    }
+  }
+  @media (max-width: 360px) {
+    .jx .phone,
+    .jx.lay-a .phone {
+      width: 252px;
+      height: 540px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .jx *,
+    .jx *::before,
+    .jx *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+</style>

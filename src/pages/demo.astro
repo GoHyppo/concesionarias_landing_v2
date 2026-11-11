@@ -5,6 +5,7 @@
  * líneas en producción de Grupo Garden, confirmadas por Nico) y el bloque de agenda #agenda, que es el
  * destino de todos los CTAs "Pide una demo" del sitio.
  */
+import Journey from '../components/Journey.astro';
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
@@ -51,20 +52,9 @@ const schemas = [breadcrumbListSchema(crumbs)];
         </div>
       </div>
       <figure class="demo-media">
-        <video
-          controls
-          muted
-          playsinline
-          preload="metadata"
-          poster="/media/demo/agente-whatsapp-poster.webp"
-          width="480"
-          height="854"
-          aria-label="Video: el agente responde por WhatsApp una consulta sobre disponibilidad de un modelo"
-        >
-          <source src="/media/demo/agente-whatsapp-concesionaria.webm" type="video/webm" />
-        </video>
+        <Journey layout="A" id="journey-demo" />
         <figcaption class="small muted">
-          Una consulta de disponibilidad respondida por el agente, con la propuesta de enviar ficha técnica y opciones de pago.
+          Un lead de ejemplo: del anuncio de Instagram al test drive confirmado, con la ficha del lead completándose sola.
         </figcaption>
       </figure>
     </div>
@@ -128,9 +118,9 @@ const schemas = [breadcrumbListSchema(crumbs)];
     gap: 40px;
     align-items: center;
   }
-  @media (min-width: 960px) {
+  @media (min-width: 1100px) {
     .demo-grid {
-      grid-template-columns: 1.3fr 0.7fr;
+      grid-template-columns: minmax(0, 1fr) auto;
     }
   }
   .demo-grid .check-list {
@@ -138,19 +128,12 @@ const schemas = [breadcrumbListSchema(crumbs)];
   }
   .demo-media {
     margin: 0 auto;
-    max-width: 300px;
-    width: 100%;
-  }
-  .demo-media video {
-    display: block;
-    width: 100%;
-    border-radius: 28px;
-    border: 1px solid var(--border);
-    background: var(--surface);
   }
   .demo-media figcaption {
-    margin-top: 10px;
+    margin-top: 16px;
     text-align: center;
+    max-width: 52ch;
+    margin-inline: auto;
   }
   .bots {
     list-style: none;
@@ -173,8 +156,8 @@ const schemas = [breadcrumbListSchema(crumbs)];
     transition: border-color 0.15s ease;
   }
   .bot:hover {
-    border-color: #25d366;
-    color: var(--white);
+    border-color: var(--noche);
+    color: var(--ink);
   }
   .bot-cta {
     display: flex;
