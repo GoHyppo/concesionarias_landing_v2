@@ -1,6 +1,6 @@
 # Estrategia de contenido · blog de concesionaria.ai
 
-Fuente de verdad del blog: qué se publica, cuándo y con qué reglas. Complementa `docs/SEO_PLAYBOOK.md` (estándar técnico) y `docs/BLOG.md` (cómo se publica). La ejecuta la Parte B de la rutina `hyppo-blog-daily` siguiendo `docs/routines/blog.md`; los cambios de criterio los aprueba Nico.
+Fuente de verdad del blog: qué se publica, cuándo y con qué reglas. Complementa `docs/SEO_PLAYBOOK.md` (estándar técnico) y `docs/BLOG.md` (cómo se publica). La ejecuta la Parte B de la rutina `hyppo-blog-daily` siguiendo `docs/routines/blog.md`; los cambios de criterio los aprueba Nico, que revisa los posts ex post en el sitio vivo (§7).
 
 ## 1. El norte
 
@@ -45,22 +45,13 @@ Temas del sitio anterior que **no** se escriben como estaban: los que dependían
 
 Español LATAM neutro con **tuteo** (tienes, puedes, pide), directo y concreto, sin hype. Sin em-dash, sin emojis, sin AI-slop. Personas reales firman: Nicolas Lew Deveali (gestión de leads, medición, negocio) y Tomas Lagomarsino (WhatsApp, IA, datos, integraciones).
 
-## 7. Doc de revisión
+## 7. Revisión de posts: ex post, en el sitio vivo
 
-- **ID del Doc: PENDIENTE.** Nico tiene que crear un Google Doc vacío "ConcesionarIA blog review", compartirlo con el SA `claude-vscode-test@vx-operation.iam.gserviceaccount.com` como Editor y pasar el ID (el SA no puede crear Docs).
-- Mientras no exista: cada post nuevo deja su copia en `docs/blog-queue/AAAA-MM-DD_<slug>.md` (mismo formato de abajo), commiteada junto con el post.
-- Formato de entrada (newest-first, igual que hyppo.io):
+Decisión de Nico (2026-11-10): **no hay Doc de revisión**. Nico revisa los posts después de publicados, directamente en concesionaria.ai; la rutina deja la URL en vivo en su reporte.
 
-```
-=== AAAA-MM-DD | <slug> | <mercado> | <material> ===
-[FECHA] AAAA-MM-DD
-[URL] https://concesionaria.ai/blog/<slug>/
-[ES] <título>
-<cuerpo completo>
-[MEDIA] <link de Drive o nota>
-```
-
-- Cuando exista el Doc: al inicio de cada corrida se comparan solo las 5 entradas más nuevas contra el markdown del repo; las ediciones de Nico ganan (commit `concesionaria-blog-sync: <slug> (edición de Nico)` y `updatedAt` con la fecha real). Si una entrada dice `CANCELADO`, el post pasa a `draft: true`.
+- Si Nico pide cambios sobre un post publicado, se hacen en una sesión: se edita el markdown, `updatedAt` pasa a la fecha real de la edición, `npm run verify` y commit `concesionaria-blog-edit: <slug>`.
+- Si pide bajarlo: `draft: true` (el build lo despublica) y commit `concesionaria-blog-edit: <slug> (despublicado)`.
+- Por eso la vara de publicación es la del playbook y el gate: un post que no pasaría la revisión de Nico no se publica.
 
 ## 8. Medición del efecto compuesto
 

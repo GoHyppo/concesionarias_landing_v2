@@ -73,10 +73,10 @@ Marca ConcesionarIA (deck comercial `Hyppo/claude_tests/pitches/concesionaria/bu
 Este sitio corre el mismo programa SEO que hyppo.io, adaptado. Leer antes de tocar páginas, titles o contenido:
 
 - `docs/SEO_PLAYBOOK.md`: mapa de keywords (un head term por URL), dueño de cada búsqueda entre concesionaria.ai, gochat.ar y hyppo.io, estándar de posts.
-- `docs/CONTENT_STRATEGY.md`: mapa de clusters, cadencia (2 posts por semana, lunes y jueves), regla anti-colisión con hyppo.io, política de claims, Doc de revisión.
+- `docs/CONTENT_STRATEGY.md`: mapa de clusters, cadencia (2 posts por semana, lunes y jueves), regla anti-colisión con hyppo.io, política de claims, revisión ex post de Nico en el sitio vivo (sin Doc de revisión).
 - `docs/BLOG.md`: cómo publicar un post, frontmatter, pipeline de imagen (prompt de Magnific).
 - `docs/SEO_TRACKER.md` (tracker de implementación) y `docs/CONTENT_LOG.md` (registro de publicación).
-- `docs/seo-digests/`, `docs/reports/`, `docs/gsc/`, `docs/blog-queue/`.
+- `docs/seo-digests/`, `docs/reports/`, `docs/gsc/`.
 - **Rutinas**: no hay rutinas propias. Las tres rutinas cloud de hyppo.io corren primero hyppo.io y después una Parte B que lee y sigue `docs/routines/blog.md` (lunes y jueves), `docs/routines/seo-ops.md` (jueves) y `docs/routines/monthly-report.md` (día 1). Las rutinas pushean a `main`: `git pull --rebase origin main` antes de trabajar y antes de pushear.
 - **`npm run verify` verde antes de cualquier push.**
 
@@ -89,8 +89,6 @@ Publicados (decisión de Nico, 2026-11-10). La tabla de `src/lib/pricing.ts` es 
 Las que tocan código tienen su comentario `PENDIENTE` en el archivo citado:
 - Tecnom como integración: `published: false` en `src/lib/integrations.ts`.
 - "Implementación en 14 días": figura en content.py pero contradice a la v1 ("4 semanas"); queda afuera del sitio hasta que Nico lo confirme.
-- ID del Doc de revisión del blog: `docs/CONTENT_STRATEGY.md` §7.
-- `publishedAt` de los 6 posts semilla: 2026-11-10. Si el sitio sale después, ponerles la fecha real de salida antes del merge.
 - No hay formulario GHL propio de ConcesionarIA (solo el calendario); si se crea, se suma en `BookDemo.astro`.
 
-Ya resueltas (2026-11-10): precios publicados, WhatsApp de Hyppo AR, calendario de Pio, bots de demo (se muestran las líneas en producción de Grupo Garden; `/demo/` lo aclara), Search Console `sc-domain:concesionaria.ai` (SA como siteOwner), GA4 `563697477`, repo transferido a GoHyppo, y GoHyppo LLC como sociedad de **Delaware** en `/privacidad/` (hyppo.io dice Florida y está mal; la cláusula de ley aplicable de `/terminos/` sigue eligiendo Florida, igual que los términos de hyppo.io).
+Ya resueltas (2026-11-10): sitio en vivo en concesionaria.ai (los 6 posts semilla salieron con su `publishedAt` real, 2026-11-10), sin Doc de revisión (Nico revisa ex post), precios publicados, WhatsApp de Hyppo AR, calendario de Pio, bots de demo (se muestran las líneas en producción de Grupo Garden; `/demo/` lo aclara), Search Console `sc-domain:concesionaria.ai` (SA como siteOwner), GA4 `563697477`, repo transferido a GoHyppo, y GoHyppo LLC como sociedad de **Delaware** en `/privacidad/` (hyppo.io dice Florida y está mal; la cláusula de ley aplicable de `/terminos/` sigue eligiendo Florida, igual que los términos de hyppo.io).
