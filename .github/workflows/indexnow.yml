@@ -1,0 +1,39 @@
+# Avisa a IndexNow (Bing, y por Bing a la búsqueda de ChatGPT y Copilot) cada
+# vez que se publica o edita un post. Espera a que el deploy esté vivo antes de
+# mandar. Para mandar el sitio entero (primera vez, o cambios de páginas):
+# Actions > indexnow > Run workflow con "all" tildado.
+name: indexnow
+
+on:
+  push:
+    branches: [main]
+    paths: ['src/content/blog/**']
+  workflow_dispatch:
+    inputs:
+      all:
+        description: 'Mandar todas las URLs del sitemap'
+        type: boolean
+        default: false
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Avisar a IndexNow
+        env:
+          SITE: https://concesionaria.ai
+        run: |
+          if [ "${{ inputs.all }}" = "true" ]; then
+            node scripts/indexnow.mjs --all
+          else
+            BASE="${{ github.event.before }}"
+            case "$BASE" in ''|0000000000000000000000000000000000000000) BASE=HEAD~1;; esac
+            node scripts/indexnow.mjs "$BASE" "${{ github.sha }}"
+          fi

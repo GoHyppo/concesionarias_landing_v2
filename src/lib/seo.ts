@@ -39,6 +39,15 @@ export function organizationSchema() {
     logo: LOGO_URL,
     description:
       'IA para concesionarias de autos: un agente de WhatsApp que responde, califica y hace el seguimiento de cada lead, con datos y dashboards de gestión.',
+    // Temas de los que la marca sabe de verdad: lo leen buscadores y asistentes de IA.
+    knowsAbout: [
+      'IA para concesionarias de autos',
+      'Chatbot de WhatsApp para concesionarias',
+      'Seguimiento y calificación de leads automotrices',
+      'CRM para concesionarias',
+      'Atribución de campañas para concesionarias',
+      'Agentes de IA para ventas de autos',
+    ],
     parentOrganization: {
       '@type': 'Organization',
       '@id': HYPPO_ID,
