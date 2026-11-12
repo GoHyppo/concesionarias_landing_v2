@@ -164,6 +164,10 @@ h3 {
 p {
   margin: 0 0 1em;
 }
+p,
+li {
+  text-wrap: pretty;
+}
 
 .mono {
   font-family: var(--mono);
@@ -221,7 +225,7 @@ p {
   font-size: clamp(1.05rem, 1.6vw, 1.2rem);
   color: var(--pizarra);
   line-height: 1.6;
-  max-width: 62ch;
+  max-width: 56ch;
 }
 .muted {
   color: var(--pizarra);
@@ -260,7 +264,6 @@ p {
   border-color: var(--line-dark);
 }
 .sec-dark .card-icon {
-  background: rgba(255, 255, 255, 0.08);
   color: var(--blanco);
 }
 .sec-dark .btn-primary {
@@ -368,19 +371,13 @@ p {
   color: var(--pizarra);
 }
 .card-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius);
-  background: var(--escarcha);
+  display: block;
   color: var(--noche);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 .card-icon .icon {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
 }
 
 .check-list {
@@ -484,7 +481,7 @@ tr:last-child td {
 
 /* ---------- Prosa (blog, legales) ---------- */
 .prose {
-  max-width: 68ch;
+  max-width: 60ch;
   color: var(--noche);
   font-size: 1.0625rem;
   line-height: 1.7;

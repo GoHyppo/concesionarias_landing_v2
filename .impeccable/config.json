@@ -1,0 +1,10 @@
+{
+  "detector": {
+    "ignoreRules": [
+      "kicker-above-heading",
+      "gray-on-color"
+    ],
+    "ignoreFiles": [],
+    "ignoreValues": []
+  }
+}
