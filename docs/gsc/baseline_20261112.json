@@ -1,0 +1,80 @@
+{
+  "site": "sc-domain:concesionaria.ai",
+  "start": "2026-10-14",
+  "end": "2026-11-10",
+  "generated": "2026-11-12T12:41:53.391442Z",
+  "date": [
+    {
+      "keys": [
+        "2026-11-10"
+      ],
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0,
+      "position": 28.2
+    }
+  ],
+  "query_page": [
+    {
+      "keys": [
+        "en nuestras agencias automotrices, los equipos de ventas reciben muchas consultas por whatsapp y redes sociales sobre vehículos y financiamiento, y muchas son de curiosos. ¿qué plataforma de mensajería cuenta con ia para calificar a los compradores por presupuesto e interés en el vehículo y dirigir las consultas serias a la sucursal correspondiente?",
+        "https://concesionaria.ai/"
+      ],
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 3
+    },
+    {
+      "keys": [
+        "ia concesionarios",
+        "https://concesionaria.ai/"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 38
+    },
+    {
+      "keys": [
+        "ia para concesionarios",
+        "https://concesionaria.ai/"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 96
+    }
+  ],
+  "page": [
+    {
+      "keys": [
+        "https://concesionaria.ai/"
+      ],
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0,
+      "position": 28.2
+    }
+  ],
+  "country": [
+    {
+      "keys": [
+        "esp"
+      ],
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 67
+    },
+    {
+      "keys": [
+        "mex"
+      ],
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 2.333333333333333
+    }
+  ]
+}
