@@ -64,15 +64,24 @@ export const GARDEN_BRANDS = [
 ];
 
 /**
- * Logos disponibles (heredados de la v1 del sitio). Solo marcas que están en
- * GARDEN_BRANDS: el sitio no muestra logos de marcas que no operan con el
- * sistema. Crestanevada estaba en la v1 y quedó afuera por eso.
+ * Logos oficiales enviados por Marketing de Grupo Garden (2026-11-16,
+ * "Marcas del Grupo Garden.pdf"): Garden en rojo y las marcas en gris monocromo.
+ * Solo marcas que están en GARDEN_BRANDS: el sitio no muestra logos de marcas que
+ * no operan con el sistema (por eso Abarth, que viene en el PDF, queda afuera).
+ * Para BMW, Garden usa el logo de BMW Motorrad.
  */
 export const GARDEN_LOGOS = [
-  { name: 'Grupo Garden', src: '/media/brands/grupo-garden.png', width: 424, height: 292 },
-  { name: 'KIA', src: '/media/brands/kia.png', width: 400, height: 267 },
-  { name: 'Nissan', src: '/media/brands/nissan.png', width: 300, height: 300 },
-  { name: 'Fiat', src: '/media/brands/fiat.png', width: 320, height: 320 },
-  { name: 'Jeep', src: '/media/brands/jeep.png', width: 700, height: 394 },
-  { name: 'Chery', src: '/media/brands/chery.png', width: 400, height: 400 },
+  { name: 'Grupo Garden', src: '/media/brands/grupo-garden.png', width: 332, height: 240 },
+  { name: 'KIA', src: '/media/brands/kia.png', width: 508, height: 120 },
+  { name: 'Nissan', src: '/media/brands/nissan.png', width: 143, height: 120 },
+  { name: 'Chevrolet', src: '/media/brands/chevrolet.png', width: 345, height: 120 },
+  { name: 'BMW Motorrad', src: '/media/brands/bmw-motorrad.png', width: 564, height: 120 },
+  { name: 'MINI', src: '/media/brands/mini.png', width: 272, height: 120 },
+  { name: 'Volvo', src: '/media/brands/volvo.png', width: 767, height: 60 },
+  { name: 'Mazda', src: '/media/brands/mazda.png', width: 135, height: 120 },
+  { name: 'Fiat', src: '/media/brands/fiat.png', width: 158, height: 120 },
+  { name: 'Jeep', src: '/media/brands/jeep.png', width: 299, height: 120 },
+  { name: 'Ram', src: '/media/brands/ram.png', width: 117, height: 120 },
+  { name: 'Chery', src: '/media/brands/chery.png', width: 311, height: 120 },
+  { name: 'iCAUR', src: '/media/brands/icaur.png', width: 676, height: 120 },
 ];

@@ -22,11 +22,13 @@ export type DemoBot = {
 };
 
 export const DEMO_BOTS: DemoBot[] = [
-  { brand: 'KIA', phone: '595981669999', logo: '/media/brands/kia.png', logoWidth: 400, logoHeight: 267 },
-  { brand: 'Jeep', phone: '595984133200', logo: '/media/brands/jeep.png', logoWidth: 700, logoHeight: 394 },
-  { brand: 'Fiat', phone: '595986111250', logo: '/media/brands/fiat.png', logoWidth: 320, logoHeight: 320 },
-  { brand: 'Nissan', phone: '595986685555', logo: '/media/brands/nissan.png', logoWidth: 300, logoHeight: 300 },
-  { brand: 'Chery', phone: '595994658749', logo: '/media/brands/chery.png', logoWidth: 400, logoHeight: 400 },
+  { brand: 'KIA', phone: '595981669999', logo: '/media/brands/kia.png', logoWidth: 508, logoHeight: 120 },
+  { brand: 'Jeep', phone: '595984133200', logo: '/media/brands/jeep.png', logoWidth: 299, logoHeight: 120 },
+  { brand: 'Fiat', phone: '595986111250', logo: '/media/brands/fiat.png', logoWidth: 158, logoHeight: 120 },
+  { brand: 'Nissan', phone: '595986685555', logo: '/media/brands/nissan.png', logoWidth: 143, logoHeight: 120 },
+  // Chery retirado (2026-11-25): Garden avisó que 595994658749 es el WhatsApp de
+  // una corredora de seguros, no el agente de Chery. Volver a sumarlo solo con el
+  // número confirmado por Garden.
 ];
 
 export function demoBotHref(bot: DemoBot): string {
