@@ -1,7 +1,7 @@
 ---
 title: 'BDC humano vs agente de IA en una concesionaria: qué conviene y cuándo'
-seoTitle: 'BDC automotriz vs agente de IA: qué conviene'
-description: 'Un BDC y un agente de IA hacen parte del mismo trabajo en una concesionaria. Qué hace mejor cada uno, cuándo conviene sumarlos y cómo se reparten los leads.'
+seoTitle: 'Qué es un BDC automotriz: humano vs agente de IA'
+description: 'Un BDC automotriz es el equipo o sistema que responde y califica leads antes de pasarlos a ventas. Qué hace mejor un agente de IA y cuándo conviene sumarlos.'
 summary: 'Un BDC humano y un agente de IA no compiten por el mismo puesto. El agente conviene para la primera respuesta, la calificación y los seguimientos repetitivos, a cualquier hora y con el mismo criterio. Las personas siguen siendo mejores para reactivar leads fríos, resolver casos complejos y cerrar. El modelo que funciona reparte el trabajo entre los dos.'
 category: 'gestion-comercial'
 author: 'tomas-lagomarsino'
